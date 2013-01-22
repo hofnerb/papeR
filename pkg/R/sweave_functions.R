@@ -74,8 +74,12 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
         xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
                              scientific = scientific, ...)
     }
-    xtTab[, wchPval] <- format.pval(xtTab[, wchPval], digits = digits,
-                                    scientific = scientific,
+    r.digits <- 10
+    num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
+    if (!is.null(num[2]))
+        r.digits <- nchar(num[2])
+    xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
+                                    digits = digits, scientific = scientific,
                                     eps = smallest.pval, ...)
     row.names(xtTab) <- dimnames(x$tTable)[[1]]
     xtTab
@@ -93,8 +97,12 @@ summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
         xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
                              scientific = scientific, ...)
     }
-    xtTab[, wchPval] <- format.pval(xtTab[, wchPval], digits = digits,
-                                    scientific = scientific,
+    r.digits <- 10
+    num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
+    if (!is.null(num[2]))
+        r.digits <- nchar(num[2])
+    xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
+                                    digits = digits, scientific = scientific,
                                     eps = smallest.pval, ...)
     row.names(xtTab) <- dimnames(x@coefs)[[1]]
     xtTab
