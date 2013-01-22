@@ -46,7 +46,9 @@
 
   P-values are formated using \code{\link{format.pval}}. Note that the
   \code{eps} argument of \code{\link{format.pval}} is provided by
-  \code{smallest.pval}.
+  \code{smallest.pval}. Note that the choice of \code{smallest.pval}
+  also affects the number of digits for p-values as these are rounded to
+  the same number of digits as given in \code{smallest.pval}.
 }
 \value{
   \code{data.frame} with \code{summary} of fixed effects extracted from
