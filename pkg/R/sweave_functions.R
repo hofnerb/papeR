@@ -64,36 +64,38 @@ summary.fixef <- function(object, ...)
 
 ################################################################################
 # Extract Fixed Effects from lme Objects (package nlme)
-summary.fixef.lme <- function(object, digits = NULL, ...){
+# Based on modified code from nlme:::print.summary.lme
+summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
+                              smallest.pval = 0.001, ...){
     x <- summary(object)
     xtTab <- as.data.frame(x$tTable)
     wchPval <- match("p-value", names(xtTab))
     for (i in names(xtTab)[-wchPval]) {
-        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits)
+        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
+                             scientific = scientific, ...)
     }
-    xtTab[, wchPval] <- format(round(xtTab[, wchPval], 4), digits = digits)
-    xtTab[, wchPval] <- as.factor(xtTab[, wchPval])
-    if (any(wchLv <- (as.double(levels(xtTab[, wchPval])) == 0))) {
-        levels(xtTab[, wchPval])[wchLv] <- "<.0001"
-    }
+    xtTab[, wchPval] <- format.pval(xtTab[, wchPval], digits = digits,
+                                    scientific = scientific,
+                                    eps = smallest.pval, ...)
     row.names(xtTab) <- dimnames(x$tTable)[[1]]
     xtTab
 }
 
 ################################################################################
 # Extract Fixed Effects from mer Objects (package lme4)
-summary.fixef.mer <- function(object, digits = NULL, ...){
+# Based on modified code from nlme:::print.summary.lme
+summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
+                              smallest.pval = 0.001, ...){
     x <- summary(object)
     xtTab <- as.data.frame(x@coefs)
     wchPval <- match("Pr(>|z|)", names(xtTab))
     for (i in names(xtTab)[-wchPval]) {
-        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits)
+        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
+                             scientific = scientific, ...)
     }
-    xtTab[, wchPval] <- format(round(xtTab[, wchPval], 4), digits = digits)
-    xtTab[, wchPval] <- as.factor(xtTab[, wchPval])
-    if (any(wchLv <- (as.double(levels(xtTab[, wchPval])) == 0))) {
-        levels(xtTab[, wchPval])[wchLv] <- "<.0001"
-    }
+    xtTab[, wchPval] <- format.pval(xtTab[, wchPval], digits = digits,
+                                    scientific = scientific,
+                                    eps = smallest.pval, ...)
     row.names(xtTab) <- dimnames(x@coefs)[[1]]
     xtTab
 }
@@ -359,18 +361,8 @@ Anova.lme <- function(mod, type = c("marginal", "sequential"), ...) {
 }
 
 
-
-#####
-# str(xtable(summary(model)),1)
-# Classes ‘xtable’ and 'data.frame':	2 obs. of  4 variables:
-#  $ Estimate  : num  5.032 -0.371
-#  $ Std. Error: num  0.22 0.311
-#  $ t value   : num  22.85 -1.19
-#  $ Pr(>|t|)  : num  9.55e-15 2.49e-01
-#  - attr(*, "align")= chr  "r" "r" "r" "r" ...
-#  - attr(*, "digits")= num  0 4 4 2 4
-#  - attr(*, "display")= chr  "s" "f" "f" "f" ...
-
+#################################################################################
+# Prettify function for summary tables
 prettify <- function(object, ...)
     UseMethod("prettify")
 
@@ -383,11 +375,16 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
 
     ## make extra column if needed
     if (extra.column) {
+        object$varlabel <- " "
         object$"FactorLevel" <- " "
         ## move Factor Levels to the front
-        object <- cbind(object[, ncol(object)], object[, - ncol(object)])
-        names(object)[1] <- "Factor Level"
+        newVars <- (ncol(object) -1):ncol(object)
+        object <- cbind(object[, newVars],
+                        object[, - newVars])
+        names(object)[1] <- " "
         object[,1] <- as.character(object[,1])
+        names(object)[2] <- "Factor Level"
+        object[,2] <- as.character(object[,2])
     }
 
     for (i in 1:length(labels)) {
@@ -403,7 +400,7 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
                     new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
                                          paste(labels[i], spaces, sep = ""),
                                          nms[idx])
-                    object[idx, 1] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
+                    object[idx, 2] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
                                            "\\1",
                                            nms[idx])
                 } else {
@@ -415,7 +412,8 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
             nms[idx] <- ""
         }
     }
-    rownames(object) <- new_nms
+    object[, 1] <- new_nms
+    rownames(object) <- NULL
     object
 }
 
