@@ -272,6 +272,9 @@ printtab <- function(tab, colnames = NULL,
     tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
     tab <- apply(tab, 2, function(x)
                  ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
+    ## if tab accidentially drops to a vector
+    if (is.null(dim(tab)))
+        tab <- matrix(tab, nrow = 1)
     out <- apply(tab, 1, function(x)
                  cat(paste(x, collapse = " & "), " \\\\ \n"))
     cat("  \\bottomrule \n")
@@ -444,6 +447,9 @@ printtab_fac <- function(tab, colnames = NULL,
     ## Convert to character strings
     tab <- apply(tab, 2, function(x)
                  ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
+    ## if tab accidentially drops to a vector
+    if (is.null(dim(tab)))
+        tab <- matrix(tab, nrow = 1)
     ## Replace NA with " "
     tab[is.na(tab)] <- ""
     out <- apply(tab, 1, function(x)
