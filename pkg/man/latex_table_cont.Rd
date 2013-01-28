@@ -1,5 +1,6 @@
 \name{latex.table.cont}
 \alias{latex.table.cont}
+\alias{print.table.cont}
 
 \title{ Produce (LaTeX) Summaries for Continuous Variables }
 \description{
@@ -14,6 +15,15 @@ latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
                  count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                  incl_outliers = TRUE, drop = TRUE,
                  show.NAs = any(is.na(data[, variables])))
+
+\method{print}{table.cont}(x,
+      table = get_options(x, "table"),
+      align = get_options(x, "align"),
+      count = get_options(x, "count"),
+      mean_sd = get_options(x, "mean_sd"),
+      quantiles = get_options(x, "quantiles"),
+      colnames = get_options(x, "colnames"),
+      ...)
 
 }
 
@@ -72,14 +82,24 @@ latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
     there are any missings in the variables to be displayed (and
     \code{FALSE} if not).
   }
+  \item{x}{
+    An object of class \code{table.fac}. See Value for details.
+  }
+  \item{...}{
+    additional arguments for printing. Currently not used.
+  }
 }
 \details{
   The output requires \code{\\usepackage{booktabs}} in the LaTeX file.
 }
 \value{
-  A \code{data.frame} with the computed statistics is returned
-  (invisibly) and the output is printed with LaTeX style syntax
-  highlighting to be used e.g. in Sweave chunks with \code{results=tex}.
+  A special \code{data.frame} with additional class \code{table.cont}
+  containing the computed statistics is returned from function
+  \code{latex.table.cont}. Addtional attributes required for the print
+  function are contained (see \code{attr(x, "latex.table.options")}).
+
+  The output is printed with LaTeX style syntax highlighting to be used
+  e.g. in Sweave chunks with \code{results=tex}.
 }
 \author{
   Benjamin Hofner
@@ -99,8 +119,8 @@ latex.table.cont(Orthodont, quantiles = FALSE)
 latex.table.cont(Orthodont, count = FALSE, quantiles = FALSE)
 latex.table.cont(Orthodont, mean_sd = FALSE)
 
-## Don't drop column 'Missing' even if no missings are present
-latex.table.cont(Orthodont, drop = FALSE)
+## Show column 'Missing' even if no missings are present
+latex.table.cont(Orthodont, show.NAs = TRUE)
 
 ## Change variables to display
 latex.table.cont(Orthodont, variables = "age")
@@ -112,7 +132,13 @@ latex.table.cont(Orthodont)
 
 ## We can also have a look at the returned object:
 df.cont <- latex.table.cont(Orthodont)
+## Structure of object
+str(df.cont)
+## Make object a data.frame and have a look at the raw data
+class(df.cont) <- "data.frame"
 df.cont
+
+print.table.cont(df.cont)
 }
 
 \keyword{univar}

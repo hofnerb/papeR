@@ -1,5 +1,6 @@
 \name{latex.table.fac}
 \alias{latex.table.fac}
+\alias{print.table.fac}
 
 \title{ Produce (LaTeX) Summaries for Factor Variables }
 \description{
@@ -13,6 +14,13 @@ latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
                 table = c("tabular", "longtable"), align = NULL, sep = TRUE,
                 drop = TRUE,
                 show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
+
+\method{print}{table.fac}(x,
+      table = get_options(x, "table"),
+      align = get_options(x, "align"),
+      sep = get_options(x, "sep"),
+      colnames = get_options(x, "colnames"), ...)
+
 }
 
 \arguments{
@@ -57,14 +65,24 @@ latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
   \item{na.lab}{
     label for missing values (default: \code{"<Missing>"}).
   }
+  \item{x}{
+    An object of class \code{table.fac}. See Value for details.
+  }
+  \item{...}{
+    additional arguments for printing. Currently not used.
+  }
 }
 \details{
   The output requires \code{\\usepackage{booktabs}} in the LaTeX file.
 }
 \value{
-  A \code{data.frame} with the computed statistics is returned
-  (invisibly) and the output is printed with LaTeX style syntax
-  highlighting to be used e.g. in Sweave chunks with \code{results=tex}.
+  A special \code{data.frame} with additional class \code{table.fac}
+  containing the computed statistics is returned from function
+  \code{latex.table.cont}. Addtional attributes required for the print
+  function are contained (see \code{attr(x, "latex.table.options")}).
+
+  The output is printed with LaTeX style syntax highlighting to be used
+  e.g. in Sweave chunks with \code{results=tex}.
 }
 \author{
   Benjamin Hofner
@@ -78,6 +96,9 @@ data(Orthodont, package = "nlme")
 
 ## Get summary for continuous variables
 latex.table.fac(Orthodont)
+
+## Reorder data for table:
+latex.table.fac(Orthodont, variables = c("Sex", "Subject"))
 
 ## What happens in the display if we introduce some missing values:
 set.seed(1907)
