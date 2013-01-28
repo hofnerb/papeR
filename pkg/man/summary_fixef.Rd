@@ -62,7 +62,29 @@
 \seealso{
 }
 \examples{
+## Load data set Orthodont
+data(Orthodont, package = "nlme")
 
+## With package nlme:
+require("nlme")
+## Fit a model for distance with random intercept for Subject
+mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+summary(mod)
+## Extract fixed effects table only
+summary.fixef(mod)
+
+## With package lme4:
+require("lme4")
+## Fit a model for distance with random intercept for Subject
+mod4 <- lmer(distance ~ age + Sex + (1|Subject), data = Orthodont)
+summary(mod4)
+## Extract fixed effects table only
+summary.fixef(mod4)
+
+## change display
+summary.fixef(mod, digits = 2)
+summary.fixef(mod, scientific = -1)  # set penalty for scientific
+summary.fixef(mod, digits = 2, smallest.pval = 0.0001)
 }
 
 \keyword{methods}

@@ -12,7 +12,8 @@
 latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
                  table = c("tabular", "longtable"), align = NULL,
                  count = TRUE, mean_sd = TRUE, quantiles = TRUE,
-                 incl_outliers = TRUE, drop = TRUE)
+                 incl_outliers = TRUE, drop = TRUE,
+                 show.NAs = any(is.na(data[, variables])))
 
 }
 
@@ -62,8 +63,14 @@ latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
     used instead.
   }
   \item{drop}{
-    logical (default: TRUE). Determines wether missing continuous variables
-    are dropped from the table.
+    logical (default: TRUE). Determines wether continuous variables,
+    which contain only missing values are dropped from the table.
+  }
+  \item{show.NAs}{
+    logical. Determines if the number of missings (NAs) is displayed as
+    a separate column. Per default, \code{show.NAs} is \code{TRUE} if
+    there are any missings in the variables to be displayed (and
+    \code{FALSE} if not).
   }
 }
 \details{
@@ -81,7 +88,31 @@ latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
   \code{\link{latex.table.fac}}
 }
 \examples{
+## Use dataset Orthodont
+data(Orthodont, package = "nlme")
 
+## Get summary for continuous variables
+latex.table.cont(Orthodont)
+
+## Change statistics to display
+latex.table.cont(Orthodont, quantiles = FALSE)
+latex.table.cont(Orthodont, count = FALSE, quantiles = FALSE)
+latex.table.cont(Orthodont, mean_sd = FALSE)
+
+## Don't drop column 'Missing' even if no missings are present
+latex.table.cont(Orthodont, drop = FALSE)
+
+## Change variables to display
+latex.table.cont(Orthodont, variables = "age")
+
+## What happens in the display if we introduce some missing values:
+set.seed(1907)
+Orthodont$age[sample(nrow(Orthodont), 20)] <- NA
+latex.table.cont(Orthodont)
+
+## We can also have a look at the returned object:
+df.cont <- latex.table.cont(Orthodont)
+df.cont
 }
 
 \keyword{univar}

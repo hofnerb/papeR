@@ -11,7 +11,8 @@
 
 latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
                 table = c("tabular", "longtable"), align = NULL, sep = TRUE,
-                drop = TRUE)
+                drop = TRUE,
+                show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
 }
 
 \arguments{
@@ -43,8 +44,18 @@ latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
     be added after each factor variable.
   }
   \item{drop}{
-    logical (default: TRUE). Determines wether missing factor variables
-    are dropped from the table.
+    logical (default: TRUE). Determines wether factor variables,
+    which contain only missing values are dropped from the table.
+  }
+  \item{show.NAs}{
+    logical. Determines if NAs are displayed as a separate category for
+    each factor variable with missings. If \code{TRUE}, an additional
+    statistic which includes the missings is displayed (see Examples).
+    Per default, \code{show.NAs} is \code{TRUE} if there are any
+    missings in the variables to be displayed (and \code{FALSE} if not).
+  }
+  \item{na.lab}{
+    label for missing values (default: \code{"<Missing>"}).
   }
 }
 \details{
@@ -62,7 +73,19 @@ latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
   \code{\link{latex.table.cont}}
 }
 \examples{
+## Use dataset Orthodont
+data(Orthodont, package = "nlme")
 
+## Get summary for continuous variables
+latex.table.fac(Orthodont)
+
+## What happens in the display if we introduce some missing values:
+set.seed(1907)
+Orthodont$Sex[sample(nrow(Orthodont), 20)] <- NA
+latex.table.fac(Orthodont)
+latex.table.fac(Orthodont, variables = "Sex")
+## do not show statistics on missing values
+latex.table.fac(Orthodont, variables = "Sex", show.NAs = FALSE)
 }
 
 \keyword{univar}

@@ -74,13 +74,17 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
         xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
                              scientific = scientific, ...)
     }
-    r.digits <- 10
-    num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
-    if (!is.null(num[2]))
-        r.digits <- nchar(num[2])
-    xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
-                                    digits = digits, scientific = scientific,
-                                    eps = smallest.pval, ...)
+    if (!is.na(wchPval)) {
+        r.digits <- 10
+        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
+        if (!is.null(num[2]))
+            r.digits <- nchar(num[2])
+        xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
+                                        digits = digits, scientific = scientific,
+                                        eps = smallest.pval, ...)
+    } else {
+        warning("No p-value detected.")
+    }
     row.names(xtTab) <- dimnames(x$tTable)[[1]]
     xtTab
 }
@@ -97,13 +101,17 @@ summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
         xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
                              scientific = scientific, ...)
     }
-    r.digits <- 10
-    num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
-    if (!is.null(num[2]))
-        r.digits <- nchar(num[2])
-    xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
-                                    digits = digits, scientific = scientific,
-                                    eps = smallest.pval, ...)
+    if (!is.na(wchPval)) {
+        r.digits <- 10
+        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
+        if (!is.null(num[2]))
+            r.digits <- nchar(num[2])
+        xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
+                                        digits = digits, scientific = scientific,
+                                        eps = smallest.pval, ...)
+    } else {
+        warning("No p-value detected.")
+    }
     row.names(xtTab) <- dimnames(x@coefs)[[1]]
     xtTab
 }
@@ -116,18 +124,18 @@ latex.table.cont <- function(data, variables = names(data),
                              table = c("tabular", "longtable"),
                              align = NULL,
                              count = TRUE, mean_sd = TRUE, quantiles = TRUE,
-                             incl_outliers = TRUE, drop = TRUE) {
+                             incl_outliers = TRUE, drop = TRUE,
+                             show.NAs = any(is.na(data[, variables]))) {
 
     table <- match.arg(table)
 
     ## get factors
-    fac <- sapply(data[, variables], is.factor)
+    fac <- mySapply(data[, variables], is.factor)
     ## drop missings
     if (drop) {
-        compl.missing <- sapply(data[, variables], function(x) all(is.na(x)))
+        compl.missing <- mySapply(data[, variables], function(x) all(is.na(x)))
         fac <- fac | compl.missing
     }
-
 
     ## if not any is TRUE (i.e. all are FALSE):
     if (!any(count, mean_sd, quantiles))
@@ -143,15 +151,17 @@ latex.table.cont <- function(data, variables = names(data),
     variables <- variables[!fac]
 
     ## setup results object
-    sums <- data.frame(variable = variables, N=NA, mean=NA, sd=NA, blank = "",
-                       min=NA, Q1=NA, median=NA, Q3=NA, max=NA)
+    sums <- data.frame(variable = variables, N=NA, Missing = NA, blank_1 = "",
+                       Mean=NA, SD=NA, blank_2 = "",
+                       Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA)
 
     ## compute statistics
     for (i in 1:nrow(sums)){
         sums$N[i] <- sum(!is.na(data[, variables[i]]))
-        sums$mean[i] <- round(mean(data[, variables[i]], na.rm=TRUE),
+        sums$Missing[i] <- sum(is.na(data[, variables[i]]))
+        sums$Mean[i] <- round(mean(data[, variables[i]], na.rm=TRUE),
                               digits = digits)
-        sums$sd[i] <- round(sd(data[, variables[i]],
+        sums$SD[i] <- round(sd(data[, variables[i]],
                                na.rm=TRUE), digits = digits)
         if (incl_outliers) {
             Q <- round(fivenum(data[, variables[i]]), digits = digits)
@@ -159,11 +169,15 @@ latex.table.cont <- function(data, variables = names(data),
             Q <- round(c(boxplot(data[, variables[i]], plot = FALSE)$stats),
                        digits = digits)
         }
-        sums$min[i] <- Q[1]
+        sums$Min[i] <- Q[1]
         sums$Q1[i]  <- Q[2]
-        sums$median[i] <- Q[3]
+        sums$Median[i] <- Q[3]
         sums$Q3[i] <- Q[4]
-        sums$max[i] <- Q[5]
+        sums$Max[i] <- Q[5]
+    }
+
+    if (!show.NAs) {
+        sums$Missing <- NULL
     }
 
     ## print results
@@ -193,31 +207,42 @@ printtab <- function(tab, colnames = NULL,
 
         if (count == FALSE) {
             tab$N <- NULL
+            tab$Missing <- NULL
         }
 
         if (mean_sd == FALSE) {
-            tab$mean <- NULL
-            tab$sd <- NULL
+            tab$Mean <- NULL
+            tab$SD <- NULL
         }
 
         if (quantiles == FALSE) {
-            tab$min <- NULL
+            tab$Min <- NULL
             tab$Q1 <- NULL
-            tab$median <- NULL
+            tab$Median <- NULL
             tab$Q3 <- NULL
-            tab$max <- NULL
+            tab$Max <- NULL
         }
 
-        if ((count == FALSE && mean_sd == FALSE) || quantiles == FALSE) {
-            tab$blank <- NULL
+        if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
+            tab$blank_1 <- NULL
+        }
+        if (mean_sd == FALSE || quantiles == FALSE) {
+            tab$blank_2 <- NULL
         }
     }
 
-    if (any(names(tab) == "blank")) {
-        idx <- which(names(tab) == "blank")
-        rules <- paste("  \\cmidrule{2-", idx - 1, "}  ",
-                       "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
-                       sep = "")
+    if (any(grepl("blank", names(tab)))) {
+        idx <- grep("blank", names(tab))
+        if (length(idx) == 1) {
+            rules <- paste("  \\cmidrule{2-", idx - 1, "}  ",
+                           "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
+                           sep = "")
+        } else {
+            rules <- paste("  \\cmidrule{2-", idx[1] - 1, "}  ",
+                           "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
+                           "\\cmidrule{", idx[2] + 1, "-", length(names(tab)), "}\n",
+                           sep = "")
+        }
     } else {
         rules <- paste("  \\cmidrule{2-", length(names(tab)), "}\n",
                        sep = "")
@@ -232,14 +257,14 @@ printtab <- function(tab, colnames = NULL,
     if (!is.null(colnames)) {
         colNames <- names(tab)
         ## blank doesn't need to be specified in colnames
-        if (sum(nms <- colNames != "blank") != length(colnames))
+        if (sum(nms <- !grepl("blank", colNames)) != length(colnames))
             stop(sQuote("colnames"), " has wrong length")
         colNames[nms] <- colnames
     } else {
         colNames <- names(tab)
         colNames[1] <- " "
     }
-    colNames[colNames == "blank"] <- " "
+    colNames[grep("blank", colNames)] <- " "
     cat(paste(colNames, collapse = " & "), "\\\\ \n")
     cat(rules)
     if (table == "longtable")
@@ -260,21 +285,29 @@ printtab <- function(tab, colnames = NULL,
 latex.table.fac <- function(data, variables = names(data),
                             colnames = NULL, digits = 2,
                             table = c("tabular", "longtable"),
-                            align = NULL, sep = TRUE, drop = TRUE) {
+                            align = NULL, sep = TRUE, drop = TRUE,
+                            show.NAs = any(is.na(data[, variables])),
+                            na.lab = "<Missing>") {
 
     table <- match.arg(table)
 
-    ## get factors
-    fac <- sapply(data[, variables], is.factor)
-    ## drop missings
-    if (drop) {
-        compl.missing <- sapply(data[, variables], function(x) all(is.na(x)))
-        fac <- fac & !compl.missing
+    if (length(variables) > 1) {
+        ## get factors
+        fac <- sapply(data[, variables], is.factor)
+        ## drop missings
+        if (drop) {
+            compl.missing <- sapply(data[, variables], function(x) all(is.na(x)))
+            fac <- fac & !compl.missing
+        }
+    } else {
+        fac <- is.factor(data[, variables])
+        if (drop && all(is.na(data[, variables])))
+            stop(sQuote("drop = TRUE"), " but all observations are missing in the specified variable.")
     }
 
     ## if all variables are not factors:
     if (all(!fac))
-        stop("Non of the variables is a factor. Nothing to compute.")
+        stop("None of the variables is a factor or all variables are missing. Nothing to compute.")
     ## if non-factors are dropped:
     if (any(!fac))
         warning("Non-factors are dropped from the summary")
@@ -282,31 +315,61 @@ latex.table.fac <- function(data, variables = names(data),
     ## subset variables to non-factors only
     variables <- variables[fac]
 
+    if (show.NAs) {
+        ## convert NAs to factor levels
+        NAtoLvl <- function(x){
+            if (any(is.na(x))) {
+                lvls <- levels(x)
+                x <- as.character(x)
+                x[is.na(x)] <- na.lab
+                return(factor(x, levels = c(lvls, na.lab)))
+            }
+            return(x)
+        }
+        if (length(variables) > 1) {
+            data[, variables] <- as.data.frame(lapply(data[, variables], NAtoLvl))
+        } else {
+            data[, variables] <- NAtoLvl(data[, variables])
+        }
+    }
+
     ## repeate variables to match no. of levels:
-    n.levels <- sapply(data[, variables], function(x) length(levels(x)))
+    if (length(variables) > 1) {
+        n.levels <- sapply(data[, variables], function(x) length(levels(x)))
+    } else {
+        n.levels <- length(levels(data[, variables]))
+    }
     var2 <- unlist(sapply(1:length(variables),
                           function(i) rep(variables[i], each = n.levels[i])))
     ## get all levels
     lvls <- unlist(sapply(variables, function(x) levels(data[, x])))
+    colnames(lvls) <- NULL
 
     ## setup results object
-    stats <- data.frame(variable = var2, level = lvls, blank = "",
-                        N = NA, fraction = NA)
-                                        # cumulative_fraction = NA)
+    stats <- data.frame(variable = var2, Level = lvls, blank = "",
+                        N = NA, blank_2 = "",
+                        Fraction = NA, CumSum = NA, blank_3 = "",
+                        Fraction_2 = NA, CumSum_2 = NA)
+    if (!show.NAs) {
+            stats$Fraction_2 <- NULL
+            stats$CumSum_2 <- NULL
+            stats$blank_2 <- NULL
+            stats$blank_3 <- NULL
+    }
     rownames(stats) <- NULL
 
     ## compute statistics
     for (i in 1:length(var2)) {
-        notna <- sum(!is.na(data[ , var2[i]]))
-        stats$N[i] <- sum(data[ , var2[i]] == lvls[i], na.rm = TRUE)
-        stats$fraction[i] <- round(stats$N[i]/notna, digits = digits)
+        notna <- sum(!is.na(data[, var2[i]]))
+        stats$N[i] <- sum(data[, var2[i]] == lvls[i], na.rm = TRUE)
+        stats$Fraction[i] <- round(stats$N[i]/notna, digits = digits)
+        stats$CumSum[i] <- sum(stats$Fraction[1:i][var2[1:i] == var2[i]])
+        if (show.NAs && lvls[i] != na.lab) {
+            notna_2 <- sum(data[, var2[i]] != na.lab)
+            stats$Fraction_2[i] <- round(stats$N[i]/notna_2, digits = digits)
+            stats$CumSum_2[i] <- sum(stats$Fraction_2[1:i][var2[1:i] == var2[i]])
+        }
     }
-
-    ## drop duplicted variable names
-    tmp <- stats$variable
-    tmp <- as.character(tmp)
-    tmp[duplicated(tmp)] <- ""
-    stats$variable <- tmp
 
     ## print results
     cat("%% Output requires \\usepackage{booktabs}.\n")
@@ -323,7 +386,22 @@ printtab_fac <- function(tab, colnames = NULL,
 
     table <- match.arg(table)
 
-    rules <- "  \\cmidrule{2-2} \\cmidrule{4-5}\n"
+    ## drop duplicted variable names
+    tmp <- tab$variable
+    tmp <- as.character(tmp)
+    tmp[duplicated(tmp)] <- ""
+    tab$variable <- tmp
+
+    idx <- grep("blank", names(tab))
+    if (length(idx) == 1) {
+        rules <- paste("  \\cmidrule{2-2} \\cmidrule{4-", ncol(tab), "}\n", sep = "")
+    } else {
+        rules <- paste("  \\cmidrule{2-2}",
+                       "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
+                       "\\cmidrule{", idx[2] + 1, "-", idx[3] - 1, "} ",
+                       "\\cmidrule{", idx[3] + 1, "-", length(names(tab)), "}\n",
+                       sep = "")
+    }
     if (is.null(align))
         align <- paste("ll",
                        paste(rep("r", length(names(tab)) - 2), collapse = ""),
@@ -339,10 +417,21 @@ printtab_fac <- function(tab, colnames = NULL,
         colNames[nms] <- colnames
     } else {
         colNames <- names(tab)
-        colNames[colNames == "fraction"] <- "\\%"
+        colNames[colNames == "Fraction"] <- "\\%"
+        colNames[colNames == "CumSum"] <- "$\\sum$ \\%"
+        colNames[colNames == "Fraction_2"] <- "\\%"
+        colNames[colNames == "CumSum_2"] <- "$\\sum$ \\%"
         colNames[1] <- " "
+        if (ncol(tab) == 10) {
+            header <- paste(paste(rep("&", 5), collapse =" "),
+                            "\\multicolumn{2}{c}{(incl. Missings)}  & & \\multicolumn{2}{c}{(w/o Missings)} \\\\")
+        }
     }
-    colNames[colNames == "blank"] <- " "
+    colNames[grep("blank", colNames)] <- " "
+
+    ## start printing
+    if (exists("header"))
+        cat(header, " \n")
     cat(paste(colNames, collapse = " & "), "\\\\ \n")
     cat(rules)
     if (table == "longtable")
@@ -352,8 +441,11 @@ printtab_fac <- function(tab, colnames = NULL,
     if (sep) {
         tab[tab[,1] != "", 1][-1] <- paste(rules, tab[tab[,1] != "", 1][-1])
     }
+    ## Convert to character strings
     tab <- apply(tab, 2, function(x)
                  ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
+    ## Replace NA with " "
+    tab[is.na(tab)] <- ""
     out <- apply(tab, 1, function(x)
                  cat(paste(x, collapse = " & "), " \\\\ \n"))
     cat("  \\bottomrule \n")
