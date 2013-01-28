@@ -2,122 +2,6 @@
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
 ################################################################################
-# Extract labels from data sets
-labels.data.frame <- function(object, which = NULL, ...){
-    if (is.null(which))
-        return(attr(object, "variable.labels"))
-
-    if (is.null(attr(object, "variable.labels"))) {
-        warning("No labels defined")
-    } else {
-        if (is.numeric(which) && any(which > length(attr(object, "variable.labels"))) ||
-            is.character(which) && !all(which %in% names(attr(object, "variable.labels"))))
-            stop("One cannot extract labels for non-existing variables.")
-    }
-    return(attr(object, "variable.labels")[which])
-}
-
-################################################################################
-# Sets labels as attribute "variable.labels"
-"labels<-" <- function(data, which = NULL, value){
-
-    if (is.null(which)) {
-        if (!is.null(value) && ncol(data) != length(value))
-            stop("You must supply a label for each column of the data set\n",
-                 "or use argument ", sQuote("which"))
-        attr(data, "variable.labels") <- value
-        ## set label names to variable names
-        if (!is.null(value) && is.null(names(attr(data, "variable.labels"))))
-            names(attr(data, "variable.labels")) <- colnames(data)
-        return(data)
-    }
-
-    ## if partial replacement is used and no labels are given so far
-    ## a "dummy" vector is created
-    if (is.null(attr(data, "variable.labels"))) {
-        attr(data, "variable.labels") <- colnames(data)
-        names(attr(data, "variable.labels")) <- colnames(data)
-    }
-
-    if (is.null(value))
-        stop(sQuote("NULL"), " cannot be assigned in combination with ", sQuote("which"))
-    if (is.numeric(which) && any(which > ncol(data)) ||
-        is.character(which) && !all(which %in% colnames(data)))
-        stop("One  cannot supply labels for none-existing variables")
-    if (length(which) != length(value))
-        stop("You must supply a label for each selected column of the data set.")
-
-    attr(data, "variable.labels")[which] <- value
-    return(data)
-}
-
-"labels[<-" <- function(data, i, value){
-    labels(data, which = i) <- value
-}
-
-
-################################################################################
-# Extract Fixed Effects from Mixed Models
-# (set generic function)
-summary.fixef <- function(object, ...)
-    UseMethod("summary.fixef")
-
-################################################################################
-# Extract Fixed Effects from lme Objects (package nlme)
-# Based on modified code from nlme:::print.summary.lme
-summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
-                              smallest.pval = 0.001, ...){
-    x <- summary(object)
-    xtTab <- as.data.frame(x$tTable)
-    wchPval <- match("p-value", names(xtTab))
-    for (i in names(xtTab)[-wchPval]) {
-        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
-                             scientific = scientific, ...)
-    }
-    if (!is.na(wchPval)) {
-        r.digits <- 10
-        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
-        if (!is.null(num[2]))
-            r.digits <- nchar(num[2])
-        xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
-                                        digits = digits, scientific = scientific,
-                                        eps = smallest.pval, ...)
-    } else {
-        warning("No p-value detected.")
-    }
-    row.names(xtTab) <- dimnames(x$tTable)[[1]]
-    xtTab
-}
-
-################################################################################
-# Extract Fixed Effects from mer Objects (package lme4)
-# Based on modified code from nlme:::print.summary.lme
-summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
-                              smallest.pval = 0.001, ...){
-    x <- summary(object)
-    xtTab <- as.data.frame(x@coefs)
-    wchPval <- match("Pr(>|z|)", names(xtTab))
-    for (i in names(xtTab)[-wchPval]) {
-        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
-                             scientific = scientific, ...)
-    }
-    if (!is.na(wchPval)) {
-        r.digits <- 10
-        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
-        if (!is.null(num[2]))
-            r.digits <- nchar(num[2])
-        xtTab[, wchPval] <- format.pval(round(xtTab[, wchPval], digits = r.digits),
-                                        digits = digits, scientific = scientific,
-                                        eps = smallest.pval, ...)
-    } else {
-        warning("No p-value detected.")
-    }
-    row.names(xtTab) <- dimnames(x@coefs)[[1]]
-    xtTab
-}
-
-
-################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 latex.table.cont <- function(data, variables = names(data),
                              colnames = NULL, digits = 2,
@@ -294,18 +178,13 @@ latex.table.fac <- function(data, variables = names(data),
 
     table <- match.arg(table)
 
-    if (length(variables) > 1) {
-        ## get factors
-        fac <- sapply(data[, variables], is.factor)
-        ## drop missings
-        if (drop) {
-            compl.missing <- sapply(data[, variables], function(x) all(is.na(x)))
-            fac <- fac & !compl.missing
-        }
-    } else {
-        fac <- is.factor(data[, variables])
-        if (drop && all(is.na(data[, variables])))
-            stop(sQuote("drop = TRUE"), " but all observations are missing in the specified variable.")
+
+    ## get factors
+    fac <- mySapply(data[, variables], is.factor)
+    ## drop missings
+    if (drop) {
+        compl.missing <- mySapply(data[, variables], function(x) all(is.na(x)))
+        fac <- fac & !compl.missing
     }
 
     ## if all variables are not factors:
@@ -337,11 +216,8 @@ latex.table.fac <- function(data, variables = names(data),
     }
 
     ## repeate variables to match no. of levels:
-    if (length(variables) > 1) {
-        n.levels <- sapply(data[, variables], function(x) length(levels(x)))
-    } else {
-        n.levels <- length(levels(data[, variables]))
-    }
+    n.levels <- mySapply(data[, variables], function(x) length(levels(x)))
+
     var2 <- unlist(sapply(1:length(variables),
                           function(i) rep(variables[i], each = n.levels[i])))
     ## get all levels
@@ -457,70 +333,3 @@ printtab_fac <- function(tab, colnames = NULL,
     cat("  \\bottomrule \n")
     cat("\\end{", table, "} \n\n", sep ="")
 }
-
-
-################################################################################
-# Marginal Anova function in the fashion of library(car) for mixed models
-Anova.lme <- function(mod, type = c("marginal", "sequential"), ...) {
-    type <- match.arg(type)
-    nlme:::anova.lme(mod, type = type, ...)
-}
-
-
-#################################################################################
-# Prettify function for summary tables
-prettify <- function(object, ...)
-    UseMethod("prettify")
-
-prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE, ...) {
-    ## get row names
-    nms <- new_nms <- rownames(object)
-
-    ## order labels to avoid matching with substrings
-    labels <- labels[rev(order(sapply(names(labels), nchar)))]
-
-    ## make extra column if needed
-    if (extra.column) {
-        object$varlabel <- " "
-        object$"FactorLevel" <- " "
-        ## move Factor Levels to the front
-        newVars <- (ncol(object) -1):ncol(object)
-        object <- cbind(object[, newVars],
-                        object[, - newVars])
-        names(object)[1] <- " "
-        object[,1] <- as.character(object[,1])
-        names(object)[2] <- "Factor Level"
-        object[,2] <- as.character(object[,2])
-    }
-
-    for (i in 1:length(labels)) {
-        idx <- grep(names(labels)[i], nms)
-        if (!length(idx) == 0){
-            ## Is there a factor level?
-            if (any(grepl(paste("^",names(labels)[i], "$", sep = ""), nms[idx]))) {
-                new_nms[idx] <- gsub(names(labels)[i],
-                                     labels[i], nms[idx])
-            } else {
-                if (extra.column) {
-                    spaces <- sapply(1:length(idx), function(i) paste(rep(" ", i), collapse = ""))
-                    new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
-                                         paste(labels[i], spaces, sep = ""),
-                                         nms[idx])
-                    object[idx, 2] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
-                                           "\\1",
-                                           nms[idx])
-                } else {
-                    new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
-                                         paste(labels[i], sep, "\\1", sep = ""),
-                                         nms[idx])
-                }
-            }
-            nms[idx] <- ""
-        }
-    }
-    object[, 1] <- new_nms
-    rownames(object) <- NULL
-    object
-}
-
-

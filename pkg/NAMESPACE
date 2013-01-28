@@ -4,7 +4,7 @@ importFrom(lme4, summary)
 export(latex.table.cont,
        latex.table.fac,
        prettify,
-	   summary.fixef,
+       summary.fixef,
        "labels<-")
 
 S3method(Anova, lme)
@@ -12,5 +12,5 @@ S3method(labels, data.frame)
 S3method(prettify, data.frame)
 S3method(summary.fixef, mer)
 S3method(summary.fixef, lme)
+S3method(mySapply, default)
 S3method(mySapply, data.frame)
-S3method(mySapply, numeric)
