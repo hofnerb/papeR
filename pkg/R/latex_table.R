@@ -63,108 +63,11 @@ latex.table.cont <- function(data, variables = names(data),
     if (!show.NAs) {
         sums$Missing <- NULL
     }
-
-    ## print results
-    cat("%% Output requires \\usepackage{booktabs}.\n")
-    printtab(sums, table = table, align = align,
-             count = count, mean_sd = mean_sd, quantiles = quantiles,
-             colnames = colnames)
-    invisible(sums)
+    add_options(sums, table = table, align = align,
+                count = count, mean_sd = mean_sd, quantiles = quantiles,
+                colnames = colnames, class = "table.cont")
+    # invisible(sums)
 }
-
-################################################################################
-## Helper for latex.table.cont
-printtab <- function(tab, colnames = NULL,
-                     table = c("tabular", "longtable"),
-                     align = NULL,
-                     count = TRUE, mean_sd = TRUE, quantiles = TRUE) {
-
-    table <- match.arg(table)
-
-    ## if not all are TRUE subset results object
-    if (!all(count, mean_sd, quantiles)) {
-
-        ## if not any is TRUE (i.e. all are FALSE):
-        if (!any(count, mean_sd, quantiles)) {
-            stop("Nothing to compute. All quantities are set to FALSE.")
-        }
-
-        if (count == FALSE) {
-            tab$N <- NULL
-            tab$Missing <- NULL
-        }
-
-        if (mean_sd == FALSE) {
-            tab$Mean <- NULL
-            tab$SD <- NULL
-        }
-
-        if (quantiles == FALSE) {
-            tab$Min <- NULL
-            tab$Q1 <- NULL
-            tab$Median <- NULL
-            tab$Q3 <- NULL
-            tab$Max <- NULL
-        }
-
-        if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
-            tab$blank_1 <- NULL
-        }
-        if (mean_sd == FALSE || quantiles == FALSE) {
-            tab$blank_2 <- NULL
-        }
-    }
-
-    if (any(grepl("blank", names(tab)))) {
-        idx <- grep("blank", names(tab))
-        if (length(idx) == 1) {
-            rules <- paste("  \\cmidrule{2-", idx - 1, "}  ",
-                           "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
-                           sep = "")
-        } else {
-            rules <- paste("  \\cmidrule{2-", idx[1] - 1, "}  ",
-                           "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
-                           "\\cmidrule{", idx[2] + 1, "-", length(names(tab)), "}\n",
-                           sep = "")
-        }
-    } else {
-        rules <- paste("  \\cmidrule{2-", length(names(tab)), "}\n",
-                       sep = "")
-    }
-    if (is.null(align))
-        align <- paste("l",
-                       paste(rep("r", length(names(tab)) - 1), collapse = ""),
-                       sep = "")
-
-    cat("\\begin{", table,"}{", align, "} \n", sep ="")
-    cat("  \\toprule \n")
-    if (!is.null(colnames)) {
-        colNames <- names(tab)
-        ## blank doesn't need to be specified in colnames
-        if (sum(nms <- !grepl("blank", colNames)) != length(colnames))
-            stop(sQuote("colnames"), " has wrong length")
-        colNames[nms] <- colnames
-    } else {
-        colNames <- names(tab)
-        colNames[1] <- " "
-    }
-    colNames[grep("blank", colNames)] <- " "
-    cat(paste(colNames, collapse = " & "), "\\\\ \n")
-    cat(rules)
-    if (table == "longtable")
-        cat("  \\endhead  \n")
-    tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
-    tab <- apply(tab, 2, function(x)
-                 ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
-    ## if tab accidentially drops to a vector
-    if (is.null(dim(tab)))
-        tab <- matrix(tab, nrow = 1)
-    out <- apply(tab, 1, function(x)
-                 cat(paste(x, collapse = " & "), " \\\\ \n"))
-    cat("  \\bottomrule \n")
-    cat("\\end{", table, "} \n\n", sep ="")
-}
-
 
 
 ################################################################################
@@ -249,21 +152,121 @@ latex.table.fac <- function(data, variables = names(data),
             stats$CumSum_2[i] <- sum(stats$Fraction_2[1:i][var2[1:i] == var2[i]])
         }
     }
-
-    ## print results
-    cat("%% Output requires \\usepackage{booktabs}.\n")
-    printtab_fac(stats, table = table, align = align, sep = sep,
-                 colnames = colnames)
-    invisible(stats)
+    add_options(stats, table = table, align = align, sep = sep,
+                colnames = colnames, class = "table.fac")
+    # invisible(stats)
 }
+
+
+
+################################################################################
+## Helper for latex.table.cont
+print.table.cont <- function(x,
+                             table = get_options(x, "table"),
+                             align = get_options(x, "align"),
+                             count = get_options(x, "count"),
+                             mean_sd = get_options(x, "mean_sd"),
+                             quantiles = get_options(x, "quantiles"),
+                             colnames = get_options(x, "colnames"), ...) {
+
+    tab <- x
+
+    ## if not all are TRUE subset results object
+    if (!all(count, mean_sd, quantiles)) {
+
+        ## if not any is TRUE (i.e. all are FALSE):
+        if (!any(count, mean_sd, quantiles)) {
+            stop("Nothing to compute. All quantities are set to FALSE.")
+        }
+        if (count == FALSE) {
+            tab$N <- NULL
+            tab$Missing <- NULL
+        }
+        if (mean_sd == FALSE) {
+            tab$Mean <- NULL
+            tab$SD <- NULL
+        }
+        if (quantiles == FALSE) {
+            tab$Min <- NULL
+            tab$Q1 <- NULL
+            tab$Median <- NULL
+            tab$Q3 <- NULL
+            tab$Max <- NULL
+        }
+        if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
+            tab$blank_1 <- NULL
+        }
+        if (mean_sd == FALSE || quantiles == FALSE) {
+            tab$blank_2 <- NULL
+        }
+    }
+
+    if (any(grepl("blank", names(tab)))) {
+        idx <- grep("blank", names(tab))
+        if (length(idx) == 1) {
+            rules <- paste("  \\cmidrule{2-", idx - 1, "}  ",
+                           "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
+                           sep = "")
+        } else {
+            rules <- paste("  \\cmidrule{2-", idx[1] - 1, "}  ",
+                           "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
+                           "\\cmidrule{", idx[2] + 1, "-", length(names(tab)), "}\n",
+                           sep = "")
+        }
+    } else {
+        rules <- paste("  \\cmidrule{2-", length(names(tab)), "}\n",
+                       sep = "")
+    }
+    if (is.null(align))
+        align <- paste("l",
+                       paste(rep("r", length(names(tab)) - 1), collapse = ""),
+                       sep = "")
+
+    ## Define column names
+    if (!is.null(colnames)) {
+        colNames <- names(tab)
+        ## blank doesn't need to be specified in colnames
+        if (sum(nms <- !grepl("blank", colNames)) != length(colnames))
+            stop(sQuote("colnames"), " has wrong length")
+        colNames[nms] <- colnames
+    } else {
+        colNames <- names(tab)
+        colNames[1] <- " "
+    }
+    colNames[grep("blank", colNames)] <- " "
+
+    ## start printing
+    cat("%% Output requires \\usepackage{booktabs}.\n")
+    cat("\\begin{", table,"}{", align, "} \n", sep ="")
+    cat("  \\toprule \n")
+
+    cat(paste(colNames, collapse = " & "), "\\\\ \n")
+    cat(rules)
+    if (table == "longtable")
+        cat("  \\endhead  \n")
+    tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
+    ## Convert to character strings
+    tab <- apply(tab, 2, function(x)
+                 ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
+    ## if tab accidentially drops to a vector
+    if (is.null(dim(tab)))
+        tab <- matrix(tab, nrow = 1)
+    out <- apply(tab, 1, function(x)
+                 cat(paste(x, collapse = " & "), " \\\\ \n"))
+    cat("  \\bottomrule \n")
+    cat("\\end{", table, "} \n\n", sep ="")
+}
+
 
 ################################################################################
 ## Helper for latex.table.fac
-printtab_fac <- function(tab, colnames = NULL,
-                         table = c("tabular", "longtable"),
-                         align = NULL, sep = TRUE) {
+print.table.fac <- function(x,
+                            table = get_options(x, "table"),
+                            align = get_options(x, "align"),
+                            sep = get_options(x, "sep"),
+                            colnames = get_options(x, "colnames"), ...) {
 
-    table <- match.arg(table)
+    tab <- x
 
     ## drop duplicted variable names
     tmp <- tab$variable
@@ -286,12 +289,11 @@ printtab_fac <- function(tab, colnames = NULL,
                        paste(rep("r", length(names(tab)) - 2), collapse = ""),
                        sep = "")
 
-    cat("\\begin{", table,"}{", align, "} \n", sep ="")
-    cat("  \\toprule \n")
+    ## Define column names
     if (!is.null(colnames)) {
         colNames <- names(tab)
         ## blank doesn't need to be specified in colnames
-        if (sum(nms <- colNames != "blank") != length(colnames))
+        if (sum(nms <- !grepl("blank", colNames)) != length(colnames))
             stop(sQuote("colnames"), " has wrong length")
         colNames[nms] <- colnames
     } else {
@@ -309,6 +311,9 @@ printtab_fac <- function(tab, colnames = NULL,
     colNames[grep("blank", colNames)] <- " "
 
     ## start printing
+    cat("%% Output requires \\usepackage{booktabs}.\n")
+    cat("\\begin{", table,"}{", align, "} \n", sep ="")
+    cat("  \\toprule \n")
     if (exists("header"))
         cat(header, " \n")
     cat(paste(colNames, collapse = " & "), "\\\\ \n")

@@ -15,11 +15,12 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
     x <- summary(object)
     xtTab <- as.data.frame(x$tTable)
     wchPval <- match("p-value", names(xtTab))
-    for (i in names(xtTab)[-wchPval]) {
-        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
-                             scientific = scientific, ...)
-    }
+
     if (!is.na(wchPval)) {
+        for (i in names(xtTab)[-wchPval]) {
+            xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
+                                 scientific = scientific, ...)
+        }
         r.digits <- 10
         num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
         if (!is.null(num[2]))
@@ -28,6 +29,10 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
                                         digits = digits, scientific = scientific,
                                         eps = smallest.pval, ...)
     } else {
+        for (i in names(xtTab)) {
+            xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
+                                 scientific = scientific, ...)
+        }
         warning("No p-value detected.")
     }
     row.names(xtTab) <- dimnames(x$tTable)[[1]]
@@ -42,11 +47,12 @@ summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
     x <- summary(object)
     xtTab <- as.data.frame(x@coefs)
     wchPval <- match("Pr(>|z|)", names(xtTab))
-    for (i in names(xtTab)[-wchPval]) {
-        xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
-                             scientific = scientific, ...)
-    }
+
     if (!is.na(wchPval)) {
+        for (i in names(xtTab)[-wchPval]) {
+            xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
+                                 scientific = scientific, ...)
+        }
         r.digits <- 10
         num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
         if (!is.null(num[2]))
@@ -55,6 +61,10 @@ summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
                                         digits = digits, scientific = scientific,
                                         eps = smallest.pval, ...)
     } else {
+        for (i in names(xtTab)) {
+            xtTab[, i] <- format(zapsmall(xtTab[, i]), digits = digits,
+                                 scientific = scientific, ...)
+        }
         warning("No p-value detected.")
     }
     row.names(xtTab) <- dimnames(x@coefs)[[1]]
