@@ -4,6 +4,7 @@
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 latex.table.cont <- function(data, variables = names(data),
+                             labels = NULL,
                              colnames = NULL, digits = 2,
                              table = c("tabular", "longtable"),
                              align = NULL,
@@ -12,6 +13,13 @@ latex.table.cont <- function(data, variables = names(data),
                              show.NAs = any(is.na(data[, variables]))) {
 
     table <- match.arg(table)
+    if (is.null(labels)) {
+        labels <- variables
+    } else {
+        if (length(variables) != length(labels))
+            stop(sQuote("variables"), " and ", sQuote("labels"),
+                 " must have the same length")
+    }
 
     ## get factors
     fac <- mySapply(data[, variables], is.factor)
@@ -33,9 +41,10 @@ latex.table.cont <- function(data, variables = names(data),
 
     ## subset variables to non-factors only
     variables <- variables[!fac]
+    labels <- labels[!fac]
 
     ## setup results object
-    sums <- data.frame(variable = variables, N=NA, Missing = NA, blank_1 = "",
+    sums <- data.frame(variable = labels, N=NA, Missing = NA, blank_1 = "",
                        Mean=NA, SD=NA, blank_2 = "",
                        Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA)
 
@@ -63,6 +72,7 @@ latex.table.cont <- function(data, variables = names(data),
     if (!show.NAs) {
         sums$Missing <- NULL
     }
+
     add_options(sums, table = table, align = align,
                 count = count, mean_sd = mean_sd, quantiles = quantiles,
                 colnames = colnames, class = "table.cont")
@@ -73,6 +83,7 @@ latex.table.cont <- function(data, variables = names(data),
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
 latex.table.fac <- function(data, variables = names(data),
+                            labels = NULL,
                             colnames = NULL, digits = 2,
                             table = c("tabular", "longtable"),
                             align = NULL, sep = TRUE, drop = TRUE,
@@ -80,7 +91,13 @@ latex.table.fac <- function(data, variables = names(data),
                             na.lab = "<Missing>") {
 
     table <- match.arg(table)
-
+    if (is.null(labels)) {
+        labels <- variables
+    } else {
+        if (length(variables) != length(labels))
+            stop(sQuote("variables"), " and ", sQuote("labels"),
+                 " must have the same length")
+    }
 
     ## get factors
     fac <- mySapply(data[, variables], is.factor)
@@ -99,6 +116,7 @@ latex.table.fac <- function(data, variables = names(data),
 
     ## subset variables to non-factors only
     variables <- variables[fac]
+    labels <- labels[fac]
 
     if (show.NAs) {
         ## convert NAs to factor levels
@@ -123,12 +141,15 @@ latex.table.fac <- function(data, variables = names(data),
 
     var2 <- unlist(sapply(1:length(variables),
                           function(i) rep(variables[i], each = n.levels[i])))
+    var_labels <- unlist(sapply(1:length(variables),
+                                function(i) rep(labels[i], each = n.levels[i])))
+
     ## get all levels
     lvls <- unlist(sapply(variables, function(x) levels(data[, x])))
     colnames(lvls) <- NULL
 
     ## setup results object
-    stats <- data.frame(variable = var2, Level = lvls, blank = "",
+    stats <- data.frame(variable = var_labels, Level = lvls, blank = "",
                         N = NA, blank_2 = "",
                         Fraction = NA, CumSum = NA, blank_3 = "",
                         Fraction_2 = NA, CumSum_2 = NA)
@@ -237,6 +258,8 @@ print.table.cont <- function(x,
 
     ## start printing
     cat("%% Output requires \\usepackage{booktabs}.\n")
+    if (table == "longtable")
+        cat("%% Output requires \\usepackage{longtable}.\n")
     cat("\\begin{", table,"}{", align, "} \n", sep ="")
     cat("  \\toprule \n")
 
@@ -312,6 +335,8 @@ print.table.fac <- function(x,
 
     ## start printing
     cat("%% Output requires \\usepackage{booktabs}.\n")
+    if (table == "longtable")
+        cat("%% Output requires \\usepackage{longtable}.\n")
     cat("\\begin{", table,"}{", align, "} \n", sep ="")
     cat("  \\toprule \n")
     if (exists("header"))

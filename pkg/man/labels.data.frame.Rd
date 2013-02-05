@@ -13,7 +13,7 @@
 }
 \usage{
 
-\method{labels}{data.frame}(object, which = NULL, ...)
+\method{labels}{data.frame}(object, which = NULL, abbreviate = FALSE, ...)
 
 ## assign labels
 labels(data, which = NULL) <- value
@@ -40,12 +40,25 @@ labels(data, which = NULL) <- value
     which is given, only the corresponding subset is labeled. Note that
     all other labels contain the variable name as label afterwards.
   }
+  \item{abbreviate}{
+    logical (default: \code{FALSE}). If \code{TRUE} variable labels are
+    abbreviated such that they remain unique. See
+    \code{\link{abbreviate}} for details. Further arguments to
+    \code{\link{abbreviate}} can be specified (see below).
+  }
   \item{\dots}{
-    further options. Currently not applicable.
+    further options passed to function \code{\link{abbreviate}} if argument
+    \code{abbreviate = TRUE}.
   }
 }
 \details{
-  %%  ~~ If necessary, more details than the description above ~~
+  One can set or extract labels from \code{\link{data.frame}} objects.
+  If no labels are specified \code{labels(data)} returns the column
+  names of the data frame.
+
+  Using \code{abbreviate = TRUE}, all labels are abbreviated to (at
+  least) 4 characters such that they are unique. Other minimal lengths
+  can specified by setting \code{minlength} (see examples below).
 }
 \value{
   A named vector of variable labels is returned, where the names are
@@ -60,11 +73,8 @@ labels(data, which = NULL) <- value
   contrary, the labels are dropped in this case. New labels are always
   attached at the end of the label vector, see examples below.
 }
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+  \code{\link{read.spss}} in package \pkg{foreign}
 }
 \examples{
 data <- data.frame(a = 1:10, b = 10:1, c = rep(1, 10))
@@ -91,6 +101,12 @@ labels(data2)    # no label for z
 labels(data2, which = "z") <- "new_label"
 labels(data2)
 ## Note: labels are always attached at the end of the vector
+
+## attach long labels to data
+labels(data) <- c("This is a long label", "This is another long label",
+                  "This also")
+labels(data)
+labels(data, abbreviate = TRUE, minlength = 10)
 }
 
 \keyword{methods}

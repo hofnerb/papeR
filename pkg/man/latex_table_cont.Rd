@@ -10,7 +10,8 @@
 }
 \usage{
 
-latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
+latex.table.cont(data, variables = names(data), labels = NULL,
+                 colnames = NULL, digits = 2,
                  table = c("tabular", "longtable"), align = NULL,
                  count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                  incl_outliers = TRUE, drop = TRUE,
@@ -34,6 +35,10 @@ latex.table.cont(data, variables = names(data), colnames = NULL, digits = 2,
   \item{variables}{
     (continuous) variables that should be included in the table. Per
     default, all non-factor variables of \code{data} are used.
+  }
+  \item{labels}{
+    labels for the variables. Per default, \code{variables} is used as
+    label.
   }
   \item{colnames}{
     a vector of character strings of length 9 (variable, N, standard

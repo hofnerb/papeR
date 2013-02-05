@@ -44,7 +44,7 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
 # Based on modified code from nlme:::print.summary.lme
 summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
                               smallest.pval = 0.001, ...){
-    x <- summary(object)
+    x <- lme4::summary(object)
     xtTab <- as.data.frame(x@coefs)
     wchPval <- match("Pr(>|z|)", names(xtTab))
 

@@ -3,18 +3,23 @@
 
 ################################################################################
 # Extract labels from data sets
-labels.data.frame <- function(object, which = NULL, ...){
-    if (is.null(which))
-        return(attr(object, "variable.labels"))
+labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
+    ## if no labels specified set temporarily names as labels
+    if (is.null(attr(object, "variable.labels")))
+        labels(object) <- names(object)
 
-    if (is.null(attr(object, "variable.labels"))) {
-        warning("No labels defined")
+    if (is.null(which)) {
+        RET <- attr(object, "variable.labels")
     } else {
         if (is.numeric(which) && any(which > length(attr(object, "variable.labels"))) ||
             is.character(which) && !all(which %in% names(attr(object, "variable.labels"))))
             stop("One cannot extract labels for non-existing variables.")
+        RET <- attr(object, "variable.labels")[which]
     }
-    return(attr(object, "variable.labels")[which])
+
+    if (abbreviate)
+        RET <- abbreviate(RET, ...)
+    return(RET)
 }
 
 ################################################################################

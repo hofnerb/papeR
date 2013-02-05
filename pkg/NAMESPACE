@@ -1,5 +1,5 @@
 importFrom(car, Anova)
-importFrom(lme4, summary)
+# importFrom(lme4, summary)
 
 export(latex.table.cont,
        latex.table.fac,
