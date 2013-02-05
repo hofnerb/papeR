@@ -10,10 +10,12 @@
 }
 \usage{
 
-latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
-                table = c("tabular", "longtable"), align = NULL, sep = TRUE,
-                drop = TRUE,
-                show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
+latex.table.fac(data, variables = names(data), labels = NULL,
+                colnames = NULL, digits = 2,
+                table = c("tabular", "longtable"), align = NULL,
+                sep = TRUE, drop = TRUE,
+                show.NAs = any(is.na(data[, variables])),
+                na.lab = "<Missing>")
 
 \method{print}{table.fac}(x,
       table = get_options(x, "table"),
@@ -30,6 +32,10 @@ latex.table.fac(data, variables = names(data), colnames = NULL, digits = 2,
   \item{variables}{
     (factor) variables that should be included in the table. Per
     default, all factor variables of \code{data} are used.
+  }
+  \item{labels}{
+    labels for the variables. Per default, \code{variables} is used as
+    label.
   }
   \item{colnames}{
     a vector of character strings of length 4 (variable, label, N, and
