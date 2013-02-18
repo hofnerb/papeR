@@ -10,18 +10,22 @@
 }
 \usage{
 
-latex.table.fac(data, variables = names(data), labels = NULL,
-                colnames = NULL, digits = 2,
-                table = c("tabular", "longtable"), align = NULL,
+latex.table.fac(data, variables = names(data), labels = NULL, colnames = NULL,
+                digits = 2, table = c("tabular", "longtable"), align = NULL,
+                caption = NULL, label = NULL, floating = FALSE, center = TRUE,
                 sep = TRUE, drop = TRUE,
-                show.NAs = any(is.na(data[, variables])),
-                na.lab = "<Missing>")
+                show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
 
 \method{print}{table.fac}(x,
+      colnames = get_options(x, "colnames"),
       table = get_options(x, "table"),
       align = get_options(x, "align"),
+      caption = get_options(x, "caption"),
+      label = get_options(x, "label"),
+      floating = get_options(x, "floating"),
+      center = get_options(x, "center"),
       sep = get_options(x, "sep"),
-      colnames = get_options(x, "colnames"), ...)
+      ...)
 
 }
 
@@ -53,6 +57,23 @@ latex.table.fac(data, variables = names(data), labels = NULL,
     character string. LaTeX alignment of table rows, per default
     \code{"llr...r"}, where \code{"r"} is repeated \code{ncol - 2} times.
   }
+  \item{caption}{
+    (optional) character string. Caption of LaTeX table. Note that
+    captions are suported for all tables (see also details below).
+  }
+  \item{label}{
+    (optional) character string. Label of LaTeX table specified as
+    \code{\\label{"label"}}.
+  }
+  \item{floating}{
+    logical (default: FALSE). Determines wether the table is a floating
+    object (i.e. use a \code{table} environment or not). Note that a
+    \code{longtable} cannot be a floating object but captions can be
+    used.
+  }
+  \item{center}{
+    logical (default: TRUE). Determines if table should be centered.
+  }
   \item{sep}{
     logical (default: TRUE). Determines wether separators (lines) should
     be added after each factor variable.
@@ -80,6 +101,11 @@ latex.table.fac(data, variables = names(data), labels = NULL,
 }
 \details{
   The output requires \code{\\usepackage{booktabs}} in the LaTeX file.
+
+  Captions can be added to both, \code{longtable}s and \code{tabular}s.
+  In the latter case, captions are also suported if the table is no
+  floating object. In this case, the LaTeX package \code{capt-of} is
+  required.
 }
 \value{
   A special \code{data.frame} with additional class \code{table.fac}

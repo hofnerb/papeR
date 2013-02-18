@@ -6,8 +6,9 @@
 latex.table.cont <- function(data, variables = names(data),
                              labels = NULL,
                              colnames = NULL, digits = 2,
-                             table = c("tabular", "longtable"),
-                             align = NULL,
+                             table = c("tabular", "longtable"), align = NULL,
+                             caption = NULL, label = NULL, floating = FALSE,
+                             center = TRUE,
                              count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                              incl_outliers = TRUE, drop = TRUE,
                              show.NAs = any(is.na(data[, variables]))) {
@@ -73,7 +74,8 @@ latex.table.cont <- function(data, variables = names(data),
         sums$Missing <- NULL
     }
 
-    add_options(sums, table = table, align = align,
+    add_options(sums, table = table, align = align, caption = caption,
+                label = label, floating = floating, center = center,
                 count = count, mean_sd = mean_sd, quantiles = quantiles,
                 colnames = colnames, class = "table.cont")
     # invisible(sums)
@@ -86,7 +88,10 @@ latex.table.fac <- function(data, variables = names(data),
                             labels = NULL,
                             colnames = NULL, digits = 2,
                             table = c("tabular", "longtable"),
-                            align = NULL, sep = TRUE, drop = TRUE,
+                            align = NULL,
+                            caption = NULL, label = NULL, floating = FALSE,
+                            center = TRUE,
+                            sep = TRUE, drop = TRUE,
                             show.NAs = any(is.na(data[, variables])),
                             na.lab = "<Missing>") {
 
@@ -173,8 +178,9 @@ latex.table.fac <- function(data, variables = names(data),
             stats$CumSum_2[i] <- sum(stats$Fraction_2[1:i][var2[1:i] == var2[i]])
         }
     }
-    add_options(stats, table = table, align = align, sep = sep,
-                colnames = colnames, class = "table.fac")
+    add_options(stats, table = table, align = align, caption = caption,
+                label = label, floating = floating, center = center,
+                sep = sep, colnames = colnames, class = "table.fac")
     # invisible(stats)
 }
 
@@ -183,15 +189,19 @@ latex.table.fac <- function(data, variables = names(data),
 ################################################################################
 ## Helper for latex.table.cont
 print.table.cont <- function(x,
+                             colnames = get_options(x, "colnames"),
                              table = get_options(x, "table"),
                              align = get_options(x, "align"),
+                             caption = get_options(x, "caption"),
+                             label = get_options(x, "label"),
+                             floating = get_options(x, "floating"),
+                             center = get_options(x, "center"),
                              count = get_options(x, "count"),
                              mean_sd = get_options(x, "mean_sd"),
                              quantiles = get_options(x, "quantiles"),
-                             colnames = get_options(x, "colnames"), ...) {
+                             ...) {
 
     tab <- x
-
     ## if not all are TRUE subset results object
     if (!all(count, mean_sd, quantiles)) {
 
@@ -257,40 +267,27 @@ print.table.cont <- function(x,
     colNames[grep("blank", colNames)] <- " "
 
     ## start printing
-    cat("%% Output requires \\usepackage{booktabs}.\n")
-    if (table == "longtable")
-        cat("%% Output requires \\usepackage{longtable}.\n")
-    cat("\\begin{", table,"}{", align, "} \n", sep ="")
-    cat("  \\toprule \n")
-
-    cat(paste(colNames, collapse = " & "), "\\\\ \n")
-    cat(rules)
-    if (table == "longtable")
-        cat("  \\endhead  \n")
-    tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
-    ## Convert to character strings
-    tab <- apply(tab, 2, function(x)
-                 ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
-    ## if tab accidentially drops to a vector
-    if (is.null(dim(tab)))
-        tab <- matrix(tab, nrow = 1)
-    out <- apply(tab, 1, function(x)
-                 cat(paste(x, collapse = " & "), " \\\\ \n"))
-    cat("  \\bottomrule \n")
-    cat("\\end{", table, "} \n\n", sep ="")
+    print_table(tab = tab, table = table, floating = floating,
+                caption = caption, label = label, center = center,
+                align = align, colNames = colNames, rules = rules,
+                sep = FALSE, header = NULL)
 }
 
 
 ################################################################################
 ## Helper for latex.table.fac
 print.table.fac <- function(x,
+                            colnames = get_options(x, "colnames"),
                             table = get_options(x, "table"),
                             align = get_options(x, "align"),
+                            caption = get_options(x, "caption"),
+                            label = get_options(x, "label"),
+                            floating = get_options(x, "floating"),
+                            center = get_options(x, "center"),
                             sep = get_options(x, "sep"),
-                            colnames = get_options(x, "colnames"), ...) {
+                            ...) {
 
     tab <- x
-
     ## drop duplicted variable names
     tmp <- tab$variable
     tmp <- as.character(tmp)
@@ -333,18 +330,72 @@ print.table.fac <- function(x,
     }
     colNames[grep("blank", colNames)] <- " "
 
+    if (!exists("header"))
+        header <- NULL
     ## start printing
+    print_table(tab = tab, table = table, floating = floating,
+                caption = caption, label = label, center = center,
+                align = align, colNames = colNames, rules = rules,
+                sep = sep, header = header)
+}
+
+
+print_table <- function(tab, table, floating, caption, label,
+                        center, align, colNames, rules, sep, header) {
     cat("%% Output requires \\usepackage{booktabs}.\n")
     if (table == "longtable")
         cat("%% Output requires \\usepackage{longtable}.\n")
-    cat("\\begin{", table,"}{", align, "} \n", sep ="")
+    if (floating) {
+        if (table == "longtable") {
+            warning(sQuote("floating = TRUE"), " cannot be used with ",
+                    dQuote("longtable"))
+        } else {
+            cat("\\begin{table}")
+            if (!is.null(caption))
+                cat("  \\caption{", caption, "}\n\n")
+            if (!is.null(label))
+                cat("  \\label{", label, "}\n\n")
+            if (center)
+                cat("\\begin{center}\n")
+        }
+    } else {
+        if (!is.null(caption)) {
+            if (table == "longtable") {
+                if (center)
+                    cat("\\begin{center}\n")
+                cat("\\begin{", table,"}{", align, "} \n", sep ="")
+                cat("  \\caption{", caption, "}\n")
+                if (!is.null(label))
+                    cat("  \\label{", label, "}\\\\[-1em]\n")
+            } else {
+                cat("%% Output requires \\usepackage{capt-of}.\n")
+                ## use end minipage to group caption and table
+                cat("\\begin{minipage}{\\linewidth}\n")
+                if (center)
+                    cat("\\begin{center}\n")
+                cat("  \\captionof{table}{", caption, "}\n")
+                if (!is.null(label))
+                    cat("  \\label{", label, "}\n")
+                if (center)
+                    cat("  \\vspace*{-1em}\n")
+                cat("\\begin{", table,"}{", align, "} \n", sep ="")
+            }
+        } else {
+            if (center)
+                cat("\\begin{center}\n")
+            cat("\\begin{", table,"}{", align, "} \n", sep ="")
+        }
+    }
     cat("  \\toprule \n")
-    if (exists("header"))
+
+    if (!is.null(header))
         cat(header, " \n")
+
     cat(paste(colNames, collapse = " & "), "\\\\ \n")
     cat(rules)
     if (table == "longtable")
         cat("  \\endhead  \n")
+
     tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
     ## if separators should be added after each factor variable:
     if (sep) {
@@ -356,10 +407,19 @@ print.table.fac <- function(x,
     ## if tab accidentially drops to a vector
     if (is.null(dim(tab)))
         tab <- matrix(tab, nrow = 1)
+
     ## Replace NA with " "
     tab[is.na(tab)] <- ""
     out <- apply(tab, 1, function(x)
                  cat(paste(x, collapse = " & "), " \\\\ \n"))
     cat("  \\bottomrule \n")
+
     cat("\\end{", table, "} \n\n", sep ="")
+    if (center)
+        cat("\\end{center}\n")
+    if (floating && table != "longtable")
+        cat("\\end{table}\n\n")
+    ## if captionof is used end minipage
+    if (!floating && table != "longtable" && !is.null(caption))
+        cat("\\end{minipage}\n")
 }

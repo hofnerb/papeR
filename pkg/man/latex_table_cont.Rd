@@ -10,20 +10,24 @@
 }
 \usage{
 
-latex.table.cont(data, variables = names(data), labels = NULL,
-                 colnames = NULL, digits = 2,
-                 table = c("tabular", "longtable"), align = NULL,
+latex.table.cont(data, variables = names(data), labels = NULL, colnames = NULL,
+                 digits = 2, table = c("tabular", "longtable"), align = NULL,
+                 caption = NULL, label = NULL, floating = FALSE, center = TRUE,
                  count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                  incl_outliers = TRUE, drop = TRUE,
                  show.NAs = any(is.na(data[, variables])))
 
 \method{print}{table.cont}(x,
+      colnames = get_options(x, "colnames"),
       table = get_options(x, "table"),
       align = get_options(x, "align"),
+      caption = get_options(x, "caption"),
+      label = get_options(x, "label"),
+      floating = get_options(x, "floating"),
+      center = get_options(x, "center"),
       count = get_options(x, "count"),
       mean_sd = get_options(x, "mean_sd"),
       quantiles = get_options(x, "quantiles"),
-      colnames = get_options(x, "colnames"),
       ...)
 
 }
@@ -58,6 +62,23 @@ latex.table.cont(data, variables = names(data), labels = NULL,
   \item{align}{
     character string. LaTeX alignment of table rows, per default
     \code{"lr...r"}, where \code{"r"} is repeated \code{ncol - 1} times.
+  }
+  \item{caption}{
+    (optional) character string. Caption of LaTeX table. Note that
+    captions are suported for all tables (see also details below).
+  }
+  \item{label}{
+    (optional) character string. Label of LaTeX table specified as
+    \code{\\label{"label"}}.
+  }
+  \item{floating}{
+    logical (default: FALSE). Determines wether the table is a floating
+    object (i.e. use a \code{table} environment or not). Note that a
+    \code{longtable} cannot be a floating object but captions can be
+    used.
+  }
+  \item{center}{
+    logical (default: TRUE). Determines if table should be centered.
   }
   \item{count}{
     (logical) indicator if number of complete cases ("n") should be
@@ -96,6 +117,11 @@ latex.table.cont(data, variables = names(data), labels = NULL,
 }
 \details{
   The output requires \code{\\usepackage{booktabs}} in the LaTeX file.
+
+  Captions can be added to both, \code{longtable}s and \code{tabular}s.
+  In the latter case, captions are also suported if the table is no
+  floating object. In this case, the LaTeX package \code{capt-of} is
+  required.
 }
 \value{
   A special \code{data.frame} with additional class \code{table.cont}
