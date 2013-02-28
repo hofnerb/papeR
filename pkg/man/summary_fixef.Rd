@@ -10,10 +10,10 @@
 }
 \usage{
 \method{summary.fixef}{lme}(object, digits = NULL, scientific = FALSE,
-              smallest.pval = 0.001,...)
+              smallest.pval = 0.001, ci = TRUE, ...)
 
 \method{summary.fixef}{mer}(object, digits = NULL, scientific = FALSE,
-              smallest.pval = 0.001,...)
+              smallest.pval = 0.001, ci = TRUE, ...)
 }
 \arguments{
   \item{object}{
@@ -33,6 +33,7 @@
     This argument is passed to the \code{eps} argument of
     \code{\link{format.pval}}. See there for details.
   }
+  \item{ci}{logical. Should confidence intervals be added?}
   \item{\dots}{
     further options passed to \code{\link{format}} and
     \code{\link{format.pval}}.
