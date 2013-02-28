@@ -70,3 +70,75 @@ summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
     row.names(xtTab) <- dimnames(x@coefs)[[1]]
     xtTab
 }
+
+################################################################################
+
+#' Confidence intervals for mixed models
+#'
+#' Compute confidence intervals for mixed models from packages \pkg{nlme} and
+#' \pkg{lme4}
+#'
+#' @param object Model of class \code{lme} or \code{mer}.
+#' @param parm Parameters to be included in the confidence interval. See
+#' \code{\link{confint.default}} for details.
+#' @param level the confidence level.
+#' @param ... Additional arguments. Currently not used.
+#' @return Matrix with confidence intervalls.
+#' @author Benjamin Hofner
+#'
+#' @rdname confint
+#'
+#' @method confint lme
+#' @S3method confint lme
+confint.lme <- function (object, parm, level = 0.95, ...) {
+    cf <- fixef(object)
+    pnames <- names(cf)
+    if (missing(parm))
+        parm <- pnames
+    else if (is.numeric(parm))
+        parm <- pnames[parm]
+    df <- summary(object)$tTable[parm, "DF"]
+    a <- (1 - level)/2
+    a <- c(a, 1 - a)
+    pct <- stats:::format.perc(a, 3)
+    fac_low <- qt(a[1], df)
+    fac_high <- qt(a[2], df)
+    fac <- cbind(fac_low, fac_high)
+    ci <- array(NA, dim = c(length(parm), 2L),
+                dimnames = list(parm, pct))
+    ses <- sqrt(diag(vcov(object)))[parm]
+    ci[] <- cf[parm] + ses * fac
+    ci
+}
+
+#' @rdname confint
+#'
+#' @method confint mer
+#' @S3method confint mer
+confint.mer <- function (object, parm, level = 0.95, ...) {
+
+    tab <- as.data.frame(summary(object)@coefs)
+    wchZval <- match("z value", names(tab))
+    if (is.na(wchZval))
+        stop("Currently only ", sQuote("mer"), " models with ",
+             sQuote("z values"), " are supported.\n",
+             "Try function ci() from package gmodels instead.")
+
+    cf <- fixef(object)
+    pnames <- names(cf)
+    if (missing(parm))
+        parm <- pnames
+    else if (is.numeric(parm))
+        parm <- pnames[parm]
+    a <- (1 - level)/2
+    a <- c(a, 1 - a)
+    pct <- stats:::format.perc(a, 3)
+    fac <- qnorm(a)
+    ci <- array(NA, dim = c(length(parm), 2L),
+                dimnames = list(parm, pct))
+    ses <- sqrt(diag(vcov(object)))
+    names(ses) <- pnames
+    ses <- ses[parm]
+    ci[] <- cf[parm] + ses %o% fac
+    ci
+}
