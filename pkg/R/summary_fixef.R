@@ -11,9 +11,14 @@ summary.fixef <- function(object, ...)
 # Extract Fixed Effects from lme Objects (package nlme)
 # Based on modified code from nlme:::print.summary.lme
 summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
-                              smallest.pval = 0.001, ...){
+                              smallest.pval = 0.001, ci = TRUE, ...){
     x <- summary(object)
     xtTab <- as.data.frame(x$tTable)
+    if (ci) {
+        xtTab <- cbind(xtTab, confint(object))
+        nc <- ncol(xtTab)
+        xtTab <- xtTab[, c(1, (nc - 1):nc, 2:(nc - 2))]
+    }
     wchPval <- match("p-value", names(xtTab))
 
     if (!is.na(wchPval)) {
@@ -35,6 +40,7 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
         }
         warning("No p-value detected.")
     }
+
     row.names(xtTab) <- dimnames(x$tTable)[[1]]
     xtTab
 }
@@ -43,9 +49,14 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
 # Extract Fixed Effects from mer Objects (package lme4)
 # Based on modified code from nlme:::print.summary.lme
 summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
-                              smallest.pval = 0.001, ...){
+                              smallest.pval = 0.001, ci = TRUE, ...){
     x <- lme4::summary(object)
     xtTab <- as.data.frame(x@coefs)
+    if (ci) {
+        xtTab <- cbind(xtTab, confint(object))
+        nc <- ncol(xtTab)
+        xtTab <- xtTab[, c(1, (nc - 1):nc, 2:(nc - 2))]
+    }
     wchPval <- match("Pr(>|z|)", names(xtTab))
 
     if (!is.na(wchPval)) {
@@ -67,6 +78,7 @@ summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
         }
         warning("No p-value detected.")
     }
+
     row.names(xtTab) <- dimnames(x@coefs)[[1]]
     xtTab
 }
@@ -117,7 +129,7 @@ confint.lme <- function (object, parm, level = 0.95, ...) {
 #' @S3method confint mer
 confint.mer <- function (object, parm, level = 0.95, ...) {
 
-    tab <- as.data.frame(summary(object)@coefs)
+    tab <- as.data.frame(lme4::summary(object)@coefs)
     wchZval <- match("z value", names(tab))
     if (is.na(wchZval))
         stop("Currently only ", sQuote("mer"), " models with ",
@@ -136,7 +148,7 @@ confint.mer <- function (object, parm, level = 0.95, ...) {
     fac <- qnorm(a)
     ci <- array(NA, dim = c(length(parm), 2L),
                 dimnames = list(parm, pct))
-    ses <- sqrt(diag(vcov(object)))
+    ses <- sqrt(diag(as.matrix(vcov(object))))
     names(ses) <- pnames
     ses <- ses[parm]
     ci[] <- cf[parm] + ses %o% fac
