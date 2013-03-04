@@ -2,6 +2,7 @@ importFrom(car, Anova)
 # importFrom(lme4, summary)
 
 export(get_options,
+       labels.data.frame,
        latex.table.cont,
        latex.table.fac,
        print.table.cont,

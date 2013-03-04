@@ -28,7 +28,7 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
 
     if (is.null(which)) {
         if (!is.null(value) && ncol(data) != length(value))
-            stop("You must supply a label for each column of the data set\n",
+            stop("One must supply a label for each column of the data set\n",
                  "or use argument ", sQuote("which"))
         attr(data, "variable.labels") <- value
         ## set label names to variable names
@@ -46,13 +46,20 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
 
     if (is.null(value))
         stop(sQuote("NULL"), " cannot be assigned in combination with ", sQuote("which"))
-    if (is.numeric(which) && any(which > ncol(data)) ||
-        is.character(which) && !all(which %in% colnames(data)))
+    if (is.numeric(which) && any(which > ncol(data)))
         stop("One  cannot supply labels for none-existing variables")
-    if (length(which) != length(value))
-        stop("You must supply a label for each selected column of the data set.")
+    if (is.character(which) && !all(which %in% colnames(data))) {
+        txt <- paste("One  cannot supply labels for none-existing variables\n",
+                     "  Variables not found in data set:\n\t",
+                     paste(which[!(which %in% colnames(data))],
+                           collapse = "\n\t"))
+        stop(txt)
+    }
 
-    attr(data, "variable.labels")[which] <- value
+    if (length(which) != length(value))
+        stop("One must supply a label for each selected column of the data set.")
+    ## only set values which are not NA
+    attr(data, "variable.labels")[which][!is.na(value)] <- value[!is.na(value)]
     return(data)
 }
 
