@@ -10,11 +10,11 @@
 }
 \usage{
 
-latex.table.cont(data, variables = names(data), labels = NULL, colnames = NULL,
-                 digits = 2, table = c("tabular", "longtable"), align = NULL,
-                 caption = NULL, label = NULL, floating = FALSE, center = TRUE,
-                 count = TRUE, mean_sd = TRUE, quantiles = TRUE,
-                 incl_outliers = TRUE, drop = TRUE,
+latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
+                 colnames = NULL, digits = 2, table = c("tabular", "longtable"),
+                 align = NULL, caption = NULL, label = NULL, floating = FALSE,
+                 center = TRUE, sep = !is.null(group), count = TRUE, mean_sd =
+                 TRUE, quantiles = TRUE, incl_outliers = TRUE, drop = TRUE,
                  show.NAs = any(is.na(data[, variables])))
 
 \method{print}{table.cont}(x,
@@ -25,6 +25,7 @@ latex.table.cont(data, variables = names(data), labels = NULL, colnames = NULL,
       label = get_options(x, "label"),
       floating = get_options(x, "floating"),
       center = get_options(x, "center"),
+      sep = get_options(x, "sep"),
       count = get_options(x, "count"),
       mean_sd = get_options(x, "mean_sd"),
       quantiles = get_options(x, "quantiles"),
@@ -37,12 +38,17 @@ latex.table.cont(data, variables = names(data), labels = NULL, colnames = NULL,
     data set to be used
   }
   \item{variables}{
-    (continuous) variables that should be included in the table. Per
-    default, all non-factor variables of \code{data} are used.
+    character vector defining (continuous) variables that should be
+    included in the table. Per default, all non-factor variables of
+    \code{data} are used.
   }
   \item{labels}{
     labels for the variables. Per default, \code{variables} is used as
     label.
+  }
+  \item{group}{
+    character specifying a grouping factor. Per default no grouping is
+    applied.
   }
   \item{colnames}{
     a vector of character strings of length 9 (variable, N, standard
@@ -79,6 +85,10 @@ latex.table.cont(data, variables = names(data), labels = NULL, colnames = NULL,
   }
   \item{center}{
     logical (default: TRUE). Determines if table should be centered.
+  }
+  \item{sep}{
+    logical (default: TRUE if grouping specified, FALSE otherwise).
+    Determines wether separators (lines) should be added after each variable.
   }
   \item{count}{
     (logical) indicator if number of complete cases ("n") should be

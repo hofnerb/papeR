@@ -4,11 +4,11 @@
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 latex.table.cont <- function(data, variables = names(data),
-                             labels = NULL,
+                             labels = NULL, group = NULL,
                              colnames = NULL, digits = 2,
                              table = c("tabular", "longtable"), align = NULL,
                              caption = NULL, label = NULL, floating = FALSE,
-                             center = TRUE,
+                             center = TRUE, sep = !is.null(group),
                              count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                              incl_outliers = TRUE, drop = TRUE,
                              show.NAs = any(is.na(data[, variables]))) {
@@ -22,45 +22,70 @@ latex.table.cont <- function(data, variables = names(data),
                  " must have the same length")
     }
 
-    ## get factors
-    fac <- mySapply(data[, variables], is.factor)
+    if (!is.null(group)) {
+        if(!is.factor(data[, group]))
+            stop(sQuote("group"), " must be a factor variable")
+        if (group %in% variables) {
+            idx <- variables != group
+            variables <- variables[idx]
+            labels <- labels[idx]
+        }
+        group_var <- data[, group]
+    }
+    ## get numerical variables
+    num <- mySapply(data[, variables], is.numeric)
     ## drop missings
     if (drop) {
         compl.missing <- mySapply(data[, variables], function(x) all(is.na(x)))
-        fac <- fac | compl.missing
+        num <- num & !compl.missing
     }
 
     ## if not any is TRUE (i.e. all are FALSE):
     if (!any(count, mean_sd, quantiles))
         stop("Nothing to compute. All quantities are set to FALSE.")
     ## if all variables are factors:
-    if (all(fac))
-        stop("All variables are factors. Nothing to compute.")
+    if (all(!num))
+        stop("None of the variables is numeric or all variables are missing. Nothing to compute.")
     ## if factors are dropped:
-    if (any(fac))
+    if (any(!num))
         warning("Factors are dropped from the summary")
 
     ## subset variables to non-factors only
-    variables <- variables[!fac]
-    labels <- labels[!fac]
+    variables <- variables[num]
+    labels <- labels[num]
 
     ## setup results object
-    sums <- data.frame(variable = labels, N=NA, Missing = NA, blank_1 = "",
+    sums <- data.frame(variable = labels, group = NA, blank = "",
+                       N=NA, Missing = NA, blank_1 = "",
                        Mean=NA, SD=NA, blank_2 = "",
-                       Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA)
+                       Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA, var = variables,
+                       stringsAsFactors = FALSE)
 
+    if (!is.null(group)) {
+        sums <- sums[rep(1:nrow(sums), each = nlevels(group_var)), ]
+        sums$group <- levels(group_var)
+    } else {
+        ## drop group variable
+        sums$group <- NULL
+        sums$blank <- NULL
+    }
+
+    myData <- data
     ## compute statistics
     for (i in 1:nrow(sums)){
-        sums$N[i] <- sum(!is.na(data[, variables[i]]))
-        sums$Missing[i] <- sum(is.na(data[, variables[i]]))
-        sums$Mean[i] <- round(mean(data[, variables[i]], na.rm=TRUE),
+        if (!is.null(group)) {
+            myData <- data[group_var == sums$group[i], ]
+        }
+        sums$N[i] <- sum(!is.na(myData[, sums$var[i]]))
+        sums$Missing[i] <- sum(is.na(myData[, sums$var[i]]))
+        sums$Mean[i] <- round(mean(myData[, sums$var[i]], na.rm=TRUE),
                               digits = digits)
-        sums$SD[i] <- round(sd(data[, variables[i]],
+        sums$SD[i] <- round(sd(myData[, sums$var[i]],
                                na.rm=TRUE), digits = digits)
         if (incl_outliers) {
-            Q <- round(fivenum(data[, variables[i]]), digits = digits)
+            Q <- round(fivenum(myData[, sums$var[i]]), digits = digits)
         } else {
-            Q <- round(c(boxplot(data[, variables[i]], plot = FALSE)$stats),
+            Q <- round(c(boxplot(myData[, sums$var[i]], plot = FALSE)$stats),
                        digits = digits)
         }
         sums$Min[i] <- Q[1]
@@ -70,22 +95,25 @@ latex.table.cont <- function(data, variables = names(data),
         sums$Max[i] <- Q[5]
     }
 
+    ## remove superfluous variables
+    sums$var <- NULL
     if (!show.NAs) {
         sums$Missing <- NULL
     }
+    if (!is.null(group)) {
+        names(sums)[names(sums) == "group"] <- labels(data, group)
+    }
 
     add_options(sums, table = table, align = align, caption = caption,
-                label = label, floating = floating, center = center,
+                label = label, floating = floating, center = center, sep = sep,
                 count = count, mean_sd = mean_sd, quantiles = quantiles,
                 colnames = colnames, class = "table.cont")
-    # invisible(sums)
 }
-
 
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
 latex.table.fac <- function(data, variables = names(data),
-                            labels = NULL,
+                            labels = NULL, group = NULL,
                             colnames = NULL, digits = 2,
                             table = c("tabular", "longtable"),
                             align = NULL,
@@ -94,6 +122,33 @@ latex.table.fac <- function(data, variables = names(data),
                             sep = TRUE, drop = TRUE,
                             show.NAs = any(is.na(data[, variables])),
                             na.lab = "<Missing>") {
+
+    if (!is.null(group)) {
+        if(!is.factor(data[, group]))
+            stop(sQuote("group"), " must be a factor variable")
+        if (group %in% variables) {
+            idx <- variables != group
+            variables <- variables[idx]
+            labels <- labels[idx]
+        }
+        group_var <- data[, group]
+
+        cl <- match.call()
+        cl[["group"]] <- NULL
+        print_single_tabs <- function(level, data, grp_var) {
+            dat <- data[grp_var == level, ]
+            cl[["data"]] <- dat
+            cl[["caption"]] <- paste(caption, " (", group , ": ", level, ")",
+                                     sep ="")
+            if (!is.null(label))
+                cl[["label"]] <- paste(label, level, sep = "_")
+            eval(cl)
+        }
+        res <- lapply(levels(group_var), print_single_tabs,
+                      data = data, grp_var = group_var)
+        class(res) <- "table.list"
+        return(res)
+    }
 
     table <- match.arg(table)
     if (is.null(labels)) {
@@ -157,7 +212,8 @@ latex.table.fac <- function(data, variables = names(data),
     stats <- data.frame(variable = var_labels, Level = lvls, blank = "",
                         N = NA, blank_2 = "",
                         Fraction = NA, CumSum = NA, blank_3 = "",
-                        Fraction_2 = NA, CumSum_2 = NA)
+                        Fraction_2 = NA, CumSum_2 = NA,
+                        stringsAsFactors = FALSE)
     if (!show.NAs) {
             stats$Fraction_2 <- NULL
             stats$CumSum_2 <- NULL
@@ -181,10 +237,7 @@ latex.table.fac <- function(data, variables = names(data),
     add_options(stats, table = table, align = align, caption = caption,
                 label = label, floating = floating, center = center,
                 sep = sep, colnames = colnames, class = "table.fac")
-    # invisible(stats)
 }
-
-
 
 ################################################################################
 ## Helper for latex.table.cont
@@ -196,12 +249,18 @@ print.table.cont <- function(x,
                              label = get_options(x, "label"),
                              floating = get_options(x, "floating"),
                              center = get_options(x, "center"),
+                             sep = get_options(x, "sep"),
                              count = get_options(x, "count"),
                              mean_sd = get_options(x, "mean_sd"),
                              quantiles = get_options(x, "quantiles"),
                              ...) {
 
     tab <- x
+    ## drop duplicted variable names
+    tmp <- tab$variable
+    tmp[duplicated(tmp)] <- ""
+    tab$variable <- tmp
+
     ## if not all are TRUE subset results object
     if (!all(count, mean_sd, quantiles)) {
 
@@ -232,20 +291,25 @@ print.table.cont <- function(x,
         }
     }
 
-    if (any(grepl("blank", names(tab)))) {
-        idx <- grep("blank", names(tab))
+    if (any(names(tab) == "blank")) {
+        start <- which(names(tab) == "blank") + 1
+    } else {
+        start <- 2
+    }
+    if (any(grepl("blank_", names(tab)))) {
+        idx <- grep("blank_", names(tab))
         if (length(idx) == 1) {
-            rules <- paste("  \\cmidrule{2-", idx - 1, "}  ",
+            rules <- paste("  \\cmidrule{", start, "-", idx - 1, "}  ",
                            "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
                            sep = "")
         } else {
-            rules <- paste("  \\cmidrule{2-", idx[1] - 1, "}  ",
+            rules <- paste("  \\cmidrule{", start, "-", idx[1] - 1, "}  ",
                            "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
                            "\\cmidrule{", idx[2] + 1, "-", length(names(tab)), "}\n",
                            sep = "")
         }
     } else {
-        rules <- paste("  \\cmidrule{2-", length(names(tab)), "}\n",
+        rules <- paste("  \\cmidrule{", start, "-", length(names(tab)), "}\n",
                        sep = "")
     }
     if (is.null(align))
@@ -268,9 +332,9 @@ print.table.cont <- function(x,
 
     ## start printing
     print_table(tab = tab, table = table, floating = floating,
-                caption = caption, label = label, center = center,
+                caption = caption, label = label, center = center, sep = sep,
                 align = align, colNames = colNames, rules = rules,
-                sep = FALSE, header = NULL)
+                header = NULL)
 }
 
 
@@ -290,7 +354,6 @@ print.table.fac <- function(x,
     tab <- x
     ## drop duplicted variable names
     tmp <- tab$variable
-    tmp <- as.character(tmp)
     tmp[duplicated(tmp)] <- ""
     tab$variable <- tmp
 
@@ -366,7 +429,8 @@ print_table <- function(tab, table, floating, caption, label,
                 cat("\\begin{", table,"}{", align, "} \n", sep ="")
                 cat("  \\caption{", caption, "}\n")
                 if (!is.null(label))
-                    cat("  \\label{", label, "}\\\\[-1em]\n")
+                    cat("  \\label{", label, "}\n")
+                cat("\\\\[-1em]\n")
             } else {
                 cat("%% Output requires \\usepackage{capt-of}.\n")
                 ## use end minipage to group caption and table
@@ -422,4 +486,8 @@ print_table <- function(tab, table, floating, caption, label,
     ## if captionof is used end minipage
     if (!floating && table != "longtable" && !is.null(caption))
         cat("\\end{minipage}\n")
+}
+
+print.table.list <- function(x, ...) {
+    lapply(x, print)
 }
