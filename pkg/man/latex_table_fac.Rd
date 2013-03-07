@@ -10,10 +10,10 @@
 }
 \usage{
 
-latex.table.fac(data, variables = names(data), labels = NULL, colnames = NULL,
-                digits = 2, table = c("tabular", "longtable"), align = NULL,
-                caption = NULL, label = NULL, floating = FALSE, center = TRUE,
-                sep = TRUE, drop = TRUE,
+latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
+                colnames = NULL, digits = 2, table = c("tabular", "longtable"),
+                align = NULL, caption = NULL, label = NULL, floating = FALSE,
+                center = TRUE, sep = TRUE, drop = TRUE,
                 show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
 
 \method{print}{table.fac}(x,
@@ -34,12 +34,17 @@ latex.table.fac(data, variables = names(data), labels = NULL, colnames = NULL,
     data set to be used
   }
   \item{variables}{
-    (factor) variables that should be included in the table. Per
-    default, all factor variables of \code{data} are used.
+    character vector defining (factor) variables that should be included
+    in the table. Per default, all factor variables of \code{data} are
+    used.
   }
   \item{labels}{
     labels for the variables. Per default, \code{variables} is used as
     label.
+  }
+  \item{group}{
+    character specifying a grouping factor. Per default no grouping is
+    applied.
   }
   \item{colnames}{
     a vector of character strings of length 4 (variable, label, N, and
