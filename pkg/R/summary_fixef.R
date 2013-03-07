@@ -11,11 +11,12 @@ summary.fixef <- function(object, ...)
 # Extract Fixed Effects from lme Objects (package nlme)
 # Based on modified code from nlme:::print.summary.lme
 summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
-                              smallest.pval = 0.001, ci = TRUE, ...){
+                              smallest.pval = 0.001, ci = TRUE, level = 0.95,
+                              ...){
     x <- summary(object)
     xtTab <- as.data.frame(x$tTable)
     if (ci) {
-        xtTab <- cbind(xtTab, confint(object))
+        xtTab <- cbind(xtTab, confint(object, level = level))
         nc <- ncol(xtTab)
         xtTab <- xtTab[, c(1, (nc - 1):nc, 2:(nc - 2))]
     }
@@ -49,11 +50,12 @@ summary.fixef.lme <- function(object, digits = NULL, scientific = FALSE,
 # Extract Fixed Effects from mer Objects (package lme4)
 # Based on modified code from nlme:::print.summary.lme
 summary.fixef.mer <- function(object, digits = NULL, scientific = FALSE,
-                              smallest.pval = 0.001, ci = TRUE, ...){
+                              smallest.pval = 0.001, ci = TRUE, level = 0.95,
+                              ...){
     x <- lme4::summary(object)
     xtTab <- as.data.frame(x@coefs)
     if (ci) {
-        xtTab <- cbind(xtTab, confint(object))
+        xtTab <- cbind(xtTab, confint(object, level = level))
         nc <- ncol(xtTab)
         xtTab <- xtTab[, c(1, (nc - 1):nc, 2:(nc - 2))]
     }

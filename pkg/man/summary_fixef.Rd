@@ -10,10 +10,10 @@
 }
 \usage{
 \method{summary.fixef}{lme}(object, digits = NULL, scientific = FALSE,
-              smallest.pval = 0.001, ci = TRUE, ...)
+              smallest.pval = 0.001, ci = TRUE, level = 0.95, ...)
 
 \method{summary.fixef}{mer}(object, digits = NULL, scientific = FALSE,
-              smallest.pval = 0.001, ci = TRUE, ...)
+              smallest.pval = 0.001, ci = TRUE, level = 0.95, ...)
 }
 \arguments{
   \item{object}{
@@ -33,7 +33,12 @@
     This argument is passed to the \code{eps} argument of
     \code{\link{format.pval}}. See there for details.
   }
-  \item{ci}{logical. Should confidence intervals be added?}
+  \item{ci}{
+    logical. Should confidence intervals be added?
+  }
+  \item{level}{confidence level; Per default 0.95\% confidence
+    intervals are returned
+  }
   \item{\dots}{
     further options passed to \code{\link{format}} and
     \code{\link{format.pval}}.
@@ -80,12 +85,14 @@ require("lme4")
 mod4 <- lmer(distance ~ age + Sex + (1|Subject), data = Orthodont)
 summary(mod4)
 ## Extract fixed effects table only
-summary.fixef(mod4)
+summary.fixef(mod4, ci = FALSE)
 
 ## change display
 summary.fixef(mod, digits = 2)
 summary.fixef(mod, scientific = -1)  # set penalty for scientific
 summary.fixef(mod, digits = 2, smallest.pval = 0.0001)
+summary.fixef(mod, digits = 2, smallest.pval = 0.0001, ci = FALSE)
+summary.fixef(mod, digits = 2, smallest.pval = 0.0001, level = 0.9)
 }
 
 \keyword{methods}
