@@ -6,7 +6,9 @@
 labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
     ## if no labels specified set temporarily names as labels
     if (is.null(attr(object, "variable.labels")))
-        labels(object) <- names(object)
+        labels(object) <- colnames(object)
+
+    object <- CLEAN_LABELS(object)
 
     if (is.null(which)) {
         RET <- attr(object, "variable.labels")
@@ -26,6 +28,7 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
 # Sets labels as attribute "variable.labels"
 "labels<-" <- function(data, which = NULL, value){
 
+    data <- CLEAN_LABELS(data)
     if (is.null(which)) {
         if (!is.null(value) && ncol(data) != length(value))
             stop("One must supply a label for each column of the data set\n",
@@ -65,4 +68,27 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
 
 "labels[<-" <- function(data, i, value){
     labels(data, which = i) <- value
+}
+
+
+CLEAN_LABELS <- function(data) {
+    ## drop spare labels
+    spare <- !(names(attr(data, "variable.labels")) %in% names(data))
+    if (any(spare)) {
+        message("Note: A variable has been removed or renamed. ",
+                "Corresponding variable labels are removed.")
+        attr(data, "variable.labels") <-  attr(data, "variable.labels")[!spare]
+    }
+    ## add missing labels
+    missing <- !(names(data) %in% names(attr(data, "variable.labels")))
+    if (any(missing)) {
+        tmp <- names(data)[missing]
+        names(tmp) <- names(data)[missing]
+        attr(data, "variable.labels") <- c(attr(data, "variable.labels"),
+                                           tmp)
+    }
+    ## re-order
+    attr(data, "variable.labels") <- attr(data, "variable.labels")[names(data)]
+    ## return altered data set
+    return(data)
 }
