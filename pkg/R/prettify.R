@@ -6,6 +6,10 @@
 prettify <- function(object, ...)
     UseMethod("prettify")
 
+prettify.summary.lm <- function(object, ...) {
+    prettify(as.data.frame(object$coefficients), ...)
+}
+
 prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE, ...) {
     ## get row names
     nms <- new_nms <- rownames(object)
