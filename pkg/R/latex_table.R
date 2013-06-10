@@ -9,6 +9,7 @@ latex.table.cont <- function(data, variables = names(data),
                              table = c("tabular", "longtable"), align = NULL,
                              caption = NULL, label = NULL, floating = FALSE,
                              center = TRUE, sep = !is.null(group),
+                             sanitize = TRUE,
                              count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                              incl_outliers = TRUE, drop = TRUE,
                              show.NAs = any(is.na(data[, variables]))) {
@@ -106,6 +107,7 @@ latex.table.cont <- function(data, variables = names(data),
 
     add_options(sums, table = table, align = align, caption = caption,
                 label = label, floating = floating, center = center, sep = sep,
+                sanitize = sanitize,
                 count = count, mean_sd = mean_sd, quantiles = quantiles,
                 colnames = colnames, class = "table.cont")
 }
@@ -119,7 +121,8 @@ latex.table.fac <- function(data, variables = names(data),
                             align = NULL,
                             caption = NULL, label = NULL, floating = FALSE,
                             center = TRUE,
-                            sep = TRUE, drop = TRUE,
+                            sep = TRUE, sanitize = TRUE,
+                            drop = TRUE,
                             show.NAs = any(is.na(data[, variables])),
                             na.lab = "<Missing>") {
 
@@ -236,7 +239,8 @@ latex.table.fac <- function(data, variables = names(data),
     }
     add_options(stats, table = table, align = align, caption = caption,
                 label = label, floating = floating, center = center,
-                sep = sep, colnames = colnames, class = "table.fac")
+                sep = sep, sanitize = sanitize, colnames = colnames,
+                class = "table.fac")
 }
 
 ################################################################################
@@ -250,6 +254,7 @@ print.table.cont <- function(x,
                              floating = get_options(x, "floating"),
                              center = get_options(x, "center"),
                              sep = get_options(x, "sep"),
+                             sanitize = get_options(x, "sanitize"),
                              count = get_options(x, "count"),
                              mean_sd = get_options(x, "mean_sd"),
                              quantiles = get_options(x, "quantiles"),
@@ -333,8 +338,8 @@ print.table.cont <- function(x,
     ## start printing
     print_table(tab = tab, table = table, floating = floating,
                 caption = caption, label = label, center = center, sep = sep,
-                align = align, colNames = colNames, rules = rules,
-                header = NULL)
+                sanitize = sanitize, align = align, colNames = colNames,
+                rules = rules, header = NULL)
 }
 
 
@@ -349,6 +354,7 @@ print.table.fac <- function(x,
                             floating = get_options(x, "floating"),
                             center = get_options(x, "center"),
                             sep = get_options(x, "sep"),
+                            sanitize = get_options(x, "sanitize"),
                             ...) {
 
     tab <- x
@@ -399,12 +405,12 @@ print.table.fac <- function(x,
     print_table(tab = tab, table = table, floating = floating,
                 caption = caption, label = label, center = center,
                 align = align, colNames = colNames, rules = rules,
-                sep = sep, header = header)
+                sep = sep, sanitize = sanitize, header = header)
 }
 
 
 print_table <- function(tab, table, floating, caption, label,
-                        center, align, colNames, rules, sep, header) {
+                        center, align, colNames, rules, sep, sanitize, header) {
     cat("%% Output requires \\usepackage{booktabs}.\n")
     if (table == "longtable")
         cat("%% Output requires \\usepackage{longtable}.\n")
@@ -440,8 +446,8 @@ print_table <- function(tab, table, floating, caption, label,
                 cat("  \\captionof{table}{", caption, "}\n")
                 if (!is.null(label))
                     cat("  \\label{", label, "}\n")
-                if (center)
-                    cat("  \\vspace*{-1em}\n")
+                #if (center)
+                #    cat("  \\vspace*{-1em}\n")
                 cat("\\begin{", table,"}{", align, "} \n", sep ="")
             }
         } else {
@@ -460,7 +466,13 @@ print_table <- function(tab, table, floating, caption, label,
     if (table == "longtable")
         cat("  \\endhead  \n")
 
-    tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
+    # tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
+    if (is.function(is.function(sanitize))) {
+        toLatex <- sanitize
+        sanitize <- TRUE
+    }
+    if (is.logical(sanitize) && sanitize == TRUE)
+        tab <- apply(tab, 2, toLatex)
     ## if separators should be added after each factor variable:
     if (sep) {
         tab[tab[,1] != "", 1][-1] <- paste(rules, tab[tab[,1] != "", 1][-1])
@@ -490,4 +502,29 @@ print_table <- function(tab, table, floating, caption, label,
 
 print.table.list <- function(x, ...) {
     lapply(x, print)
+}
+
+toLatex.default <- function(object, ...) {
+    result <- object
+    result <- gsub("\\\\", "SANITIZE.BACKSLASH", result)
+    result <- gsub("$", "\\$", result, fixed = TRUE)
+    result <- gsub(">=", "$\\geq$", result, fixed = TRUE)
+    result <- gsub("<=", "$\\leq$", result, fixed = TRUE)
+    result <- gsub(">", "$>$", result, fixed = TRUE)
+    result <- gsub("<", "$<$", result, fixed = TRUE)
+    result <- gsub("|", "$|$", result, fixed = TRUE)
+    result <- gsub("{", "\\{", result, fixed = TRUE)
+    result <- gsub("}", "\\}", result, fixed = TRUE)
+    result <- gsub("%", "\\%", result, fixed = TRUE)
+    result <- gsub("&", "\\&", result, fixed = TRUE)
+    result <- gsub("_", "\\_", result, fixed = TRUE)
+    result <- gsub("#", "\\#", result, fixed = TRUE)
+    result <- gsub("\\^([[:digit:]]+)", "$^{\\1}$", result)
+    result <- gsub("\\^([^[:digit:]])", "\\\\verb|^|\\1", result)
+    result <- gsub("~", "\\~{}", result, fixed = TRUE)
+    result <- gsub("²", "$^2$", result, fixed = TRUE)
+    result <- gsub("³", "$^3$", result, fixed = TRUE)
+    result <- gsub("SANITIZE.BACKSLASH", "$\\backslash$",
+                   result, fixed = TRUE)
+    return(result)
 }
