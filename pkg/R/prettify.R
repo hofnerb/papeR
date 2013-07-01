@@ -6,8 +6,42 @@
 prettify <- function(object, ...)
     UseMethod("prettify")
 
-prettify.summary.lm <- function(object, ...) {
-    prettify(as.data.frame(object$coefficients), ...)
+## function(object, digits = NULL, scientific = FALSE,
+##          smallest.pval = 0.001, ci = TRUE, level = 0.95)
+prettify.summary.lm <- function(object, confint = FALSE, ...) {
+
+    res <- as.data.frame(object$coefficients)
+    if (confint){
+        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
+        CI <- confint(mod)
+        res$CI_lower <- CI[,1]
+        res$CI_upper <- CI[,2]
+    }
+    prettify(res, ...)
+}
+
+prettify.summary.glm <- function(object, confint = FALSE, OR = NULL, ...) {
+    if (object$family$family == "binomial" && (is.null(OR) || OR)) {
+        OR <- TRUE
+    } else {
+        OR <- FALSE
+    }
+    res <- as.data.frame(object$coefficients)
+    if (OR) {
+        res$OR <- exp(res$Estimate)
+    }
+    if (confint){
+        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
+        CI <- confint(mod)
+        if (OR) {
+            res$CI_lower <- exp(CI[,1])
+            res$CI_upper <- exp(CI[,2])
+        } else {
+            res$CI_lower <- CI[,1]
+            res$CI_upper <- CI[,2]
+        }
+    }
+    prettify(res, ...)
 }
 
 prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE, ...) {
@@ -17,7 +51,7 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
     ## order labels to avoid matching with substrings
     labels <- labels[rev(order(sapply(names(labels), nchar)))]
 
-    ## make extra column if needed
+    ## make extra column for factor levels if needed
     if (extra.column) {
         object$varlabel <- " "
         object$"FactorLevel" <- " "
@@ -29,6 +63,13 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
         object[,1] <- as.character(object[,1])
         names(object)[2] <- "Factor Level"
         object[,2] <- as.character(object[,2])
+    } else {
+        object$varlabel <- " "
+        newVars <- ncol(object)
+        object <- cbind(object[, newVars],
+                        object[, - newVars])
+        names(object)[1] <- " "
+        object[,1] <- as.character(object[,1])
     }
 
     for (i in 1:length(labels)) {
