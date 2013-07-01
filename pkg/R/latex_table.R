@@ -202,13 +202,13 @@ latex.table.fac <- function(data, variables = names(data),
     ## repeate variables to match no. of levels:
     n.levels <- mySapply(data[, variables], function(x) length(levels(x)))
 
-    var2 <- unlist(sapply(1:length(variables),
+    var2 <- unlist(lapply(1:length(variables),
                           function(i) rep(variables[i], each = n.levels[i])))
-    var_labels <- unlist(sapply(1:length(variables),
+    var_labels <- unlist(lapply(1:length(variables),
                                 function(i) rep(labels[i], each = n.levels[i])))
 
     ## get all levels
-    lvls <- unlist(sapply(variables, function(x) levels(data[, x])))
+    lvls <- unlist(lapply(variables, function(x) levels(data[, x])))
     colnames(lvls) <- NULL
 
     ## setup results object
