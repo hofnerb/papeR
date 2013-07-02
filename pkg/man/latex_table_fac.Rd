@@ -13,7 +13,7 @@
 latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
                 colnames = NULL, digits = 2, table = c("tabular", "longtable"),
                 align = NULL, caption = NULL, label = NULL, floating = FALSE,
-                center = TRUE, sep = TRUE, drop = TRUE,
+                center = TRUE, sep = TRUE, sanitize = TRUE, drop = TRUE,
                 show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
 
 \method{print}{table.fac}(x,
@@ -25,6 +25,7 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
       floating = get_options(x, "floating"),
       center = get_options(x, "center"),
       sep = get_options(x, "sep"),
+      sanitize = get_options(x, "sanitize"),
       ...)
 
 }
@@ -82,6 +83,11 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
   \item{sep}{
     logical (default: TRUE). Determines wether separators (lines) should
     be added after each factor variable.
+  }
+  \item{sanitize}{
+    logical (default: TRUE) or a sanitizing function used to clean the
+    input in order to be useable in LaTeX environments. Per default
+    \code{\link{toLatex.character}} is used.
   }
   \item{drop}{
     logical (default: TRUE). Determines wether factor variables,

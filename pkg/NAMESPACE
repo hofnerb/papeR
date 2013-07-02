@@ -1,4 +1,5 @@
 importFrom(car, Anova)
+importFrom(utils, toLatex)
 # importFrom(lme4, summary)
 
 export(get_options,
@@ -9,7 +10,7 @@ export(get_options,
        print.table.fac,
        prettify,
        summary.fixef,
-       toLatex.default,
+       toLatex.character,
        "labels<-",
        get_options)
 
@@ -25,4 +26,4 @@ S3method(mySapply, data.frame)
 S3method(print, table.cont)
 S3method(print, table.fac)
 S3method(print, table.list)
-S3method(toLatex, default)
+S3method(toLatex, character)
