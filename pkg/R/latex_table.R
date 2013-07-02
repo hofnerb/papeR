@@ -1,6 +1,11 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
+### for package testing:
+# pkgEnv <- getNamespace("papeR")
+# attach(pkgEnv)
+
+
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 latex.table.cont <- function(data, variables = names(data),
@@ -18,9 +23,13 @@ latex.table.cont <- function(data, variables = names(data),
     if (is.null(labels)) {
         labels <- variables
     } else {
-        if (length(variables) != length(labels))
-            stop(sQuote("variables"), " and ", sQuote("labels"),
-                 " must have the same length")
+        if (is.logical(labels) && labels) {
+            labels <- labels(data, which = variables)
+        } else {
+            if (length(variables) != length(labels))
+                stop(sQuote("variables"), " and ", sQuote("labels"),
+                     " must have the same length")
+        }
     }
 
     if (!is.null(group)) {
@@ -157,9 +166,13 @@ latex.table.fac <- function(data, variables = names(data),
     if (is.null(labels)) {
         labels <- variables
     } else {
-        if (length(variables) != length(labels))
-            stop(sQuote("variables"), " and ", sQuote("labels"),
-                 " must have the same length")
+        if (is.logical(labels) && labels) {
+            labels <- labels(data, which = variables)
+        } else {
+            if (length(variables) != length(labels))
+                stop(sQuote("variables"), " and ", sQuote("labels"),
+                     " must have the same length")
+        }
     }
 
     ## get factors
