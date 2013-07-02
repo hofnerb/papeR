@@ -8,10 +8,10 @@ prettify <- function(object, ...)
 
 ## function(object, digits = NULL, scientific = FALSE,
 ##          smallest.pval = 0.001, ci = TRUE, level = 0.95)
-prettify.summary.lm <- function(object, labels, sep = ": ", extra.column = FALSE,
+prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
                                 confint = TRUE, level = 0.95,
                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                                 signif.stars = getOption("show.signif.stars"), ...) {
+                                signif.stars = getOption("show.signif.stars"), ...) {
 
     res <- as.data.frame(object$coefficients)
     if (confint){
@@ -28,39 +28,25 @@ prettify.summary.lm <- function(object, labels, sep = ": ", extra.column = FALSE
         names(res)[3] <- "CI (upper)"
     }
 
-    wchPval <- grep("Pr(>|.*|)", names(res))
-    if (signif.stars) {
-        res$signif <- symnum(res[, wchPval], corr = FALSE, na = FALSE,
-                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-                             symbols = c("***", "**", "*", ".", " "))
-        names(res)[names(res) == "signif"] <- "   "
-    }
-    if (!is.na(wchPval)) {
-        r.digits <- 10
-        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
-        if (!is.null(num[2]))
-            r.digits <- nchar(num[2])
-        res[, wchPval] <- format.pval(round(res[, wchPval], digits = r.digits),
-                                      digits = digits, scientific = scientific,
-                                      eps = smallest.pval, ...)
-    } else {
-        warning("No p-value detected.")
+    res <- prettifyPValue(res, smallest.pval, digits, scientific, signif.stars, ...)
+
+    ## use variable names as labels
+    if (is.null(labels)) {
+        labels <- names(attr(object$terms, "dataClasses"))
+        names(labels) <- labels
     }
 
     prettify(res, labels = labels, sep = sep, extra.column = extra.column, ...)
 }
 
-prettify.summary.glm <- function(object, labels, sep = ": ", extra.column = FALSE,
+prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
                                  confint = TRUE, level = 0.95, OR = TRUE,
                                  smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                                 signif.stars = getOption("show.signif.stars"), ...) {
-    if (object$family$family == "binomial" && OR) {
-        OR <- TRUE
-    } else {
-        OR <- FALSE
-    }
+                                 signif.stars = getOption("show.signif.stars"),
+                                 ...) {
+
     res <- as.data.frame(object$coefficients)
-    if (OR) {
+    if (OR <- (object$family$family == "binomial" && OR)) {
         res$OR <- exp(res$Estimate)
     }
     if (confint){
@@ -89,31 +75,41 @@ prettify.summary.glm <- function(object, labels, sep = ": ", extra.column = FALS
             names(res)[3] <- "CI (upper)"
         }
     }
-    wchPval <- grep("Pr(.*)", names(res))
-    if (signif.stars) {
-        res$signif <- symnum(res[, wchPval], corr = FALSE, na = FALSE,
-                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
-                             symbols = c("***", "**", "*", ".", " "))
-        names(res)[names(res) == "signif"] <- "   "
-    }
-    if (!is.na(wchPval)) {
-        r.digits <- 10
-        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
-        if (!is.null(num[2]))
-            r.digits <- nchar(num[2])
-        res[, wchPval] <- format.pval(round(res[, wchPval], digits = r.digits),
-                                      digits = digits, scientific = scientific,
-                                      eps = smallest.pval, ...)
-    } else {
-        warning("No p-value detected.")
+
+    res <- prettifyPValue(res, smallest.pval, digits, scientific, signif.stars, ...)
+
+    ## use variable names as labels
+    if (is.null(labels)) {
+        labels <- names(attr(object$terms, "dataClasses"))
+        names(labels) <- labels
     }
 
     prettify(res, labels = labels, sep = sep, extra.column = extra.column, ...)
 }
 
+prettify.anova <- function(object, labels,
+                           smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                           signif.stars = getOption("show.signif.stars"), ...){
+
+    res <- as.data.frame(object)
+    res <- prettifyPValue(res, smallest.pval, digits, scientific, signif.stars, ...)
+
+    res$varlabel <- as.character(dimnames(object)[[1]])
+    newVars <- ncol(res)
+    res <- cbind(res[, newVars],
+                 res[, - newVars])
+    names(res)[1] <- " "
+    rownames(res) <- NULL
+
+    res
+}
+
 prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE, ...) {
     ## get row names
     nms <- new_nms <- rownames(object)
+
+    if (is.null(labels))
+        stop(sQuote("labels"), "not specified")
 
     ## order labels to avoid matching with substrings
     labels <- labels[rev(order(sapply(names(labels), nchar)))]
@@ -166,5 +162,29 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
     }
     object[, 1] <- new_nms
     rownames(object) <- NULL
+    object
+}
+
+
+### helper for pretty p-values
+prettifyPValue <- function(object,
+                           smallest.pval, digits, scientific, signif.stars, ...) {
+
+    wchPval <- grep("Pr(.*)", names(object))
+    if (length(wchPval) != 0) {
+        if (signif.stars) {
+            object$signif <- symnum(object[, wchPval], corr = FALSE, na = FALSE,
+                                    cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                                    symbols = c("***", "**", "*", ".", " "))
+            names(object)[names(object) == "signif"] <- "   "
+        }
+        r.digits <- 10
+        num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
+        if (!is.null(num[2]))
+            r.digits <- nchar(num[2])
+        object[, wchPval] <- format.pval(round(object[, wchPval], digits = r.digits),
+                                         digits = digits, scientific = scientific,
+                                         eps = smallest.pval, ...)
+    }
     object
 }

@@ -40,8 +40,10 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
     used.
   }
   \item{labels}{
-    labels for the variables. Per default, \code{variables} is used as
-    label.
+    labels for the variables. If \code{labels = NULL} (default)
+    \code{variables} is used as label. If \code{labels = TRUE},
+    \code{labels(data, which = variables)} is used as
+    labels.
   }
   \item{group}{
     character specifying a grouping factor. Per default no grouping is

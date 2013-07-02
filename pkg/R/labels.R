@@ -19,8 +19,11 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
         RET <- attr(object, "variable.labels")[which]
     }
 
-    if (abbreviate)
+    if (abbreviate) {
+        nms <- names(RET)
         RET <- abbreviate(RET, ...)
+        names(RET) <- nms
+    }
     return(RET)
 }
 
