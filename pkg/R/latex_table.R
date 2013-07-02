@@ -466,6 +466,13 @@ print_table <- function(tab, table, floating, caption, label,
     if (table == "longtable")
         cat("  \\endhead  \n")
 
+    ## Convert to character strings
+    tab <- apply(tab, 2, function(x)
+                 ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
+    ## if tab accidentially drops to a vector
+    if (is.null(dim(tab)))
+        tab <- matrix(tab, nrow = 1)
+
     # tab[,1] <- gsub("(_)", "\\\\_", tab[,1])
     if (is.function(is.function(sanitize))) {
         toLatex <- sanitize
@@ -473,16 +480,14 @@ print_table <- function(tab, table, floating, caption, label,
     }
     if (is.logical(sanitize) && sanitize == TRUE)
         tab <- apply(tab, 2, toLatex)
+    ## if tab accidentially drops to a vector
+    if (is.null(dim(tab)))
+        tab <- matrix(tab, nrow = 1)
+
     ## if separators should be added after each factor variable:
     if (sep) {
         tab[tab[,1] != "", 1][-1] <- paste(rules, tab[tab[,1] != "", 1][-1])
     }
-    ## Convert to character strings
-    tab <- apply(tab, 2, function(x)
-                 ifelse(sapply(x, is.numeric), sprintf("%4.2f", x), x))
-    ## if tab accidentially drops to a vector
-    if (is.null(dim(tab)))
-        tab <- matrix(tab, nrow = 1)
 
     ## Replace NA with " "
     tab[is.na(tab)] <- ""
@@ -504,7 +509,7 @@ print.table.list <- function(x, ...) {
     lapply(x, print)
 }
 
-toLatex.default <- function(object, ...) {
+toLatex.character <- function(object, ...) {
     result <- object
     result <- gsub("\\\\", "SANITIZE.BACKSLASH", result)
     result <- gsub("$", "\\$", result, fixed = TRUE)
@@ -522,8 +527,9 @@ toLatex.default <- function(object, ...) {
     result <- gsub("\\^([[:digit:]]+)", "$^{\\1}$", result)
     result <- gsub("\\^([^[:digit:]])", "\\\\verb|^|\\1", result)
     result <- gsub("~", "\\~{}", result, fixed = TRUE)
-    result <- gsub("²", "$^2$", result, fixed = TRUE)
-    result <- gsub("³", "$^3$", result, fixed = TRUE)
+    ## grep for ^2 and ^3
+    result <- gsub("\u00B2", "$^2$", result, fixed = TRUE)
+    result <- gsub("\u00B3", "$^3$", result, fixed = TRUE)
     result <- gsub("SANITIZE.BACKSLASH", "$\\backslash$",
                    result, fixed = TRUE)
     return(result)

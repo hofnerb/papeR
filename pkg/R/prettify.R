@@ -8,8 +8,10 @@ prettify <- function(object, ...)
 
 ## function(object, digits = NULL, scientific = FALSE,
 ##          smallest.pval = 0.001, ci = TRUE, level = 0.95)
-prettify.summary.lm <- function(object, confint = TRUE, level = 0.95,
-                                smallest.pval = 0.001, digits = NULL, scientific = FALSE,...) {
+prettify.summary.lm <- function(object, labels, sep = ": ", extra.column = FALSE,
+                                confint = TRUE, level = 0.95,
+                                smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                                 signif.stars = getOption("show.signif.stars"), ...) {
 
     res <- as.data.frame(object$coefficients)
     if (confint){
@@ -27,6 +29,12 @@ prettify.summary.lm <- function(object, confint = TRUE, level = 0.95,
     }
 
     wchPval <- grep("Pr(>|.*|)", names(res))
+    if (signif.stars) {
+        res$signif <- symnum(res[, wchPval], corr = FALSE, na = FALSE,
+                             cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
+                             symbols = c("***", "**", "*", ".", " "))
+        names(res)[names(res) == "signif"] <- "   "
+    }
     if (!is.na(wchPval)) {
         r.digits <- 10
         num <- strsplit(as.character(smallest.pval), "\\.")[[1]]
@@ -39,10 +47,10 @@ prettify.summary.lm <- function(object, confint = TRUE, level = 0.95,
         warning("No p-value detected.")
     }
 
-    prettify(res, ...)
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column, ...)
 }
 
-prettify.summary.glm <- function(object,
+prettify.summary.glm <- function(object, labels, sep = ": ", extra.column = FALSE,
                                  confint = TRUE, level = 0.95, OR = TRUE,
                                  smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                                  signif.stars = getOption("show.signif.stars"), ...) {
@@ -81,7 +89,7 @@ prettify.summary.glm <- function(object,
             names(res)[3] <- "CI (upper)"
         }
     }
-    wchPval <- grep("Pr(>|.*|)", names(res))
+    wchPval <- grep("Pr(.*)", names(res))
     if (signif.stars) {
         res$signif <- symnum(res[, wchPval], corr = FALSE, na = FALSE,
                              cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1),
@@ -100,7 +108,7 @@ prettify.summary.glm <- function(object,
         warning("No p-value detected.")
     }
 
-    prettify(res, ...)
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column, ...)
 }
 
 prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE, ...) {
