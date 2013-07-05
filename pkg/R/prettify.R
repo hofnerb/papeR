@@ -28,15 +28,15 @@ prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column 
         names(res)[3] <- "CI (upper)"
     }
 
-    res <- prettifyPValue(res, smallest.pval, digits, scientific, signif.stars, ...)
-
     ## use variable names as labels
     if (is.null(labels)) {
         labels <- names(attr(object$terms, "dataClasses"))
         names(labels) <- labels
     }
 
-    prettify(res, labels = labels, sep = sep, extra.column = extra.column, ...)
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column,
+             smallest.pval = smallest.pval, digits = digits,
+             scientific = scientific, signif.stars = signif.stars, ...)
 }
 
 prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
@@ -76,7 +76,37 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
         }
     }
 
-    res <- prettifyPValue(res, smallest.pval, digits, scientific, signif.stars, ...)
+    ## use variable names as labels
+    if (is.null(labels)) {
+        labels <- names(attr(object$terms, "dataClasses"))
+        names(labels) <- labels
+    }
+
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column,
+             smallest.pval = smallest.pval, digits = digits,
+             scientific = scientific, signif.stars = signif.stars, ...)
+}
+
+prettify.summary.lme <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                                 confint = TRUE, level = 0.95,
+                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                                 signif.stars = getOption("show.signif.stars"),
+                                 ...) {
+
+    res <- as.data.frame(object$tTable)
+    if (confint){
+        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
+        CI <- confint(mod, level = level)
+        res$CI_lower <- CI[,1]
+        res$CI_upper <- CI[,2]
+        ## move confint to the front
+        newVars <- (ncol(res) -1):ncol(res)
+        res <- cbind(res[, 1, drop = FALSE],
+                     res[, newVars],
+                     res[, - c(1, newVars)])
+        names(res)[2] <- "CI (lower)"
+        names(res)[3] <- "CI (upper)"
+    }
 
     ## use variable names as labels
     if (is.null(labels)) {
@@ -84,35 +114,81 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
         names(labels) <- labels
     }
 
-    prettify(res, labels = labels, sep = sep, extra.column = extra.column, ...)
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column,
+             smallest.pval = smallest.pval, digits = digits,
+             scientific = scientific, signif.stars = signif.stars, ...)
 }
 
-prettify.anova <- function(object, labels,
+prettify.summary.mer <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                                 confint = TRUE, level = 0.95,
+                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                                 signif.stars = getOption("show.signif.stars"),
+                                 ...) {
+
+    res <- as.data.frame(object@coefs)
+    if (confint){
+        mod <- eval(object@call, envir = attr(attr(object@frame, "terms"), ".Environment"))
+        CI <- confint(mod, level = level)
+        res$CI_lower <- CI[,1]
+        res$CI_upper <- CI[,2]
+        ## move confint to the front
+        newVars <- (ncol(res) -1):ncol(res)
+        res <- cbind(res[, 1, drop = FALSE],
+                     res[, newVars],
+                     res[, - c(1, newVars)])
+        names(res)[2] <- "CI (lower)"
+        names(res)[3] <- "CI (upper)"
+    }
+
+    ## use variable names as labels
+    if (is.null(labels)) {
+        labels <- names(attr(attr(object@frame, "terms"), "dataClasses"))
+        names(labels) <- labels
+    }
+
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column,
+             smallest.pval = smallest.pval, digits = digits,
+             scientific = scientific, signif.stars = signif.stars, ...)
+}
+
+prettify.anova <- function(object, labels = NULL,
                            smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                            signif.stars = getOption("show.signif.stars"), ...){
 
     res <- as.data.frame(object)
     res <- prettifyPValue(res, smallest.pval, digits, scientific, signif.stars, ...)
 
-    res$varlabel <- as.character(dimnames(object)[[1]])
+    res$varlabel <- dimnames(object)[[1]]
+    res$varlabel <- as.character(res$varlabel)
     newVars <- ncol(res)
     res <- cbind(res[, newVars],
                  res[, - newVars])
     names(res)[1] <- " "
     rownames(res) <- NULL
 
+    if (!is.null(labels)) {
+        idx <- res[, 1] %in% names(labels)
+        res[idx, 1] <- labels[idx]
+    }
     res
 }
 
-prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE, ...) {
+prettify.data.frame <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                                smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                                signif.stars = getOption("show.signif.stars"),
+                                ...) {
     ## get row names
     nms <- new_nms <- rownames(object)
 
-    if (is.null(labels))
-        stop(sQuote("labels"), "not specified")
-
-    ## order labels to avoid matching with substrings
-    labels <- labels[rev(order(sapply(names(labels), nchar)))]
+    if (is.null(labels)) {
+        if (extra.column)
+            warning(sQuote("extra.column"),
+                    " can only be used if labels are specified")
+        extra.column <- FALSE
+    } else {
+        ## order labels to avoid matching with substrings
+        labels <- labels[rev(order(sapply(names(labels), nchar)))]
+    }
 
     ## make extra column for factor levels if needed
     if (extra.column) {
@@ -127,7 +203,7 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
         names(object)[2] <- "Factor Level"
         object[,2] <- as.character(object[,2])
     } else {
-        object$varlabel <- " "
+        object$varlabel <- new_nms
         newVars <- ncol(object)
         object <- cbind(object[, newVars],
                         object[, - newVars])
@@ -135,42 +211,49 @@ prettify.data.frame <- function(object, labels, sep = ": ", extra.column = FALSE
         object[,1] <- as.character(object[,1])
     }
 
-    for (i in 1:length(labels)) {
-        idx <- grep(names(labels)[i], nms)
-        if (!length(idx) == 0){
-            ## Is there a factor level?
-            if (any(grepl(paste("^",names(labels)[i], "$", sep = ""), nms[idx]))) {
-                new_nms[idx] <- gsub(names(labels)[i],
-                                     labels[i], nms[idx])
-            } else {
-                if (extra.column) {
-                    spaces <- sapply(1:length(idx), function(i) paste(rep(" ", i), collapse = ""))
-                    new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
-                                         paste(labels[i], spaces, sep = ""),
-                                         nms[idx])
-                    object[idx, 2] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
-                                           "\\1",
-                                           nms[idx])
+    if (!is.null(labels)) {
+        for (i in 1:length(labels)) {
+            idx <- grep(names(labels)[i], nms)
+            if (!length(idx) == 0){
+                ## Is there a factor level?
+                if (any(grepl(paste("^",names(labels)[i], "$", sep = ""), nms[idx]))) {
+                    new_nms[idx] <- gsub(names(labels)[i],
+                                         labels[i], nms[idx])
                 } else {
-                    new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
-                                         paste(labels[i], sep, "\\1", sep = ""),
-                                         nms[idx])
+                    if (extra.column) {
+                        spaces <- sapply(1:length(idx), function(i) paste(rep(" ", i), collapse = ""))
+                        new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
+                                             paste(labels[i], spaces, sep = ""),
+                                             nms[idx])
+                        object[idx, 2] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
+                                               "\\1",
+                                               nms[idx])
+                    } else {
+                        new_nms[idx] <- gsub(paste("^",names(labels)[i], "(.*)", sep = ""),
+                                             paste(labels[i], sep, "\\1", sep = ""),
+                                             nms[idx])
+                    }
                 }
+                nms[idx] <- ""
             }
-            nms[idx] <- ""
         }
     }
     object[, 1] <- new_nms
     rownames(object) <- NULL
+
+    object <- prettifyPValue(object, smallest.pval, digits, scientific,
+                             signif.stars, ...)
+
     object
 }
 
 
 ### helper for pretty p-values
 prettifyPValue <- function(object,
-                           smallest.pval, digits, scientific, signif.stars, ...) {
+                           smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                           signif.stars = getOption("show.signif.stars"), ...) {
 
-    wchPval <- grep("Pr(.*)", names(object))
+    wchPval <- grep("Pr(.*)|p-value", names(object))
     if (length(wchPval) != 0) {
         if (signif.stars) {
             object$signif <- symnum(object[, wchPval], corr = FALSE, na = FALSE,
@@ -186,5 +269,14 @@ prettifyPValue <- function(object,
                                          digits = digits, scientific = scientific,
                                          eps = smallest.pval, ...)
     }
+
+    if (!is.null(digits)) {
+        for (i in names(object)[-wchPval]) {
+            if (is.numeric(object[, i]))
+                object[, i] <- format(zapsmall(object[, i]), digits = digits,
+                                      scientific = scientific, ...)
+        }
+    }
+
     object
 }

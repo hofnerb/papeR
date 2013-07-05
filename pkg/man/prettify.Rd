@@ -1,33 +1,58 @@
 \name{prettify}
 \alias{prettify}
+\alias{prettify.anova}
 \alias{prettify.data.frame}
 \alias{prettify.summary.lm}
 \alias{prettify.summary.glm}
+\alias{prettify.summary.lme}
+\alias{prettify.summary.mer}
+\alias{prettifyPValue}
 
 \title{ Make Pretty Summary Tables}
 \description{
   Replace variable names with labels and care for a better separation of
-  variable and value label of factor variables.
+  variable and value label of factor variables. Additionally, confidence
+  intervalls can be easily added and p-values are formated for pretty printing.
 }
 \usage{
-\method{prettify}{data.frame}(object, labels, sep = ": ", extra.column = FALSE,
-                    ...)
+\method{prettify}{data.frame}(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                    signif.stars = getOption("show.signif.stars"), ...)
 
-\method{prettify}{summary.lm}(object, labels, sep = ": ", extra.column = FALSE,
+\method{prettify}{summary.lm}(object, labels = NULL, sep = ": ", extra.column = FALSE,
                     confint = TRUE, level = 0.95,
                     smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                     signif.stars = getOption("show.signif.stars"), ...)
 
-\method{prettify}{summary.glm}(object, labels, sep = ": ", extra.column = FALSE,
+\method{prettify}{summary.glm}(object, labels = NULL, sep = ": ", extra.column = FALSE,
                      confint = TRUE, level = 0.95, OR = TRUE,
                      smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                      signif.stars = getOption("show.signif.stars"), ...)
+
+\method{prettify}{summary.lme}(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                    confint = TRUE, level = 0.95,
+                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                    signif.stars = getOption("show.signif.stars"), ...)
+
+\method{prettify}{summary.mer}(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                    confint = TRUE, level = 0.95,
+                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                    signif.stars = getOption("show.signif.stars"), ...)
+
+\method{prettify}{anova}(object, labels,
+               smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+               signif.stars = getOption("show.signif.stars"), ...)
+
+## helper function for pretty p-values
+prettifyPValue(object, smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+               signif.stars = getOption("show.signif.stars"), ...)
 }
 \arguments{
   \item{object}{
     object of class \code{data.frame} resulting (most likely) from a
-    call to \code{\link{summary}} or directly a \code{\link{summary}}
-    output.
+    call to \code{\link{summary}} or directly the output from
+    \code{\link{summary}}, \code{\link{anova}} or \code{\link{Anova}}
+    (the latter from package \pkg{car}).
   }
   \item{labels}{
     specify labels here. For the format see \code{\link{labels}}.
@@ -59,8 +84,10 @@
   }
   \item{digits}{
     number of significant digits. The default, \code{NULL}, uses
-    \code{getOption("digits")}. See also argument \code{digits} in
-    \code{\link{format}}.
+    \code{getOption("digits")} for formating p-values and leaves all
+    other columns unchanged. If \code{digits} are specified, all columns
+    use this number of significant digits (columnwise). See also
+    argument \code{digits} in \code{\link{format}}.
   }
   \item{scientific}{specifies if numbers should be printed in scientific
     format. For details and possible values see \code{\link{format}}.
@@ -74,7 +101,17 @@
   }
 }
 \details{
-  %%  ~~ If necessary, more details than the description above ~~
+  Specialized functions that prettify summary tables of various models
+  exist. For the \code{data.frame} method, \code{extra.column} and
+  \code{sep} can only be used if \code{labels} are specified as variable
+  names need to be known in order to split variable name and factor
+  level. For \code{summary} objects, variable names can be extracted
+  from the objects.
+
+  \code{prettifyPValue} is a helper function used within the prettify
+  functions but can also be used directly on a \code{data.frame} object.
+  The function tries to \dQuote{guess} the column of p-values and
+  formats them nicely. Additionally, significance stars are added if requested.
 
 }
 \value{
@@ -91,7 +128,30 @@
 \seealso{
 }
 \examples{
+## Load data set Orthodont
+data(Orthodont, package = "nlme")
 
+## Fit a linear model
+linmod <- lm(distance ~ age + Sex, data = Orthodont)
+## Extract pretty summary
+prettify(summary(linmod))
+
+### Better model with random effects
+## With package nlme:
+require("nlme")
+## Fit a model for distance with random intercept for Subject
+mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+summary(mod)
+## Extract fixed effects table only and make it pretty
+prettify(summary(mod))
+
+## With package lme4:
+require("lme4")
+## Fit a model for distance with random intercept for Subject
+mod4 <- lmer(distance ~ age + Sex + (1|Subject), data = Orthodont)
+summary(mod4)
+## Extract fixed effects table only and make it pretty
+prettify(summary(mod), confint = FALSE)
 }
 
 \keyword{methods}

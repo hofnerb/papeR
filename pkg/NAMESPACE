@@ -9,6 +9,7 @@ export(get_options,
        print.table.cont,
        print.table.fac,
        prettify,
+       prettifyPValue,
        summary.fixef,
        toLatex.character,
        "labels<-",
@@ -18,6 +19,8 @@ S3method(Anova, lme)
 S3method(labels, data.frame)
 S3method(prettify, summary.lm)
 S3method(prettify, summary.glm)
+S3method(prettify, summary.lme)
+S3method(prettify, summary.mer)
 S3method(prettify, anova)
 S3method(prettify, data.frame)
 S3method(summary.fixef, mer)
