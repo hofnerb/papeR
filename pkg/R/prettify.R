@@ -13,7 +13,7 @@ prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column 
                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                                 signif.stars = getOption("show.signif.stars"), ...) {
 
-    res <- as.data.frame(object$coefficients)
+    res <- as.data.frame(coef(object))
     if (confint){
         mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
         CI <- confint(mod, level = level)
@@ -45,7 +45,7 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
                                  signif.stars = getOption("show.signif.stars"),
                                  ...) {
 
-    res <- as.data.frame(object$coefficients)
+    res <- as.data.frame(coef(object))
     if (OR <- (object$family$family == "binomial" && OR)) {
         res$OR <- exp(res$Estimate)
     }
@@ -61,6 +61,53 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
                          res[, newVars],
                          res[, - c(1, newVars)])
             names(res)[2] <- "Odds Ratio"
+            names(res)[3] <- "CI (lower)"
+            names(res)[4] <- "CI (upper)"
+        } else {
+            res$CI_lower <- CI[,1]
+            res$CI_upper <- CI[,2]
+            ## move confint to the front
+            newVars <- (ncol(res) -1):ncol(res)
+            res <- cbind(res[, 1, drop = FALSE],
+                         res[, newVars],
+                         res[, - c(1, newVars)])
+            names(res)[2] <- "CI (lower)"
+            names(res)[3] <- "CI (upper)"
+        }
+    }
+
+    ## use variable names as labels
+    if (is.null(labels)) {
+        labels <- names(attr(object$terms, "dataClasses"))
+        names(labels) <- labels
+    }
+
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column,
+             smallest.pval = smallest.pval, digits = digits,
+             scientific = scientific, signif.stars = signif.stars, ...)
+}
+
+prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
+                                   confint = TRUE, level = 0.95, HR = TRUE,
+                                   smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                                   signif.stars = getOption("show.signif.stars"),
+                                   ...) {
+
+    res <- as.data.frame(coef(object))
+    if (!HR)
+        res$"exp(coef)" <- NULL
+    if (confint){
+        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
+        CI <- confint(mod, level = level)
+        if (HR) {
+            res$CI_lower <- exp(CI[,1])
+            res$CI_upper <- exp(CI[,2])
+            ## move confint to the front
+            newVars <- (ncol(res) - 1):ncol(res)
+            res <- cbind(res[, 1:2, drop = FALSE],
+                         res[, newVars],
+                         res[, - c(1:2, newVars)])
+            names(res)[2] <- "Hazard Ratio"
             names(res)[3] <- "CI (lower)"
             names(res)[4] <- "CI (upper)"
         } else {

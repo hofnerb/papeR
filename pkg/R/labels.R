@@ -27,6 +27,13 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
     return(RET)
 }
 
+labels.default <- function(object, ...){
+    if (is.null(attr(object, "variable.labels")))
+        return(NULL)
+
+    return(attr(object, "variable.labels"))
+}
+
 ################################################################################
 # Sets labels as attribute "variable.labels"
 "labels<-" <- function(data, which = NULL, value){
@@ -40,39 +47,38 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...){
         ## set label names to variable names
         if (!is.null(value) && is.null(names(attr(data, "variable.labels"))))
             names(attr(data, "variable.labels")) <- colnames(data)
-        return(data)
-    }
+    } else {
+        ## if partial replacement is used and no labels are given so far
+        ## a "dummy" vector is created
+        if (is.null(attr(data, "variable.labels"))) {
+            attr(data, "variable.labels") <- colnames(data)
+            names(attr(data, "variable.labels")) <- colnames(data)
+        }
+        if (is.null(value))
+            stop(sQuote("NULL"), " cannot be assigned in combination with ", sQuote("which"))
+        if (is.numeric(which) && any(which > ncol(data)))
+            stop("One  cannot supply labels for none-existing variables")
+        if (is.character(which) && !all(which %in% colnames(data))) {
+            txt <- paste("One  cannot supply labels for none-existing variables\n",
+                         "  Variables not found in data set:\n\t",
+                         paste(which[!(which %in% colnames(data))],
+                               collapse = "\n\t"))
+            stop(txt)
+        }
 
-    ## if partial replacement is used and no labels are given so far
-    ## a "dummy" vector is created
-    if (is.null(attr(data, "variable.labels"))) {
-        attr(data, "variable.labels") <- colnames(data)
-        names(attr(data, "variable.labels")) <- colnames(data)
+        if (length(which) != length(value))
+            stop("One must supply a label for each selected column of the data set.")
+        ## only set values which are not NA
+        attr(data, "variable.labels")[which][!is.na(value)] <- value[!is.na(value)]
     }
-
-    if (is.null(value))
-        stop(sQuote("NULL"), " cannot be assigned in combination with ", sQuote("which"))
-    if (is.numeric(which) && any(which > ncol(data)))
-        stop("One  cannot supply labels for none-existing variables")
-    if (is.character(which) && !all(which %in% colnames(data))) {
-        txt <- paste("One  cannot supply labels for none-existing variables\n",
-                     "  Variables not found in data set:\n\t",
-                     paste(which[!(which %in% colnames(data))],
-                           collapse = "\n\t"))
-        stop(txt)
-    }
-
-    if (length(which) != length(value))
-        stop("One must supply a label for each selected column of the data set.")
-    ## only set values which are not NA
-    attr(data, "variable.labels")[which][!is.na(value)] <- value[!is.na(value)]
+    if (!("labeled.data.frame" %in% class(data)))
+        class(data) <- c("labeled.data.frame", class(data))
     return(data)
 }
 
 "labels[<-" <- function(data, i, value){
     labels(data, which = i) <- value
 }
-
 
 CLEAN_LABELS <- function(data) {
     ## drop spare labels
@@ -94,4 +100,57 @@ CLEAN_LABELS <- function(data) {
     attr(data, "variable.labels") <- attr(data, "variable.labels")[names(data)]
     ## return altered data set
     return(data)
+}
+
+
+## define coercion function
+as.labeled.data.frame <- as.labelled.data.frame <- function(object, ...)
+    UseMethod("as.labeled.data.frame")
+
+as.labeled.data.frame.data.frame <- function(object, ...) {
+    labels(object) <- labels(object)
+    object
+}
+
+## special extraction function that copies the relevant labels
+"[.labeled.data.frame" <- function(x, ..., drop = TRUE) {
+    lbls <- labels(x)
+    x <- NextMethod("[")
+    if (!is.null(dim(x)) || !drop)
+        labels(x) <- lbls[names(x)]
+    x
+}
+
+## special subset function that copies the relevant labels
+subset.labeled.data.frame <- function(x, ...) {
+    lbls <- labels(x)
+    x <- subset.data.frame(x, ...)
+    labels(x) <- lbls[names(x)]
+    x
+}
+
+## special cbind function that copies the relevant labels
+cbind.labeled.data.frame <- function(..., deparse.level = 1) {
+    objects <- list(...)
+    if (any(!(which.df <- sapply(objects, is.data.frame))))
+        warning("Not all objects are data.frames, some labels might be wrong")
+    lbls <- unlist(lapply(objects[which.df], labels))
+    x <- cbind.data.frame(...,  deparse.level =  deparse.level)
+    labels(x) <- lbls[names(x)]
+    x
+}
+
+## special cbind function that copies the relevant labels
+rbind.labeled.data.frame <- function(..., deparse.level = 1) {
+    lbls <- lapply(list(...), labels)
+    diff_lbls <- FALSE
+    for (i in 2:length(lbls)) {
+        diff_lbls <- any(lbls[[i]] != lbls[[1]], diff_lbls)
+    }
+    if (diff_lbls)
+        warning("Labels differ; Labels of first object are used.")
+    lbls <- lbls[[1]]
+    x <- rbind.data.frame(..., deparse.level =  deparse.level)
+    labels(x) <- lbls
+    x
 }
