@@ -2,7 +2,9 @@ importFrom(car, Anova)
 importFrom(utils, toLatex)
 # importFrom(lme4, summary)
 
-export(get_options,
+export(as.labeled.data.frame,
+       as.labelled.data.frame,
+       get_options,
        labels.data.frame,
        latex.table.cont,
        latex.table.fac,
@@ -16,9 +18,16 @@ export(get_options,
        get_options)
 
 S3method(Anova, lme)
+S3method(as.labeled.data.frame, data.frame)
+S3method(labels, default)
 S3method(labels, data.frame)
+S3method("[", labeled.data.frame)
+S3method(subset, labeled.data.frame)
+S3method(cbind, labeled.data.frame)
+S3method(rbind, labeled.data.frame)
 S3method(prettify, summary.lm)
 S3method(prettify, summary.glm)
+S3method(prettify, summary.coxph)
 S3method(prettify, summary.lme)
 S3method(prettify, summary.mer)
 S3method(prettify, anova)
@@ -31,3 +40,4 @@ S3method(print, table.cont)
 S3method(print, table.fac)
 S3method(print, table.list)
 S3method(toLatex, character)
+S3method(toLatex, sessionInfo)
