@@ -96,8 +96,12 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
     res <- as.data.frame(coef(object))
     if (!HR)
         res$"exp(coef)" <- NULL
+
+    if (is.null(labels) || confint)
+        mod <- eval(object$call)
+
     if (confint){
-        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
+        message("confidence intervals are experimental only")
         CI <- confint(mod, level = level)
         if (HR) {
             res$CI_lower <- exp(CI[,1])
@@ -125,7 +129,7 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
 
     ## use variable names as labels
     if (is.null(labels)) {
-        labels <- names(attr(object$terms, "dataClasses"))
+        labels <- names(attr(mod$terms, "dataClasses"))
         names(labels) <- labels
     }
 
