@@ -170,12 +170,12 @@ prettify.summary.mer <- function(object, labels = NULL, sep = ": ", extra.column
                                  confint = TRUE, level = 0.95,
                                  smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                                  signif.stars = getOption("show.signif.stars"),
-                                 ...) {
+                                 simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...) {
 
     res <- as.data.frame(object@coefs)
     if (confint){
         mod <- eval(object@call, envir = attr(attr(object@frame, "terms"), ".Environment"))
-        CI <- confint(mod, level = level)
+        CI <- confint(mod, level = level, simulate = simulate, B = B, ...)
         res$CI_lower <- CI[,1]
         res$CI_upper <- CI[,2]
         ## move confint to the front
