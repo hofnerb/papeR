@@ -117,9 +117,9 @@ is.labeled.data.frame <- is.labelled.data.frame <- function(object) {
 }
 
 ## special extraction function that copies the relevant labels
-"[.labeled.data.frame" <- function(x, ..., drop = FALSE) {
+"[.labeled.data.frame" <- function(x, ..., drop = TRUE) {
     lbls <- labels(x)
-    x <- NextMethod("[")
+    x <- NextMethod("[", drop = drop)
     if (!is.null(dim(x)) || !drop)
         labels(x) <- lbls[names(x)]
     x
