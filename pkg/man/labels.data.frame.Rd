@@ -1,6 +1,17 @@
-\name{labels.data.frame}
+\name{labels}
+
+\alias{labels.default}
 \alias{labels.data.frame}
 \alias{labels<-}
+
+\alias{as.labeled.data.frame}
+\alias{as.labelled.data.frame}
+\alias{is.labeled.data.frame}
+\alias{is.labelled.data.frame}
+\alias{[.labeled.data.frame}
+\alias{subset.labeled.data.frame}
+\alias{cbind.labeled.data.frame}
+\alias{rbind.labeled.data.frame}
 
 \title{
   Extract and Set Labels from / to Data Frames
@@ -18,12 +29,24 @@
 ## assign labels
 labels(data, which = NULL) <- value
 
+## check if data.frame is a special labeled.data.frame
+is.labeled.data.frame(object)
+## set as.labeled.data.frame
+as.labeled.data.frame(object, ...)
+
+## special functions for labeled.data.frame objects that keep the labels
+\method{[}{labeled.data.frame}(x, ..., drop = FALSE)
+\method{subset}{labeled.data.frame}(x, ...)
+\method{cbind}{labeled.data.frame}(..., deparse.level = 1)
+\method{rbind}{labeled.data.frame}(..., deparse.level = 1)
 }
 
 \arguments{
   \item{object}{
-    a \code{data.frame}. Usually a result from \code{\link{read.spss}}
-    in package \pkg{foreign}.
+    a \code{data.frame} or \code{labeled.data.frame}. The former is
+    usually a result from \code{\link{read.spss}} in package
+    \pkg{foreign}, the latter results from adding labels in R or from a
+    call to \code{as.labeled.data.frame}.
   }
   \item{data}{
     a \code{data.frame}, where labels should be added or altered.
@@ -49,12 +72,29 @@ labels(data, which = NULL) <- value
   \item{\dots}{
     further options passed to function \code{\link{abbreviate}} if argument
     \code{abbreviate = TRUE}.
+
+    In \code{x[...]}, \dots can be used to specify indices for
+    extraction. See \code{\link{[}} for details.
+  }
+  \item{x}{
+    a \code{labeled.data.frame}.
+  }
+  \item{drop}{
+    logical (default: FALSE). If \code{TRUE} the result is coerced to
+    the lowest possible dimension (i.e. a vector in case of a single
+    column) and labels might be dropped in this case.
+  }
+  \item{deparse.level}{
+    see \code{\link{cbind}}.
   }
 }
 \details{
   One can set or extract labels from \code{\link{data.frame}} objects.
   If no labels are specified \code{labels(data)} returns the column
-  names of the data frame.
+  names of the data frame. If labels are set (attached to a
+  \code{data.frame}) the \code{data.frame} gets a special class
+  \code{labeled.data.frame} with specific subset and combination
+  functions.
 
   Using \code{abbreviate = TRUE}, all labels are abbreviated to (at
   least) 4 characters such that they are unique. Other minimal lengths

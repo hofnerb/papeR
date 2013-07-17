@@ -112,8 +112,12 @@ as.labeled.data.frame.data.frame <- function(object, ...) {
     object
 }
 
+is.labeled.data.frame <- is.labelled.data.frame <- function(object) {
+    "labeled.data.frame.data" %in% class(object)
+}
+
 ## special extraction function that copies the relevant labels
-"[.labeled.data.frame" <- function(x, ..., drop = TRUE) {
+"[.labeled.data.frame" <- function(x, ..., drop = FALSE) {
     lbls <- labels(x)
     x <- NextMethod("[")
     if (!is.null(dim(x)) || !drop)

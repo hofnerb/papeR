@@ -1,6 +1,5 @@
 importFrom(car, Anova)
 importFrom(utils, toLatex)
-# importFrom(lme4, summary)
 
 export(as.labeled.data.frame,
        as.labelled.data.frame,
@@ -12,12 +11,13 @@ export(as.labeled.data.frame,
        print.table.fac,
        prettify,
        prettifyPValue,
-       summary.fixef,
        toLatex.character,
        "labels<-",
        get_options)
 
 S3method(Anova, lme)
+S3method(confint, lme)
+S3method(confint, mer)
 S3method(as.labeled.data.frame, data.frame)
 S3method(labels, default)
 S3method(labels, data.frame)
@@ -32,8 +32,6 @@ S3method(prettify, summary.lme)
 S3method(prettify, summary.mer)
 S3method(prettify, anova)
 S3method(prettify, data.frame)
-S3method(summary.fixef, mer)
-S3method(summary.fixef, lme)
 S3method(mySapply, default)
 S3method(mySapply, data.frame)
 S3method(print, table.cont)

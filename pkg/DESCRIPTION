@@ -5,6 +5,17 @@ Date: 2013-07-01
 Author: Benjamin Hofner
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
 Description: A toolbox for writing Sweave or other LaTeX-based reports
-Depends: car, nlme, lme4, utils
+Depends:
+    car,
+    nlme,
+    lme4,
+    utils,
+    gmodels
 License: GPL-2
 URL: http://r-forge.r-project.org/projects/reportr/
+Collate:
+    'helpers.R'
+    'labels.R'
+    'latex_table.R'
+    'prettify.R'
+    'toLatex.R'
