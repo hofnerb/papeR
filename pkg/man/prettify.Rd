@@ -11,9 +11,10 @@
 
 \title{Make Pretty Summary Tables}
 \description{
-  Replace variable names with labels and care for a better separation of
-  variable and value label of factor variables. Additionally, confidence
-  intervalls can be easily added and p-values are formated for pretty printing.
+  Improve summary tables by replacing variable names with labels and
+  separating variable names and value labels of factor variables.
+  Additionally, confidence intervalls are added to summaries per default and
+  p-values are formated for pretty printing.
 }
 \usage{
 \method{prettify}{data.frame}(object, labels = NULL, sep = ": ", extra.column = FALSE,
@@ -135,8 +136,9 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL, scientific = FALSE,
 
   \code{prettifyPValue} is a helper function used within the prettify
   functions but can also be used directly on a \code{data.frame} object.
-  The function tries to \dQuote{guess} the column of p-values and
-  formats them nicely. Additionally, significance stars are added if requested.
+  The function tries to (cleverly) \dQuote{guess} the column of p-values
+  (based on the column names) and formats them nicely. Additionally,
+  significance stars are added if requested.
 
 }
 \value{
@@ -166,10 +168,23 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL, scientific = FALSE,
 ## Load data set Orthodont
 data(Orthodont, package = "nlme")
 
+######################################################################
+# Linear model
+######################################################################
+
 ## Fit a linear model
 linmod <- lm(distance ~ age + Sex, data = Orthodont)
 ## Extract pretty summary
 prettify(summary(linmod))
+
+## Extract anova (sequential tests)
+anova(linmod)
+## now prettify it
+prettify(anova(linmod))
+
+######################################################################
+# Random effects model (nlme)
+######################################################################
 
 ### (fit a more suitable model with random effects)
 ## With package nlme:
@@ -182,6 +197,10 @@ prettify(summary(mod))
 ## Extract fixed effects table only and make it pretty
 prettify(summary(mod), confint = FALSE)
 
+######################################################################
+# Random effects model (lme4)
+######################################################################
+
 ## With package lme4:
 require("lme4")
 ## Fit a model for distance with random intercept for Subject
@@ -190,16 +209,31 @@ summary(mod4)
 ## Extract fixed effects table and make it pretty
 prettify(summary(mod4))
 
-## Extract anova (sequential tests)
-anova(linmod)
-## now prettify it
-prettify(anova(linmod))
+## Extract and prettify anova (sequential tests)
+prettify(anova(mod4))
 
-## Extract Anova (partial instead of sequential tests)
+## Better: extract Anova (partial instead of sequential tests)
 library("car")
 Anova(mod4)
 ## now prettify it
 prettify(Anova(mod4))
+
+######################################################################
+# Cox model
+######################################################################
+
+library("survival")
+## Load data set ovarian
+data(ovarian, package = "survival")
+
+## fit a Cox model
+mod5 <- coxph(Surv(futime, fustat) ~ age, data=ovarian)
+summary(mod5)
+## Make pretty summary
+prettify(summary(mod5))
+
+## Make pretty summary
+prettify(Anova(mod5))
 }
 
 \keyword{methods}

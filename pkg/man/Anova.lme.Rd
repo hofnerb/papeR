@@ -22,33 +22,18 @@
     further arguments to be passed to \code{\link{anova.lme}}
   }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
-\references{
-%% ~put references to the literature/web site here ~
-}
-\author{
-%%  ~~who you are~~
-}
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+  \code{\link[car]{Anova}} (package \pkg{car})
 }
 \examples{
+## Load data set Orthodont
+data(Orthodont, package = "nlme")
 
+## Fit a model for distance with random intercept for Subject
+mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+
+Anova(mod)
 }
 
 \keyword{methods}

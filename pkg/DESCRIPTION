@@ -1,7 +1,7 @@
 Package: papeR
 Title: A toolbox for writing Sweave or other LaTeX-based papers and reports
-Version: 0.2
-Date: 2013-07-01
+Version: 0.3
+Date: 2013-08-02
 Author: Benjamin Hofner
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
 Description: A toolbox for writing Sweave or other LaTeX-based reports
@@ -9,10 +9,11 @@ Depends:
     car,
     nlme,
     lme4,
+    survival,
     utils,
     gmodels
 License: GPL-2
-URL: http://r-forge.r-project.org/projects/reportr/
+URL: http://r-forge.r-project.org/projects/paper/
 Collate:
     'helpers.R'
     'labels.R'

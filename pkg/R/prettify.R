@@ -221,6 +221,7 @@ prettify.anova <- function(object, labels = NULL,
         idx <- res[, 1] %in% names(labels)
         res[idx, 1] <- labels[idx]
     }
+    res <- res[!apply(res, 1, function(x) any(is.na(x))), ]
     res
 }
 

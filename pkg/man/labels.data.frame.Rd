@@ -35,7 +35,7 @@ is.labeled.data.frame(object)
 as.labeled.data.frame(object, ...)
 
 ## special functions for labeled.data.frame objects that keep the labels
-\method{[}{labeled.data.frame}(x, ..., drop = FALSE)
+\method{[}{labeled.data.frame}(x, ..., drop = TRUE)
 \method{subset}{labeled.data.frame}(x, ...)
 \method{cbind}{labeled.data.frame}(..., deparse.level = 1)
 \method{rbind}{labeled.data.frame}(..., deparse.level = 1)
@@ -80,7 +80,7 @@ as.labeled.data.frame(object, ...)
     a \code{labeled.data.frame}.
   }
   \item{drop}{
-    logical (default: FALSE). If \code{TRUE} the result is coerced to
+    logical (default: TRUE). If \code{TRUE} the result is coerced to
     the lowest possible dimension (i.e. a vector in case of a single
     column) and labels might be dropped in this case.
   }
