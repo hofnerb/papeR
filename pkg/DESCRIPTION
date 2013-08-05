@@ -18,5 +18,6 @@ Collate:
     'helpers.R'
     'labels.R'
     'latex_table.R'
+    'plot.R'
     'prettify.R'
     'toLatex.R'

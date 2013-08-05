@@ -1,4 +1,17 @@
 ------------------------------------------------------------------------
+r31 | hofner | 2013-08-05 12:07:48 +0200 (Mo, 05. Aug 2013) | 4 Zeilen
+
+- added NEWS and ChangeLog
+- started preparation of release candidate
+- increased version to 0.3
+
+------------------------------------------------------------------------
+r30 | hofner | 2013-08-02 14:17:08 +0200 (Fr, 02. Aug 2013) | 3 Zeilen
+
+minor changes
+peparations for release candidate
+
+------------------------------------------------------------------------
 r29 | hofner | 2013-07-17 19:18:43 +0200 (Mi, 17. Jul 2013) | 3 Zeilen
 
 - fixed bug in prettify.summary.coxph (labels were not correctly guessed)
