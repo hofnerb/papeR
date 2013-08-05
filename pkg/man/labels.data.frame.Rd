@@ -12,6 +12,7 @@
 \alias{subset.labeled.data.frame}
 \alias{cbind.labeled.data.frame}
 \alias{rbind.labeled.data.frame}
+\alias{plot.labeled.data.frame}
 
 \title{
   Extract and Set Labels from / to Data Frames
@@ -39,6 +40,10 @@ as.labeled.data.frame(object, ...)
 \method{subset}{labeled.data.frame}(x, ...)
 \method{cbind}{labeled.data.frame}(..., deparse.level = 1)
 \method{rbind}{labeled.data.frame}(..., deparse.level = 1)
+
+## special plotting function for labeled.data.frame objects
+\method{plot}{labeled.data.frame}(data, variables = names(data),
+     labels = TRUE, group = NULL, ...)
 }
 
 \arguments{
@@ -49,7 +54,8 @@ as.labeled.data.frame(object, ...)
     call to \code{as.labeled.data.frame}.
   }
   \item{data}{
-    a \code{data.frame}, where labels should be added or altered.
+    a \code{data.frame} or a \code{labeled.data.frame}, where labels
+    should be added or altered.
   }
   \item{which}{
     either a number indicating the label to extract or a character
@@ -75,6 +81,9 @@ as.labeled.data.frame(object, ...)
 
     In \code{x[...]}, \dots can be used to specify indices for
     extraction. See \code{\link{[}} for details.
+
+    In \code{plot}, \code{\dots} can be used to specify further graphial
+    parameters.
   }
   \item{x}{
     a \code{labeled.data.frame}.
@@ -86,6 +95,21 @@ as.labeled.data.frame(object, ...)
   }
   \item{deparse.level}{
     see \code{\link{cbind}}.
+  }
+  \item{variables}{
+    character vector or numeric vector defining (continuous) variables
+    that should be included in the table. Per default, all numeric and
+    factor variables of \code{data} are used.
+  }
+  \item{labels}{
+    labels for the variables. If \code{labels = TRUE} (the default),
+    \code{labels(data, which = variables)} is used as labels. If
+    \code{labels = NULL} \code{variables} is used as label.
+    \code{labels} can also be specified as character vector.
+  }
+  \item{group}{
+    character or numeric specifying a grouping factor. Per default no
+    grouping is applied.
   }
 }
 \details{
@@ -117,10 +141,12 @@ as.labeled.data.frame(object, ...)
   \code{\link{read.spss}} in package \pkg{foreign}
 }
 \examples{
-data <- data.frame(a = 1:10, b = 10:1, c = rep(1, 10))
+data <- data.frame(a = 1:10, b = 10:1, c = rep(1:2, 5))
 labels(data) <- c("a", "b", "c")
 ## one gets a named character vector of labels
 labels(data)
+## data is now a labeled.data.frame:
+class(data)
 
 ## set labels for a and b only
 labels(data, which = c("a", "b")) <- c("x", "y")
@@ -136,7 +162,7 @@ labels(data)
 
 ## attach label for new variable:
 data2 <- data
-data2$z <- rep(2, 10)
+data2$z <- as.factor(rep(2:3, each = 5))
 labels(data2)    # no label for z
 labels(data2, which = "z") <- "new_label"
 labels(data2)
@@ -147,6 +173,20 @@ labels(data) <- c("This is a long label", "This is another long label",
                   "This also")
 labels(data)
 labels(data, abbreviate = TRUE, minlength = 10)
+
+## plot the data auto"magically"; numerics as boxplot, factors as barplots
+par(mfrow = c(2,2))
+plot(data2)
+
+## a single plot
+plot(data2, variables = "a")
+## grouped plot
+plot(data2, variables = "a", group = "z")
+## make "c" a factor and plot "c" vs. "z"
+data2$c <- as.factor(data2$c)
+plot(data2, variables = "c", group = "z")
+## the same
+plot(data2, variables = 3, group = 4)
 }
 
 \keyword{methods}
