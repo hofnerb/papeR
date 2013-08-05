@@ -1,0 +1,181 @@
+------------------------------------------------------------------------
+r29 | hofner | 2013-07-17 19:18:43 +0200 (Mi, 17. Jul 2013) | 3 Zeilen
+
+- fixed bug in prettify.summary.coxph (labels were not correctly guessed)
+- changed default to x[..., drop = TRUE] for labeled.data.frame
+
+------------------------------------------------------------------------
+r28 | hofner | 2013-07-17 12:08:40 +0200 (Mi, 17. Jul 2013) | 2 Zeilen
+
+added missing file
+
+------------------------------------------------------------------------
+r27 | hofner | 2013-07-17 12:08:20 +0200 (Mi, 17. Jul 2013) | 7 Zeilen
+
+- removed summary_fixef 
+  (better results can be achieved using prettify() on summaries from random effects models)
+- added confint functions for mixed models
+- added function is.labeled.data.frame
+- added documentation for new functions and for extraction and subset functions 
+  for 'labeled.data.frame's
+
+------------------------------------------------------------------------
+r26 | hofner | 2013-07-11 19:42:10 +0200 (Do, 11. Jul 2013) | 8 Zeilen
+
+- defined new class "labeled.data.frame" with special 
+  subset, cbind and rbind function (to keep labels when changing data set)
+- new function as.labeled.data.frame
+- new prettify function for summary.coxph
+- new toLatex function for sessionInfo() 
+  [with nicer results than the default function: e.g. citations included]
+
+
+------------------------------------------------------------------------
+r25 | hofner | 2013-07-05 12:06:03 +0200 (Fr, 05. Jul 2013) | 3 Zeilen
+
+added prettify methods for lme and mer summaries
+lots of improvements in prettify
+
+------------------------------------------------------------------------
+r24 | hofner | 2013-07-02 19:14:54 +0200 (Di, 02. Jul 2013) | 5 Zeilen
+
+bugfix in labels(..., abbreviate = TRUE)
+added prettify.anova for Anova and anova results
+refactored code in prettify
+latex.tables.XXX now with argument labels = TRUE for easy labeling
+
+------------------------------------------------------------------------
+r23 | hofner | 2013-07-02 19:02:48 +0200 (Di, 02. Jul 2013) | 2 Zeilen
+
+add manual for toLatex.character
+
+------------------------------------------------------------------------
+r22 | hofner | 2013-07-02 17:09:24 +0200 (Di, 02. Jul 2013) | 4 Zeilen
+
+make checks happy
+include significance stars
+improved manuals
+
+------------------------------------------------------------------------
+r21 | hofner | 2013-07-01 17:36:37 +0200 (Mo, 01. Jul 2013) | 4 Zeilen
+
+improved prettify
+bugfix in latex.table.fac
+increased version to 0.2
+
+------------------------------------------------------------------------
+r20 | hofner | 2013-07-01 14:56:34 +0200 (Mo, 01. Jul 2013) | 3 Zeilen
+
+new prettify function for summary.glm
+improved prettify function for summary.lm
+
+------------------------------------------------------------------------
+r19 | hofner | 2013-06-10 11:59:43 +0200 (Mo, 10. Jun 2013) | 3 Zeilen
+
+added toLatex function to sanitize R output for usage within latex
+added automatic sanitization to latex.table functions
+
+------------------------------------------------------------------------
+r18 | hofner | 2013-06-10 11:57:31 +0200 (Mo, 10. Jun 2013) | 2 Zeilen
+
+added prettify method for summary.lm objects
+
+------------------------------------------------------------------------
+r17 | hofner | 2013-05-22 13:31:43 +0200 (Mi, 22. Mai 2013) | 2 Zeilen
+
+improved label handling when data set is alterd (e.g. variables dropped, added or renamed)
+
+------------------------------------------------------------------------
+r16 | hofner | 2013-03-07 19:46:48 +0100 (Do, 07. Mär 2013) | 2 Zeilen
+
+first implementation of grouped statistics in latex.table.XXX
+
+------------------------------------------------------------------------
+r15 | hofner | 2013-03-07 15:43:28 +0100 (Do, 07. Mär 2013) | 3 Zeilen
+
+added level argument to summary.fixef
+fixed example
+
+------------------------------------------------------------------------
+r14 | hofner | 2013-03-04 10:36:28 +0100 (Mo, 04. Mär 2013) | 5 Zeilen
+
+changes in labels():
+- don't set labels to NA
+- export labels.data.frame
+- report which labels are not matching (if any)
+
+------------------------------------------------------------------------
+r13 | hofner | 2013-02-28 19:38:22 +0100 (Do, 28. Feb 2013) | 2 Zeilen
+
+added confidence intervals to summary_fixef functions
+
+------------------------------------------------------------------------
+r12 | hofner | 2013-02-28 18:57:41 +0100 (Do, 28. Feb 2013) | 3 Zeilen
+
+added missing manual for get_options
+added functions to extract confidence intervals for mixed models
+
+------------------------------------------------------------------------
+r11 | hofner | 2013-02-18 17:12:25 +0100 (Mo, 18. Feb 2013) | 3 Zeilen
+
+refactored code in latex.table.xxx functions
+new arguments caption, label and center in latex.table.xxx function
+
+------------------------------------------------------------------------
+r10 | hofner | 2013-02-05 19:14:53 +0100 (Di, 05. Feb 2013) | 3 Zeilen
+
+added labels to latex.table functions
+try to fix lme4 error ("summary not exported")
+
+------------------------------------------------------------------------
+r9 | hofner | 2013-01-28 18:49:15 +0100 (Mo, 28. Jan 2013) | 5 Zeilen
+
+improvements in latex.table functions:
+- new print functions
+- other internal changes
+bug in summary.fixef now really fixed
+
+------------------------------------------------------------------------
+r8 | hofner | 2013-01-28 15:06:38 +0100 (Mo, 28. Jan 2013) | 2 Zeilen
+
+restructure code
+
+------------------------------------------------------------------------
+r7 | hofner | 2013-01-28 14:13:40 +0100 (Mo, 28. Jan 2013) | 2 Zeilen
+
+fixed problems with latex.table.cont (with only one variable)
+
+------------------------------------------------------------------------
+r6 | hofner | 2013-01-28 12:12:50 +0100 (Mo, 28. Jan 2013) | 5 Zeilen
+
+added new arguments to latex.table functions
+added examples for latex.table and summary.fixef
+bugfix in summary.fixef: used to terminate when no p-value present
+
+
+------------------------------------------------------------------------
+r5 | hofner | 2013-01-22 17:20:34 +0100 (Di, 22. Jan 2013) | 2 Zeilen
+
+summary.fixef: small improvements in display of p-values
+
+------------------------------------------------------------------------
+r4 | hofner | 2013-01-22 16:54:02 +0100 (Di, 22. Jan 2013) | 2 Zeilen
+
+removed default files from project
+
+------------------------------------------------------------------------
+r3 | hofner | 2013-01-22 16:53:00 +0100 (Di, 22. Jan 2013) | 3 Zeilen
+
+added prettify function to improve summary tables
+improved summary.fixef functions
+
+------------------------------------------------------------------------
+r2 | hofner | 2013-01-21 14:48:17 +0100 (Mo, 21. Jan 2013) | 2 Zeilen
+
+initialization
+
+------------------------------------------------------------------------
+r1 | stefan7th | 2011-09-15 17:26:09 +0200 (Do, 15. Sep 2011) | 1 Zeile
+
+small themeroot fix
+------------------------------------------------------------------------

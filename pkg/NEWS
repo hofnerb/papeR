@@ -1,0 +1,37 @@
+        CHANGES in `papeR' VERSION 0.3-0 (2013-08-02)
+
+  o  preparation of release candidate for CRAN
+
+        CHANGES in `papeR' VERSION 0.2-0 (2013-07-01)
+
+  o  greatly improved prettify functions:
+      -  added prettify functions for summary.coxph, summary.lme, summary.mer 
+      	 and anova	
+      -  added confidence intervals to all model based prettify functions 
+         and made confint = TRUE the default;
+         confidence intervalls are computed by refitting the model 
+         within prettify and using confint() on this model (experimental)
+      -  improved handling of p-values
+
+  o  added new class "labeled.data.frame" with special 
+     subset, cbind and rbind function (to keep labels when changing data set)
+
+  o  added "shortcut" to define labels using labels = TRUE in latex.tables.XXX:
+     labels are extracted from labeled.data.frame directly
+
+  o  new toLatex function for sessionInfo() 
+     [with nicer results than the default function from base R: 
+      e.g. citations are included]
+
+        CHANGES in `papeR' VERSION 0.1-0 (2013-01-21)
+
+  o  initial version
+
+  o  improvement of prettify function
+  
+  o  added prettify functions for more object classes
+
+  o  added function toLatex to sanitize code for usage in LaTeX
+
+  o  improved label handling when data set is alterd 
+     (e.g. variables dropped, added or renamed)
