@@ -1,4 +1,10 @@
 ------------------------------------------------------------------------
+r32 | hofner | 2013-08-05 18:42:25 +0200 (Mo, 05. Aug 2013) | 3 Zeilen
+
+- added plot function for labeled.data.frame objects that 
+  allows for univariate plots and grouped, bivariate plots
+
+------------------------------------------------------------------------
 r31 | hofner | 2013-08-05 12:07:48 +0200 (Mo, 05. Aug 2013) | 4 Zeilen
 
 - added NEWS and ChangeLog
