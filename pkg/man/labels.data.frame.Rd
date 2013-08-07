@@ -59,7 +59,7 @@ as.labeled.data.frame(object, ...)
   }
   \item{which}{
     either a number indicating the label to extract or a character
-    string with the variable name for which the label should be
+    string with the \emph{variable name} for which the label should be
     extracted. One can also use a vector of numerics or character
     strings to extract mutiple labels. If \code{which} is \code{NULL}
     (default), all labels are returned.
@@ -125,34 +125,48 @@ as.labeled.data.frame(object, ...)
   can specified by setting \code{minlength} (see examples below).
 }
 \value{
-  A named vector of variable labels is returned, where the names are
-  the variable names.
+  \code{labels(data)} returns a named vector of variable labels, where
+  the names match the variable names and the values represent the labels.
 }
 
 \author{
   Benjamin Hofner
 }
 \note{
-  Reordering of the data set does \bold{not} reorder the labels, in
-  contrary, the labels are dropped in this case. New labels are always
-  attached at the end of the label vector, see examples below.
+  If you import data using \code{\link{read.spss}}, \code{labels} are
+  set but the \code{data.frame} is not coerced to a
+  \code{labeled.data.frame}. Use \code{as.labeled.data.frame} in this
+  case or do any manipulation of labels using the asignment function
+  (see examples below).
 }
 \seealso{
   \code{\link{read.spss}} in package \pkg{foreign}
 }
 \examples{
+############################################################
+### Basic labels manipulations
+
 data <- data.frame(a = 1:10, b = 10:1, c = rep(1:2, 5))
-labels(data) <- c("a", "b", "c")
+labels(data)  ## only the variable names
+is.labeled.data.frame(data) ## not yet
+
+## now set labels
+labels(data) <- c("my_a", "my_b", "my_c")
 ## one gets a named character vector of labels
 labels(data)
 ## data is now a labeled.data.frame:
-class(data)
+is.labeled.data.frame(data)
+
+## Altervatively one could use as.labeled.data.frame(data);
+## This would keep the default labels but set the class
+## correctly.
 
 ## set labels for a and b only
+## Note that which represents the variable names!
 labels(data, which = c("a", "b")) <- c("x", "y")
 labels(data)
 
-## reset labels:
+## reset labels (to variable names):
 labels(data) <- NULL
 labels(data)
 
@@ -163,16 +177,44 @@ labels(data)
 ## attach label for new variable:
 data2 <- data
 data2$z <- as.factor(rep(2:3, each = 5))
-labels(data2)    # no label for z
+labels(data2)  ## no real label for z, only variable name
 labels(data2, which = "z") <- "new_label"
 labels(data2)
-## Note: labels are always attached at the end of the vector
+
+
+############################################################
+### Abbreviate labels
 
 ## attach long labels to data
 labels(data) <- c("This is a long label", "This is another long label",
                   "This also")
 labels(data)
 labels(data, abbreviate = TRUE, minlength = 10)
+
+
+############################################################
+### Data manipulations
+
+## reorder dataset:
+tmp <- data2[, c(1, 4, 3, 2)]
+labels(tmp)
+## labels are kept and order is updated
+## (but only if data.set has class "labeled.data.frame")
+
+## subsetting to single variables:
+labels(tmp[, 2])  ## label got lost as tmp drops to vector
+labels(tmp[, 2, drop = FALSE]) ## prevent dropping labels
+
+## one can also cbind labeled.data.set objects:
+labels(cbind(data, tmp[, 2, drop = TRUE]))
+## or better:
+labels(cbind(data, tmp[, 2, drop = FALSE]))
+## or rbind labeled.data.set objects:
+labels(rbind(data, tmp[, -2]))
+
+
+############################################################
+### Plotting labeled.data.set objects
 
 ## plot the data auto"magically"; numerics as boxplot, factors as barplots
 par(mfrow = c(2,2))

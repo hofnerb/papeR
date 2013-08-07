@@ -9,7 +9,7 @@
 \alias{prettify.summary.mer}
 \alias{prettifyPValue}
 
-\title{Make Pretty Summary Tables}
+\title{Make Pretty Summary and Anova Tables}
 \description{
   Improve summary tables by replacing variable names with labels and
   separating variable names and value labels of factor variables.
@@ -17,42 +17,44 @@
   p-values are formated for pretty printing.
 }
 \usage{
+## generic function called by all prettify.summary.xxx functions
 \method{prettify}{data.frame}(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                    signif.stars = getOption("show.signif.stars"), ...)
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"), ...)
 
 \method{prettify}{summary.lm}(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                    confint = TRUE, level = 0.95,
-                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                    signif.stars = getOption("show.signif.stars"), ...)
+         confint = TRUE, level = 0.95,
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"), ...)
 
 \method{prettify}{summary.glm}(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                     confint = TRUE, level = 0.95, OR = TRUE,
-                     smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                     signif.stars = getOption("show.signif.stars"), ...)
+         confint = TRUE, level = 0.95, OR = TRUE,
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"), ...)
 
 \method{prettify}{summary.coxph}(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                       confint = TRUE, level = 0.95, HR = TRUE,
-                       smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                       signif.stars = getOption("show.signif.stars"), ...)
+         confint = TRUE, level = 0.95, HR = TRUE,
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"), ...)
 
 \method{prettify}{summary.lme}(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                    confint = TRUE, level = 0.95,
-                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                    signif.stars = getOption("show.signif.stars"), ...)
+         confint = TRUE, level = 0.95,
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"), ...)
 
 \method{prettify}{summary.mer}(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                    confint = TRUE, level = 0.95,
-                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                    signif.stars = getOption("show.signif.stars"),
-                    simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...)
+         confint = TRUE, level = 0.95,
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"),
+         simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...)
 
 \method{prettify}{anova}(object, labels,
-               smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-               signif.stars = getOption("show.signif.stars"), ...)
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"), ...)
 
 ## helper function for pretty p-values
-prettifyPValue(object, smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
+               scientific = FALSE,
                signif.stars = getOption("show.signif.stars"), ...)
 }
 \arguments{

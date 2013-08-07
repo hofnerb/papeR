@@ -50,6 +50,7 @@
   packages \pkg{nlme} and \pkg{lme4}
 }
 \author{
-  Benjamin Hofner
+  Benjamin Hofner, partially based on code from package stats.
+  See source code for documentation.
 }
 

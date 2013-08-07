@@ -6,8 +6,6 @@
 prettify <- function(object, ...)
     UseMethod("prettify")
 
-## function(object, digits = NULL, scientific = FALSE,
-##          smallest.pval = 0.001, ci = TRUE, level = 0.95)
 prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
                                 confint = TRUE, level = 0.95,
                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,

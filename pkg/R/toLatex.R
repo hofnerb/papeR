@@ -1,8 +1,14 @@
-################################################################################
-##  Author: Benjamin Hofner, benjamin.hofner@fau.de
-
 ## functions for coercion to LaTeX "objects"
 
+## modified version based on sanitize subroutine defined in
+## R package xtable (Version  1.7-1) inside function print.xtable
+##
+## URL of original package: http://CRAN.R-project.org/package=xtable
+## Authors of R package xtable (inlcuding print.xtable):
+##   David Dahl <email: dahl@stat.tamu.edu> with contributions and
+##   suggestions from many others (see source code).
+##
+## Licence of R package xtable: GPL-2 | GPL-3
 toLatex.character <- function(object, ...) {
     result <- object
     result <- gsub("\\\\", "SANITIZE.BACKSLASH", result)
@@ -30,7 +36,14 @@ toLatex.character <- function(object, ...) {
 }
 
 
-## based on toLatex.sessionInfo from package utils
+## modified version based on toLatex.sessionInfo from package utils
+##
+## Copyright (C) 1995-2013 The R Core Team
+## URL: http://cran.at.r-project.org/src/base/R-3/R-3.0.1.tar.gz
+## Inside archive path: /src/library/utils/R/sessionInfo.R
+## Licence of R package utils: >= GPL-2
+##
+## with major changes and modifications by Benjamin Hofner
 toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
                                 base.pkgs = FALSE, other.pkgs = TRUE,
                                 namespace.pks = FALSE, citations = TRUE,
@@ -46,8 +59,11 @@ toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
     opkgver <- sapply(object$otherPkgs, function(x) x$Version)
     nspkgver <- sapply(object$loadedOnly, function(x) x$Version)
 
-    if (citations)
-        key <- write.bib("base", file = "Rpackages.bib", append = append, verbose = FALSE)$key
+    if (citations) {
+        bibs <- write.bib("base", file = file, append = append, verbose = FALSE)
+        all_bibs <- bibs
+        key <- bibs$key
+    }
 
     z <- c("\\begin{itemize}\\raggedright",
            paste0("  \\item ", object$R.version$version.string,
@@ -67,24 +83,59 @@ toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
         if (is.null(pkgs))
             opkgver <- opkgver[sort(names(opkgver))]
         if (citations) {
-            key <- write.bib(names(opkgver), file = "Rpackages.bib",
-                             append = TRUE, verbose = FALSE)$key
+            bibs <- write.bib(names(opkgver), file = file, append = TRUE,
+                              verbose = FALSE)
+            all_bibs <- c(all_bibs, bibs)
+            key <- bibs$key
         }
         z <- c(z, "  \\item Used packages: ", "  \\begin{itemize}",
                formatPkgs(names(opkgver), opkgver, key), "  \\end{itemize}")
     }
     if (namespace.pks && length(nspkgver)) {
         nspkgver <- nspkgver[sort(names(nspkgver))]
-        if (citations)
-            key <- write.bib(names(nspkgver), file = "Rpackages.bib",
-                             append = TRUE, verbose = FALSE)$key
+        if (citations) {
+            bibs <- write.bib(names(nspkgver), file = file, append = TRUE,
+                              verbose = FALSE)
+            all_bibs <- c(all_bibs, bibs)
+            key <- bibs$key
+        }
         z <- c(z, "  \\item Loaded via a namespace (and not attached): ",
                "  \\begin{itemize}",
                formatPkgs(names(nspkgver), nspkgver, key), "  \\end{itemize}")
     }
     z <- c(z, "\\end{itemize}")
-    class(z) <- "Latex"
-    z
+
+    if (citations && !is.null(file)) {
+        message("Written ", length(all_bibs), " BibTeX entries to file '", file,
+                "' ...")
+        message("Use \\bibliography{", file, "} to include citations.\n\n")
+    }
+    if (is.null(file)) {
+        attr(z, "BibTeX") <- all_bibs
+        class(z) <- c("LatexBibtex", "Latex")
+        return(z)
+    } else {
+        class(z) <- "Latex"
+        return(z)
+    }
+}
+
+print.LatexBibtex <- function(x, ...) {
+    NextMethod("print", x)
+    cat("\n\n")
+    print(attr(x, "BibTeX"))
+    invisible(x)
+}
+
+toLatex.LatexBibtex <- function(object, ...) {
+    attributes(object) <- NULL
+    class(object) <- "Latex"
+    object
+}
+
+toBibtex.LatexBibtex <- function(object, ...) {
+    object <- toBibtex(attr(object, "BibTeX"))
+    object
 }
 
 formatPkgs <- function(name, vers, key, citecommand = "\\citep") {
@@ -96,7 +147,12 @@ formatPkgs <- function(name, vers, key, citecommand = "\\citep") {
     paste0("\\item ", name, " (vers. ", vers, ") ", cites)
 }
 
-## based on package bibtex
+## modified version based on R package version 0.3-5.
+##
+## URL of original package: http://CRAN.R-project.org/package=bibtex
+## Authors of R package bibtex (inlcuding write.bib):
+##   Romain Francois, Kurt Hornik
+## Licence of R package bibtex: GPL-2 | GPL-3
 write.bib <- function(entry = "base", file = NULL,
                       append = FALSE, verbose = TRUE) {
 
@@ -157,7 +213,7 @@ write.bib <- function(entry = "base", file = NULL,
         fh <- file(file, open = ifelse(append, "a+", "w+"))
         on.exit(if (isOpen(fh)) close(fh))
         if (verbose)
-            message("Writing ", length(bibs), " Bibtex entries ... ",
+            message("Writing ", length(bibs), " BibTeX entries ... ",
                     appendLF = FALSE)
         writeLines(toBibtex(bibs), fh)
         if (verbose)

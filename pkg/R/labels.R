@@ -113,7 +113,7 @@ as.labeled.data.frame.data.frame <- function(object, ...) {
 }
 
 is.labeled.data.frame <- is.labelled.data.frame <- function(object) {
-    "labeled.data.frame.data" %in% class(object)
+    "labeled.data.frame" %in% class(object)
 }
 
 ## special extraction function that copies the relevant labels
@@ -139,22 +139,51 @@ cbind.labeled.data.frame <- function(..., deparse.level = 1) {
     if (any(!(which.df <- sapply(objects, is.data.frame))))
         warning("Not all objects are data.frames, some labels might be wrong")
     lbls <- unlist(lapply(objects[which.df], labels))
-    x <- cbind.data.frame(...,  deparse.level =  deparse.level)
+    x <- cbind.data.frame(...,  deparse.level = deparse.level)
     labels(x) <- lbls[names(x)]
     x
 }
 
+check_equality <- function(x, y) {
+    ## exactly equal
+    if (all(x == y)) {
+        return(TRUE)
+    }
+    ## unequal length
+    if (length(x) != length(y)) {
+        return(FALSE)
+    }
+    ## equal but different order
+    anywhere <- rep(NA, length(x))
+    for (i in 1:length(x))
+        anywhere[i] <- x[i] %in% y
+    if (all(anywhere)) {
+        return(TRUE)
+    } else {
+        return(FALSE)
+    }
+}
+
+
 ## special cbind function that copies the relevant labels
 rbind.labeled.data.frame <- function(..., deparse.level = 1) {
+    nms <- lapply(list(...), names)
     lbls <- lapply(list(...), labels)
     diff_lbls <- FALSE
+    diff_nms <- FALSE
+    for (i in 2:length(nms)) {
+        diff_nms <- any(!check_equality(nms[[i]], nms[[1]]), diff_nms)
+    }
+    if (diff_nms)
+        stop("names of 'data.frame's differ")
+
     for (i in 2:length(lbls)) {
-        diff_lbls <- any(lbls[[i]] != lbls[[1]], diff_lbls)
+        diff_lbls <- any(!check_equality(lbls[[i]], lbls[[1]]), diff_lbls)
     }
     if (diff_lbls)
-        warning("Labels differ; Labels of first object are used.")
+        warning("Labels differ; Labels of first data.set are used.")
     lbls <- lbls[[1]]
-    x <- rbind.data.frame(..., deparse.level =  deparse.level)
+    x <- rbind.data.frame(..., deparse.level = deparse.level)
     labels(x) <- lbls
     x
 }

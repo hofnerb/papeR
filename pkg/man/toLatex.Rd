@@ -10,10 +10,10 @@
 \method{toLatex}{character}(object, ...)
 
 \method{toLatex}{sessionInfo}(object, pkgs = NULL, locale = FALSE,
-                   base.pkgs = FALSE, other.pkgs = TRUE,
-                   namespace.pks = FALSE, citations = TRUE,
-                   citecommand = "\\\\citep", file = "Rpackages.bib",
-                   append = FALSE, ...)
+        base.pkgs = FALSE, other.pkgs = TRUE,
+        namespace.pks = FALSE, citations = TRUE,
+        citecommand = "\\\\citep", file = "Rpackages.bib",
+        append = FALSE, ...)
 }
 
 \arguments{
@@ -51,7 +51,9 @@
       to write \code{\\\\} instead.
   }
   \item{file}{
-    Specify path to BibTeX file where citations should be saved.
+    Specify path to BibTeX file where citations should be saved. If
+    \code{file = NULL} is specified, the BibTeX entries are attached to
+    the output as attribute \code{"BibTeX"}. See examples for details.
   }
   \item{append}{
     logical (default = FALSE). Should citations be added to an existing
@@ -67,7 +69,8 @@
   e.g. in Sweave chunks with \code{results=tex}.
 }
 \author{
-  Benjamin Hofner
+  Benjamin Hofner, based on code from package xtable, bibtex and package utils.
+  See source code for documentation.
 }
 \seealso{
   \code{\link{toLatex}}. For details on \code{toLatex.sessionInfo} see
@@ -76,6 +79,32 @@
 \examples{
 txt <- "Price: <= 500$ & additional goodies"
 toLatex(txt)
+
+############################################################
+## session info for automatic inclusion in reports
+
+info <- toLatex(sessionInfo(), file = NULL)
+info
+
+## extract first part (the Latex part)
+toLatex(info)
+## extract second part (the BibTeX part)
+toBibtex(info)
+
+
+############################################################
+## usual usage scenario
+
+## Do not run automatically as it needs write access to the current
+## working directory. This code (without removing the file) could
+## for example be included in a Latex chunk of your Sweave or knitr
+## report.
+
+\dontrun{getwd()     ## location where write access is needed
+toLatex(sessionInfo(), file = "packages.bib")
+file.remove("packages.bib")
+}
+
 }
 
 \keyword{univar}
