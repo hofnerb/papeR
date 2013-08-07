@@ -1,8 +1,11 @@
 importFrom(car, Anova)
 importFrom(utils, toLatex)
+importFrom(utils, toBibtex)
 
 export(as.labeled.data.frame,
+       is.labeled.data.frame,
        as.labelled.data.frame,
+       is.labelled.data.frame,
        get_options,
        labels.data.frame,
        latex.table.cont,
@@ -39,3 +42,5 @@ S3method(print, table.fac)
 S3method(print, table.list)
 S3method(toLatex, character)
 S3method(toLatex, sessionInfo)
+S3method(toLatex, LatexBibtex)
+S3method(toBibtex, LatexBibtex)

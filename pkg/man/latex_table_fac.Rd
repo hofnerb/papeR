@@ -125,6 +125,8 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
   containing the computed statistics is returned from function
   \code{latex.table.cont}. Addtional attributes required for the print
   function are contained (see \code{attr(x, "latex.table.options")}).
+  These are extracted in the print function using the function
+  \code{\link{get_options}}.
 
   The output is printed with LaTeX style syntax highlighting to be used
   e.g. in Sweave chunks with \code{results=tex}.
@@ -133,7 +135,7 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
   Benjamin Hofner
 }
 \seealso{
-  \code{\link{latex.table.cont}}
+  \code{\link{latex.table.cont}} and \code{\link{get_options}}
 }
 \examples{
 ## Use dataset Orthodont

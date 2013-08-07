@@ -1,6 +1,6 @@
+
 ################################################################################
 # sapply function that differentiates between data.frames and (numeric) vectors
-
 mySapply <- function(object, FUN, ...)
     UseMethod("mySapply")
 
@@ -33,6 +33,13 @@ get_options <- function(object, name) {
 }
 
 
+## modified version based on confint.lm from package stats
+##
+## Copyright (C) 1994-2003 W. N. Venables and B. D. Ripley
+## Copyright (C) 2003-2012 The R Core Team
+## URL: http://cran.at.r-project.org/src/base/R-3/R-3.0.1.tar.gz
+## Inside archive path: /src/library/stats/R/confint.R
+## Licence of R package utils: >= GPL-2
 confint.lme <- function (object, parm, level = 0.95, ...) {
     cf <- fixef(object)
     pnames <- names(cf)

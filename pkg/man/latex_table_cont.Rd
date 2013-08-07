@@ -13,8 +13,9 @@
 latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
                  colnames = NULL, digits = 2, table = c("tabular", "longtable"),
                  align = NULL, caption = NULL, label = NULL, floating = FALSE,
-                 center = TRUE, sep = !is.null(group), sanitize = TRUE, count = TRUE, mean_sd =
-                 TRUE, quantiles = TRUE, incl_outliers = TRUE, drop = TRUE,
+                 center = TRUE, sep = !is.null(group), sanitize = TRUE,
+                 count = TRUE, mean_sd = TRUE, quantiles = TRUE,
+                 incl_outliers = TRUE, drop = TRUE,
                  show.NAs = any(is.na(data[, variables])))
 
 \method{print}{table.cont}(x,
@@ -146,6 +147,8 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   containing the computed statistics is returned from function
   \code{latex.table.cont}. Addtional attributes required for the print
   function are contained (see \code{attr(x, "latex.table.options")}).
+  These are extracted in the print function using the function
+  \code{\link{get_options}}.
 
   The output is printed with LaTeX style syntax highlighting to be used
   e.g. in Sweave chunks with \code{results=tex}.
@@ -154,7 +157,7 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   Benjamin Hofner
 }
 \seealso{
-  \code{\link{latex.table.fac}}
+  \code{\link{latex.table.fac}} and \code{\link{get_options}}
 }
 \examples{
 ## Use dataset Orthodont
