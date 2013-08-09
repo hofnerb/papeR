@@ -12,7 +12,7 @@
   \tabular{ll}{
     Package: \tab papeR\cr
     Type: \tab Package\cr
-    Version: \tab 0.3\cr
+    Version: \tab 0.4\cr
     Date: \tab 2013-08-07\cr
     License: \tab GPL-2\cr
   }

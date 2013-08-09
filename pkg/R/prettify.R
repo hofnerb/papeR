@@ -99,7 +99,8 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
         mod <- eval(object$call)
 
     if (confint){
-        message("confidence intervals are experimental only")
+        message("Confidence intervals are experimental only;\n",
+                "Model refitted but original environment not available.\n")
         CI <- confint(mod, level = level)
         if (HR) {
             res$CI_lower <- exp(CI[,1])
@@ -168,13 +169,54 @@ prettify.summary.lme <- function(object, labels = NULL, sep = ": ", extra.column
              scientific = scientific, signif.stars = signif.stars, ...)
 }
 
-prettify.summary.mer <- function(object, labels = NULL, sep = ": ", extra.column = FALSE,
-                                 confint = TRUE, level = 0.95,
-                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-                                 signif.stars = getOption("show.signif.stars"),
-                                 simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...) {
+prettify.summary.merMod <- function(object,
+                     labels = NULL, sep = ": ", extra.column = FALSE,
+                     confint = TRUE, level = 0.95,
+                     smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                     signif.stars = getOption("show.signif.stars"),
+                     method = c("profile", "Wald", "boot"), B = 1000, ...) {
 
-    res <- as.data.frame(object@coefs)
+    res <- as.data.frame(coefficients(object))
+
+    if (confint || is.null(labels))
+        mod <- eval(object$call)
+
+    if (confint){
+        message("Confidence intervals are experimental only;\n",
+                "Model refitted but original environment not available.\n")
+        CI <- confint(mod, level = level, method = method, nsim = B,
+                      ...)[rownames(res), ]
+        res$CI_lower <- CI[,1]
+        res$CI_upper <- CI[,2]
+        ## move confint to the front
+        newVars <- (ncol(res) -1):ncol(res)
+        res <- cbind(res[, 1, drop = FALSE],
+                     res[, newVars],
+                     res[, - c(1, newVars)])
+        names(res)[2] <- "CI (lower)"
+        names(res)[3] <- "CI (upper)"
+    }
+
+    ## use variable names as labels
+    if (is.null(labels)) {
+        labels <- names(attr(attr(mod@frame, "terms"), "dataClasses"))
+        names(labels) <- labels
+    }
+
+    prettify(res, labels = labels, sep = sep, extra.column = extra.column,
+             smallest.pval = smallest.pval, digits = digits,
+             scientific = scientific, signif.stars = signif.stars, ...)
+}
+
+
+prettify.summary.mer <- function(object,
+                     labels = NULL, sep = ": ", extra.column = FALSE,
+                     confint = TRUE, level = 0.95,
+                     smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+                     signif.stars = getOption("show.signif.stars"),
+                     simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...) {
+
+    res <- as.data.frame(coefficients(object))
     if (confint){
         mod <- eval(object@call, envir = attr(attr(object@frame, "terms"), ".Environment"))
         CI <- confint(mod, level = level, simulate = simulate, B = B, ...)
