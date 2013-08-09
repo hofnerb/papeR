@@ -216,9 +216,9 @@ prettify(anova(mod4))
 
 ## Better: extract Anova (partial instead of sequential tests)
 library("car")
-Anova(mod4)
+try(Anova(mod4))  ## doesn't currently work with lme4 >= vers. 1.0.0
 ## now prettify it
-prettify(Anova(mod4))
+try(prettify(Anova(mod4))) ## doesn't currently work with lme4 >= vers. 1.0.0
 
 ######################################################################
 # Cox model

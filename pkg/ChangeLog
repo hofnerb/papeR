@@ -1,4 +1,15 @@
 ------------------------------------------------------------------------
+r34 | hofner | 2013-08-07 17:11:09 +0200 (Mi, 07. Aug 2013) | 8 Zeilen
+
+- improvement/bugfix in rbind.labeled.data.frame()
+- bugfix in is.labeled.data.frame()
+- improvement of toLatex.sessionInfo()
+- numerous improvements in manuals
+- added missing items to NAMESPACE
+
+- Now really push release to CRAN
+
+------------------------------------------------------------------------
 r33 | hofner | 2013-08-06 16:42:28 +0200 (Di, 06. Aug 2013) | 2 Zeilen
 
 release 0.3 to CRAN
