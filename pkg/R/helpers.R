@@ -100,3 +100,24 @@ confint.mer <- function (object, parm, level = 0.95,
     ci[] <- cf[parm] + ses %o% fac
     ci
 }
+
+
+
+
+refit_model <- function(cl, ENV = globalenv()) {
+
+    if (!is.null(cl[["data"]]) && is.name(cl[["data"]]) &&
+        is.null(ENV[[as.character(cl[["data"]])]])) {
+
+        return(FALSE)  ## set confint = FALSE
+        ## else: data might be a data.frame
+    }
+    if (is.null(cl[["data"]]) &&
+        any(sapply(all.vars(cl[["formula"]]),
+                   function(what) is.null(ENV[[what]])))) {
+
+        return(FALSE)  ## set confint = FALSE
+    }
+
+    return(eval(cl, envir = ENV))
+}
