@@ -12,9 +12,23 @@ prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column 
                                 signif.stars = getOption("show.signif.stars"), ...) {
 
     res <- as.data.frame(coef(object))
+
+    ## compute confidence interval or extract it from confint
+    if (is.logical(confint)) {
+        if (confint)
+            mod <- refit_model(cl = object$call,
+                               ENV = attr(object$terms, ".Environment"))
+        if (is.logical(mod)) {
+            confint <- mod
+        } else {
+            CI <- confint(mod, level = level)
+        }
+    } else {
+        CI <- confint
+        confint <- TRUE
+    }
+
     if (confint){
-        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
-        CI <- confint(mod, level = level)
         res$CI_lower <- CI[,1]
         res$CI_upper <- CI[,2]
         ## move confint to the front
@@ -47,9 +61,23 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
     if (OR <- (object$family$family == "binomial" && OR)) {
         res$OR <- exp(res$Estimate)
     }
+
+    ## compute confidence interval or extract it from confint
+    if (is.logical(confint)) {
+        if (confint)
+            mod <- refit_model(cl = object$call,
+                               ENV = attr(object$terms, ".Environment"))
+        if (is.logical(mod)) {
+            confint <- mod
+        } else {
+            CI <- confint(mod, level = level)
+        }
+    } else {
+        CI <- confint
+        confint <- TRUE
+    }
+
     if (confint){
-        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
-        CI <- confint(mod, level = level)
         if (OR) {
             res$CI_lower <- exp(CI[,1])
             res$CI_upper <- exp(CI[,2])
@@ -89,19 +117,32 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
                                    confint = TRUE, level = 0.95, HR = TRUE,
                                    smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                                    signif.stars = getOption("show.signif.stars"),
-                                   ...) {
+                                   env = parent.frame(), ...) {
 
     res <- as.data.frame(coef(object))
     if (!HR)
         res$"exp(coef)" <- NULL
 
-    if (is.null(labels) || confint)
-        mod <- eval(object$call)
+    ## compute confidence interval or extract it from confint
+    if (is.logical(confint) || is.null(labels)) {
+        if (is.null(labels) || confint)
+            mod <- refit_model(cl = object$call, ENV = env)
+        if (is.logical(mod)) {
+            confint <- mod
+            if (is.null(labels))
+                stop("Model can't be refitted and no labels are specified. ",
+                     "Please specify labels.")
+        } else {
+            CI <- confint(mod, level = level)
+        }
+    } else {
+        CI <- confint
+        confint <- TRUE
+    }
 
     if (confint){
         message("Confidence intervals are experimental only;\n",
                 "Model refitted but original environment not available.\n")
-        CI <- confint(mod, level = level)
         if (HR) {
             res$CI_lower <- exp(CI[,1])
             res$CI_upper <- exp(CI[,2])
@@ -144,9 +185,23 @@ prettify.summary.lme <- function(object, labels = NULL, sep = ": ", extra.column
                                  ...) {
 
     res <- as.data.frame(object$tTable)
+
+    ## compute confidence interval or extract it from confint
+    if (is.logical(confint)) {
+        if (confint)
+            mod <- refit_model(cl = object$call,
+                               ENV = attr(object$terms, ".Environment"))
+        if (is.logical(mod)) {
+            confint <- mod
+        } else {
+            CI <- confint(mod, level = level)
+        }
+    } else {
+        CI <- confint
+        confint <- TRUE
+    }
+
     if (confint){
-        mod <- eval(object$call, envir = attr(object$terms, ".Environment"))
-        CI <- confint(mod, level = level)
         res$CI_lower <- CI[,1]
         res$CI_upper <- CI[,2]
         ## move confint to the front
@@ -174,18 +229,32 @@ prettify.summary.merMod <- function(object,
                      confint = TRUE, level = 0.95,
                      smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                      signif.stars = getOption("show.signif.stars"),
-                     method = c("profile", "Wald", "boot"), B = 1000, ...) {
+                     method = c("profile", "Wald", "boot"), B = 1000,
+                     env = parent.frame(), ...) {
 
     res <- as.data.frame(coefficients(object))
 
-    if (confint || is.null(labels))
-        mod <- eval(object$call)
+    ## compute confidence interval or extract it from confint
+    if (is.logical(confint) || is.null(labels)) {
+        if (is.null(labels) ||confint)
+            mod <- refit_model(cl = object$call, ENV = env)
+        if (is.logical(mod)) {
+            confint <- mod
+            if (is.null(labels))
+                stop("Model can't be refitted and no labels are specified. ",
+                     "Please specify labels.")
+        } else {
+            CI <- confint(mod, level = level, method = method, nsim = B,
+                          ...)[rownames(res), ]
+        }
+    } else {
+        CI <- confint
+        confint <- TRUE
+    }
 
     if (confint){
         message("Confidence intervals are experimental only;\n",
                 "Model refitted but original environment not available.\n")
-        CI <- confint(mod, level = level, method = method, nsim = B,
-                      ...)[rownames(res), ]
         res$CI_lower <- CI[,1]
         res$CI_upper <- CI[,2]
         ## move confint to the front
@@ -217,9 +286,23 @@ prettify.summary.mer <- function(object,
                      simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...) {
 
     res <- as.data.frame(coefficients(object))
+
+    ## compute confidence interval or extract it from confint
+    if (is.logical(confint)) {
+        if (confint)
+            mod <- refit_model(cl = object@call,
+                               ENV = attr(attr(object@frame, "terms"), ".Environment"))
+        if (is.logical(mod)) {
+            confint <- mod
+        } else {
+            CI <- confint(mod, level = level, simulate = simulate, B = B, ...)
+        }
+    } else {
+        CI <- confint
+        confint <- TRUE
+    }
+
     if (confint){
-        mod <- eval(object@call, envir = attr(attr(object@frame, "terms"), ".Environment"))
-        CI <- confint(mod, level = level, simulate = simulate, B = B, ...)
         res$CI_lower <- CI[,1]
         res$CI_upper <- CI[,2]
         ## move confint to the front
