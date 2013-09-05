@@ -2,9 +2,8 @@
 ## Tests for prettify interface
 
 require("papeR")
-require("survival")
-require("nlme")
-require("lme4")
+
+set.seed(1234)
 
 ################################################################################
 ## Test computation of CIs when data is part of the call
@@ -124,13 +123,45 @@ fit_model <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
     return(ret)
 }
 
-fit_model("lm")
-fit_model("glm")
-fit_model("coxph")
-fit_model("lme")
-fit_model("lmer")
+### check lm interface
+(res <- fit_model("lm"))
+stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+## differences in CIs as different data is used
+all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+## CI dropped. Other values equal
+stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
 
-# stopifnot(all(all.equal(psm1, psm1a),
-#               all.equal(psm1, psm2),
-#               all.equal(psm1, psm3),
-#               all.equal(psm1, psm4)))
+### check glm interface
+(res <- fit_model("glm"))
+stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+## differences in CIs as different data is used
+all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+## CI dropped. Other values equal
+stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+
+### check lme interface
+(res <- fit_model("lme"))
+stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+## differences in CIs as different data is used
+all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+## CI dropped. Other values equal
+stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+
+### check coxph interface
+(res <- fit_model("coxph"))
+stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+stopifnot(inherits(res[[2]], "try-error"))
+stopifnot(inherits(res[[4]], "try-error"))
+## differences in CIs as different data is used
+all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+
+### check lmer interface
+(res <- fit_model("lmer"))
+stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+stopifnot(inherits(res[[2]], "try-error"))
+stopifnot(inherits(res[[4]], "try-error"))
+## differences in CIs as different data is used
+all.equal(res[[1]], res[[5]], check.attributes = FALSE)

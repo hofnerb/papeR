@@ -104,7 +104,7 @@ confint.mer <- function (object, parm, level = 0.95,
 
 
 
-refit_model <- function(cl, ENV = globalenv()) {
+refit_model <- function(cl, ENV = globalenv(), summary, .call = "prettify") {
 
     if (!is.null(cl[["data"]]) && is.name(cl[["data"]]) &&
         is.null(ENV[[as.character(cl[["data"]])]])) {
@@ -118,6 +118,16 @@ refit_model <- function(cl, ENV = globalenv()) {
 
         return(FALSE)  ## set confint = FALSE
     }
+    mod <- eval(cl, envir = ENV)
+    ae <- all.equal(summary(mod), summary)
 
-    return(eval(cl, envir = ENV))
+    if (!all(ae == TRUE))
+        warning(" In ", .call, ":\n",
+                "  Summary specified via argument ", sQuote("object"),
+                " and summary of refitted model differ.\n",
+                "  Make shure that the data set has not been changed.\n",
+                "  Differences are:\n",
+                paste("  ", ae, "\n"), call. = FALSE)
+
+    return(mod)
 }
