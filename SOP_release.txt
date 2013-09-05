@@ -1,0 +1,12 @@
+
+  ###########################################################
+  #  Standard operating procedures for `papeR' development  #
+  ###########################################################
+
+
+  Creating ChangeLog
+  ------------------
+
+  Go to root directory of project:
+
+    svn log -rHEAD:2 > pkg/ChangeLog

@@ -11,13 +11,15 @@ prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column 
                                 smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                                 signif.stars = getOption("show.signif.stars"), ...) {
 
+    .call <- match.call()
     res <- as.data.frame(coef(object))
 
     ## compute confidence interval or extract it from confint
     if (is.logical(confint)) {
         if (confint)
             mod <- refit_model(cl = object$call,
-                               ENV = attr(object$terms, ".Environment"))
+                               ENV = attr(object$terms, ".Environment"),
+                               summary = object, .call = .call)
         if (is.logical(mod)) {
             confint <- mod
         } else {
@@ -57,6 +59,7 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
                                  signif.stars = getOption("show.signif.stars"),
                                  ...) {
 
+    .call <- match.call()
     res <- as.data.frame(coef(object))
     if (OR <- (object$family$family == "binomial" && OR)) {
         res$OR <- exp(res$Estimate)
@@ -66,7 +69,8 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
     if (is.logical(confint)) {
         if (confint)
             mod <- refit_model(cl = object$call,
-                               ENV = attr(object$terms, ".Environment"))
+                               ENV = attr(object$terms, ".Environment"),
+                               summary = object, .call = .call)
         if (is.logical(mod)) {
             confint <- mod
         } else {
@@ -119,6 +123,7 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
                                    signif.stars = getOption("show.signif.stars"),
                                    env = parent.frame(), ...) {
 
+    .call <- match.call()
     res <- as.data.frame(coef(object))
     if (!HR)
         res$"exp(coef)" <- NULL
@@ -126,7 +131,8 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
     ## compute confidence interval or extract it from confint
     if (is.logical(confint) || is.null(labels)) {
         if (is.null(labels) || confint)
-            mod <- refit_model(cl = object$call, ENV = env)
+            mod <- refit_model(cl = object$call, ENV = env,
+                               summary = object, .call = .call)
         if (is.logical(mod)) {
             confint <- mod
             if (is.null(labels))
@@ -184,13 +190,15 @@ prettify.summary.lme <- function(object, labels = NULL, sep = ": ", extra.column
                                  signif.stars = getOption("show.signif.stars"),
                                  ...) {
 
+    .call <- match.call()
     res <- as.data.frame(object$tTable)
 
     ## compute confidence interval or extract it from confint
     if (is.logical(confint)) {
         if (confint)
             mod <- refit_model(cl = object$call,
-                               ENV = attr(object$terms, ".Environment"))
+                               ENV = attr(object$terms, ".Environment"),
+                               summary = object, .call = .call)
         if (is.logical(mod)) {
             confint <- mod
         } else {
@@ -232,12 +240,14 @@ prettify.summary.merMod <- function(object,
                      method = c("profile", "Wald", "boot"), B = 1000,
                      env = parent.frame(), ...) {
 
+    .call <- match.call()
     res <- as.data.frame(coefficients(object))
 
     ## compute confidence interval or extract it from confint
     if (is.logical(confint) || is.null(labels)) {
         if (is.null(labels) ||confint)
-            mod <- refit_model(cl = object$call, ENV = env)
+            mod <- refit_model(cl = object$call, ENV = env,
+                               summary = object, .call = .call)
         if (is.logical(mod)) {
             confint <- mod
             if (is.null(labels))
@@ -285,13 +295,15 @@ prettify.summary.mer <- function(object,
                      signif.stars = getOption("show.signif.stars"),
                      simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...) {
 
+    .call <- match.call()
     res <- as.data.frame(coefficients(object))
 
     ## compute confidence interval or extract it from confint
     if (is.logical(confint)) {
         if (confint)
             mod <- refit_model(cl = object@call,
-                               ENV = attr(attr(object@frame, "terms"), ".Environment"))
+                               ENV = attr(attr(object@frame, "terms"), ".Environment"),
+                               summary = object, .call = .call)
         if (is.logical(mod)) {
             confint <- mod
         } else {

@@ -35,7 +35,8 @@
 \method{prettify}{summary.coxph}(object, labels = NULL, sep = ": ", extra.column = FALSE,
          confint = TRUE, level = 0.95, HR = TRUE,
          smallest.pval = 0.001, digits = NULL, scientific = FALSE,
-         signif.stars = getOption("show.signif.stars"), ...)
+         signif.stars = getOption("show.signif.stars"),
+         env = parent.frame(), ...)
 
 \method{prettify}{summary.lme}(object, labels = NULL, sep = ": ", extra.column = FALSE,
          confint = TRUE, level = 0.95,
@@ -76,7 +77,12 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
     (default: \code{FALSE}).
   }
   \item{confint}{
-    logical. Should confidence intervals be added?
+    logical value indicating if confidence intervals sould be added or
+    the confidence intervals themself.
+
+    Using \code{confint = TRUE} is experimental only and special care
+    needs to be taken that the data set used for fitting is neither
+    changed nor deleted. See \sQuote{Details} and \sQuote{Examples}.
   }
   \item{level}{
     confidence level; Per default 0.95\% confidence
@@ -120,6 +126,11 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
   \item{\dots}{
     further options. Currently not applicable.
   }
+  \item{env}{
+    specify environment in which the model was fitted. Needed to find
+    the correct data for refitting the model in order to obtain
+    confidence intervals.
+  }
 }
 \details{
   Specialized functions that prettify summary tables of various models
@@ -134,7 +145,18 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
   functions then use \code{\link{confint}} on the refitted model. For
   \code{lme} and \code{mer} models special
   \code{\link[=confint.mer]{confint}} functions are defined in this
-  package. For details see there.
+  package. For details see there. Note that is it highly important
+  \bold{not} to modify or delete the data in the fitting environment if
+  one wants to obtain correct confidence intervals. See examples for what
+  might happen. We try ourt best to find changes of the data and to warn
+  the user (but without any warranty).
+
+  Alternatively, one can directly specify the confidence intervals using
+  e.g. \code{confint = confint(model)}, where \code{model} is the fitted
+  model. This does not rely on refitting of the model and should always
+  work as expected. In this case, arguments \code{level},
+  \code{simulate} and \code{B} are ignored. Note that in this case it is
+  adviced to also specify the labels by hand!
 
   \code{prettifyPValue} is a helper function used within the prettify
   functions but can also be used directly on a \code{data.frame} object.
@@ -236,6 +258,44 @@ prettify(summary(mod5))
 
 ## Make pretty summary
 prettify(Anova(mod5))
+
+
+
+######################################################################
+# ATTENTION when confint = TRUE: Do not modify or delete data
+######################################################################
+
+## Fit a linear model (same as above)
+linmod <- lm(distance ~ age + Sex, data = Orthodont)
+## Extract pretty summary
+prettify(summary(linmod))
+
+## Change the data (age in month instead of years)
+Orthodont$age <- Orthodont$age * 12
+prettify(summary(linmod))  ## confidence intervals for age have changed
+                           ## but coefficients stayed the same; a
+                           ## warning is issued
+
+## Remove data in fitting environment
+rm(Orthodont)
+prettify(summary(linmod))  ## confidence intervals are missing as no
+                           ## data set was available to refit the model
+
+
+
+######################################################################
+# Use confint to specify confidence interval without refitting
+######################################################################
+
+## make labels without using the data set
+labels <- c("distance", "age", "Subject", "Sex")
+names(labels) <- labels
+
+## usually easier via: labels(Orthodont)
+
+prettify(summary(linmod), confint = confint(linmod),
+         labels = labels)
+
 }
 
 \keyword{methods}

@@ -3,6 +3,15 @@
   o  included (experimental) version of prettify.summary.merMod
      to make lme4 (>= 1.0.0) happy
 
+  o  included better handling of environments in prettify functions
+     and checks if the data has changed
+
+  o  included possibility to specify confidence intervals directly
+     via confint, e.g.
+       prettify(summary(mod), confint = confint(mod))
+
+  o  added first software tests
+
         CHANGES in `papeR' VERSION 0.3-0 (2013-08-07)
 
   o  first release to CRAN
