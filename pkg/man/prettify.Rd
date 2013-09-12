@@ -7,6 +7,7 @@
 \alias{prettify.summary.coxph}
 \alias{prettify.summary.lme}
 \alias{prettify.summary.mer}
+\alias{prettify.summary.merMod}
 \alias{prettifyPValue}
 
 \title{Make Pretty Summary and Anova Tables}
@@ -43,11 +44,19 @@
          smallest.pval = 0.001, digits = NULL, scientific = FALSE,
          signif.stars = getOption("show.signif.stars"), ...)
 
+## method for mixed models fitted with lme4 (vers. < 1.0)
 \method{prettify}{summary.mer}(object, labels = NULL, sep = ": ", extra.column = FALSE,
          confint = TRUE, level = 0.95,
          smallest.pval = 0.001, digits = NULL, scientific = FALSE,
          signif.stars = getOption("show.signif.stars"),
          simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...)
+
+## method for mixed models fitted with lme4 (vers. >= 1.0)
+\method{prettify}{summary.merMod}(object, labels = NULL, sep = ": ", extra.column = FALSE,
+         confint = TRUE, level = 0.95,
+         smallest.pval = 0.001, digits = NULL, scientific = FALSE,
+         signif.stars = getOption("show.signif.stars"),
+         method = c("profile", "Wald", "boot"), B = 1000, env = parent.frame(), ...)
 
 \method{prettify}{anova}(object, labels,
          smallest.pval = 0.001, digits = NULL, scientific = FALSE,
@@ -123,6 +132,11 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
     number of samples to take in \code{\link{mcmcsamp}}. See
     \code{\link{confint.mer}} for details.
   }
+  \item{method}{
+    Determines the method for computing confidence intervals; One of
+    \code{"profile"} (default), \code{"Wald"}, \code{"boot"}. For
+    details see \code{confint.merMod} in package \pkg{lme4}.
+  }
   \item{\dots}{
     further options. Currently not applicable.
   }
@@ -179,8 +193,8 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
 \seealso{
   \code{\link{summary}}, \code{\link{summary.lm}},
   \code{\link{summary.glm}}, \code{\link{summary.lme}},
-  \code{\link[=summary.mer-class]{summary.mer}} and \code{\link{summary.coxph}}
-  for summary functions.
+  \code{summary.merMod} (or \code{summary.mer-class} in lme4 < 1.0)
+  and \code{\link{summary.coxph}} for summary functions.
 
   \code{\link{anova}} and \code{\link{Anova}} for ANOVA functions.
 

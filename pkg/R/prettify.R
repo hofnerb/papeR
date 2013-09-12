@@ -287,7 +287,7 @@ prettify.summary.merMod <- function(object,
              scientific = scientific, signif.stars = signif.stars, ...)
 }
 
-
+## function for lme4 version < 1.0 only
 prettify.summary.mer <- function(object,
                      labels = NULL, sep = ": ", extra.column = FALSE,
                      confint = TRUE, level = 0.95,
@@ -296,7 +296,7 @@ prettify.summary.mer <- function(object,
                      simulate = c("ifneeded", TRUE, FALSE), B = 1000, ...) {
 
     .call <- match.call()
-    res <- as.data.frame(coefficients(object))
+    res <- as.data.frame(object@coefs)
 
     ## compute confidence interval or extract it from confint
     if (is.logical(confint)) {

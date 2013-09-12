@@ -1,0 +1,466 @@
+
+R Under development (unstable) (2013-09-04 r63830) -- "Unsuffered Consequences"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #####
+> ## Tests for prettify interface
+> 
+> require("papeR")
+Loading required package: papeR
+Loading required package: car
+Loading required package: MASS
+Loading required package: nnet
+Loading required package: nlme
+Loading required package: lme4
+Loading required package: lattice
+Loading required package: Matrix
+
+Attaching package: 'lme4'
+
+The following object is masked from 'package:nlme':
+
+    lmList
+
+Loading required package: survival
+Loading required package: splines
+> 
+> set.seed(1234)
+> 
+> ################################################################################
+> ## Test computation of CIs when data is part of the call
+> ## (i.e. not only a link is passed but really the data)
+> model_fit <- function(my_data, model_class) {
++     do.call(model_class, list(y ~ x, data = my_data))
++ }
+> 
+> for (model_class in c("lm", "glm")) {  #, "coxph", "lme", "lmer")) {
++     cat(model_class, "\n")
++     x <- rnorm(100)
++     y <- rnorm(100, mean = 2 * x)
++     data <- data.frame(y = y, x = x)
++ 
++     ## fit model with data argument
++     mod <- do.call(model_class, list(y ~ x, data = data))
++     psm1 <- prettify(summary(mod))
++     rm(data)
++     psm1a <- prettify(summary(mod))
++ 
++     ## fit model without data argument
++     mod2 <- do.call(model_class, list(y ~ x))
++     psm2 <- prettify(summary(mod2))
++ 
++     ## fit model in different environment
++     mod3 <- model_fit(data.frame(y = y, x = x), model_class)
++     psm3 <- prettify(summary(mod3))
++ 
++     ## change data and compute summary
++     x <- rnorm(100)
++     y <- rnorm(100, mean = 2 * x)
++     data <- data.frame(y = y, x = x)
++ 
++     psm4 <- prettify(summary(mod))
++ 
++     stopifnot(all(all.equal(psm1, psm1a),
++                   all.equal(psm1, psm2),
++                   all.equal(psm1, psm3),
++                   all.equal(psm1, psm4)))
++ }
+lm 
+glm 
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Warning messages:
+1: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+2: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+3: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+4: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+5: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+> 
+> ################################################################################
+> ## Test computation of CIs when data is *not* part of the call
+> rm(list = ls())
+> model_fit2 <- function(my_data, model_class) {
++     switch(model_class,
++            lm = lm(y ~ x, data = my_data),
++            glm = glm(y ~ x, data = my_data),
++            coxph = coxph(Surv(y, event) ~ x, data = my_data),
++            lme = lme(y ~ x, random = ~ 1 | group, data = my_data),
++            lmer = lmer(y ~ x + (1 | group), data = my_data))
++ }
+> 
+> fit_model <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
++     x <- rnorm(100)
++     y <- rnorm(100, mean = 2 * x)
++     data <- data.frame(y = y, x = x)
++ 
++     if (model_class %in% c("lme", "lmer")) {
++         group <- sample(1:2, 100, replace = TRUE)
++         data$group <- group
++     }
++ 
++     if (model_class %in% "coxph") {
++         event <- as.logical(sample(0:1, 100, replace = TRUE))
++         data$event <- event
++         data$y <- exp(y)
++     }
++ 
++     ## fit model with data argument
++     mod <- switch(model_class,
++                   lm = lm(y ~ x, data = data),
++                   glm = glm(y ~ x, data = data),
++                   coxph = coxph(Surv(y, event) ~ x, data = data),
++                   lme = lme(y ~ x, random = ~ 1 | group, data = data),
++                   lmer = lmer(y ~ x + (1 | group), data = data))
++     psm1 <- prettify(summary(mod))
++     data_tmp <- data
++     rm(data)
++     psm1a <- try(prettify(summary(mod)), silent = TRUE)
++ 
++     ## fit model without data argument
++     mod2 <- switch(model_class,
++                    lm = lm(y ~ x),
++                    glm = glm(y ~ x),
++                    coxph = coxph(Surv(y, event) ~ x),
++                    lme = lme(y ~ x, random = ~ 1 | group),
++                    lmer = lmer(y ~ x + (1 | group)))
++     psm2 <- prettify(summary(mod2))
++ 
++     ## fit model in different environment
++     mod3 <- model_fit2(data_tmp, model_class)
++     psm3 <- try(prettify(summary(mod3)), silent = TRUE)
++ 
++     ## change data and compute summary
++     x <- rnorm(100)
++     y <- rnorm(100, mean = 2 * x)
++     data <- data.frame(y = y, x = x)
++ 
++     if (model_class %in% c("lme", "lmer")) {
++         group <- sample(1:2, 100, replace = TRUE)
++         data$group <- group
++     }
++ 
++     if (model_class %in% "coxph") {
++         event <- as.logical(sample(0:1, 100, replace = TRUE))
++         data$event <- event
++         data$y <- exp(y)
++     }
++ 
++     psm4 <- prettify(summary(mod))
++ 
++     ret <- list(psm1, psm1a, psm2, psm3, psm4)
++     names(ret) <- c("standard", "data removed from global environment",
++                     "no data argument in call", "local environment",
++                     "data in global environment changed")
++     return(ret)
++ }
+> 
+> ### check lm interface
+> (res <- fit_model("lm"))
+$standard
+                 Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) -0.06708292 -0.2747372  0.1405714  0.1046398 -0.641084    0.523
+2           x  1.96515024  1.7392253  2.1910752  0.1138466 17.261383   <0.001
+     
+1    
+2 ***
+
+$`data removed from global environment`
+                 Estimate Std. Error   t value Pr(>|t|)    
+1 (Intercept) -0.06708292  0.1046398 -0.641084    0.523    
+2           x  1.96515024  0.1138466 17.261383   <0.001 ***
+
+$`no data argument in call`
+                 Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) -0.06708292 -0.2747372  0.1405714  0.1046398 -0.641084    0.523
+2           x  1.96515024  1.7392253  2.1910752  0.1138466 17.261383   <0.001
+     
+1    
+2 ***
+
+$`local environment`
+                 Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) -0.06708292 -0.2747372  0.1405714  0.1046398 -0.641084    0.523
+2           x  1.96515024  1.7392253  2.1910752  0.1138466 17.261383   <0.001
+     
+1    
+2 ***
+
+$`data in global environment changed`
+                 Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) -0.06708292 -0.2131608  0.1753971  0.1046398 -0.641084    0.523
+2           x  1.96515024  1.6525640  2.0780860  0.1138466 17.261383   <0.001
+     
+1    
+2 ***
+
+Warning message:
+ In prettify.summary.lmsummary(mod):
+  Summary specified via argument 'object' and summary of refitted model differ.
+  Make shure that the data set has not been changed.
+  Differences are:
+   Component 3: Mean relative difference: 1.440076 
+   Component 4: Mean relative difference: 0.05217365 
+   Component 6: Mean relative difference: 0.07321088 
+   Component 8: Mean relative difference: 0.00387986 
+   Component 9: Mean relative difference: 0.003932442 
+   Component 10: Mean relative difference: 0.01567603 
+   Component 11: Mean relative difference: 0.1157109 
+ 
+> stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+> stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+> ## differences in CIs as different data is used
+> all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+[1] "Component 3: Mean relative difference: 0.07360499"
+[2] "Component 4: Mean relative difference: 0.06339508"
+> ## CI dropped. Other values equal
+> stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+> 
+> ### check glm interface
+> (res <- fit_model("glm"))
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+Waiting for profiling to be done...
+$standard
+               Estimate  CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 0.0988258 -0.08954311  0.2871947 0.09610835  1.028275    0.306
+2           x 1.9020844  1.70434607  2.0998227 0.10088875 18.853286   <0.001
+     
+1    
+2 ***
+
+$`data removed from global environment`
+               Estimate Std. Error   t value Pr(>|t|)    
+1 (Intercept) 0.0988258 0.09610835  1.028275    0.306    
+2           x 1.9020844 0.10088875 18.853286   <0.001 ***
+
+$`no data argument in call`
+               Estimate  CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 0.0988258 -0.08954311  0.2871947 0.09610835  1.028275    0.306
+2           x 1.9020844  1.70434607  2.0998227 0.10088875 18.853286   <0.001
+     
+1    
+2 ***
+
+$`local environment`
+               Estimate  CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 0.0988258 -0.08954311  0.2871947 0.09610835  1.028275    0.306
+2           x 1.9020844  1.70434607  2.0998227 0.10088875 18.853286   <0.001
+     
+1    
+2 ***
+
+$`data in global environment changed`
+               Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)    
+1 (Intercept) 0.0988258 -0.2661522  0.1276317 0.09610835  1.028275    0.306    
+2           x 1.9020844  1.7219261  2.1619418 0.10088875 18.853286   <0.001 ***
+
+Warning messages:
+1: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+2: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+3: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+4: In if (class(mod) == "mer") { :
+  the condition has length > 1 and only the first element will be used
+5:  In prettify.summary.glmsummary(mod):
+  Summary specified via argument 'object' and summary of refitted model differ.
+  Make shure that the data set has not been changed.
+  Differences are:
+   Component 4: Mean relative difference: 0.101652 
+   Component 5: Mean relative difference: 0.03714908 
+   Component 8: Mean relative difference: 0.02533463 
+   Component 11: Mean relative difference: 1.412373 
+   Component 12: Mean relative difference: 0.1777574 
+   Component 14: Mean relative difference: 0.101652 
+   Component 16: Mean relative difference: 0.1582326 
+   Component 17: Mean relative difference: 0.2225051 
+ 
+> stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+> stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+> ## differences in CIs as different data is used
+> all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+[1] "Component 3: Mean relative difference: 0.1082503" 
+[2] "Component 4: Mean relative difference: 0.09286993"
+> ## CI dropped. Other values equal
+> stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+> 
+> ### check lme interface
+> (res <- fit_model("lme"))
+$standard
+                 Value  CI (lower) CI (upper) Std.Error DF   t-value p-value
+1 (Intercept) 0.150213 -0.06242377  0.3628499 0.1071368 97  1.402068   0.164
+2           x 1.933623  1.72701783  2.1402272 0.1040975 97 18.575112  <0.001
+     
+1    
+2 ***
+
+$`data removed from global environment`
+                 Value Std.Error DF   t-value p-value    
+1 (Intercept) 0.150213 0.1071368 97  1.402068   0.164    
+2           x 1.933623 0.1040975 97 18.575112  <0.001 ***
+
+$`no data argument in call`
+                 Value  CI (lower) CI (upper) Std.Error DF   t-value p-value
+1 (Intercept) 0.150213 -0.06242377  0.3628499 0.1071368 97  1.402068   0.164
+2           x 1.933623  1.72701783  2.1402272 0.1040975 97 18.575112  <0.001
+     
+1    
+2 ***
+
+$`local environment`
+                 Value  CI (lower) CI (upper) Std.Error DF   t-value p-value
+1 (Intercept) 0.150213 -0.06242377  0.3628499 0.1071368 97  1.402068   0.164
+2           x 1.933623  1.72701783  2.1402272 0.1040975 97 18.575112  <0.001
+     
+1    
+2 ***
+
+$`data in global environment changed`
+                 Value CI (lower) CI (upper) Std.Error DF   t-value p-value    
+1 (Intercept) 0.150213 -0.4056462  0.2897115 0.1071368 97  1.402068   0.164    
+2           x 1.933623  1.7998203  2.2421902 0.1040975 97 18.575112  <0.001 ***
+
+Warning message:
+ In prettify.summary.lmesummary(mod):
+  Summary specified via argument 'object' and summary of refitted model differ.
+  Make shure that the data set has not been changed.
+  Differences are:
+   Component 1: Component 1: Component 1: Mean relative difference: 5.108725 
+   Component 4: Component 1: Mean relative difference: 0.1421679 
+   Component 4: Component 2: Component 1: Mean relative difference: 1 
+   Component 5: Mean relative difference: 0.6232168 
+   Component 6: Mean relative difference: 0.03085291 
+   Component 7: Attributes: < Component 1: Mean relative difference: 5.145267 > 
+   Component 7: Mean relative difference: 13239.63 
+   Component 8: Mean relative difference: 0.02319813 
+   Component 10: Component 1: 56 string mismatches 
+   Component 14: Mean relative difference: 1.444164 
+   Component 15: Mean relative difference: 0.1518549 
+   Component 16: Attributes: < Component 2: Mean relative difference: 0.9803822 > 
+   Component 18: Component 1: Mean relative difference: 1.3 [... truncated] 
+> stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+> stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+> ## differences in CIs as different data is used
+> all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+[1] "Component 3: Mean relative difference: 0.2324887" 
+[2] "Component 4: Mean relative difference: 0.06995444"
+> ## CI dropped. Other values equal
+> stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+> 
+> ### check coxph interfaces
+> (res <- fit_model("coxph"))
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+$standard
+         coef Hazard Ratio CI (lower) CI (upper)  se(coef)         z Pr(>|z|)
+1 x -1.714104     0.180125  0.1159805  0.2797454 0.2246108 -7.631443   <0.001
+     
+1 ***
+
+$`data removed from global environment`
+[1] "Error in prettify.summary.coxph(summary(mod)) : \n  Model can't be refitted and no labels are specified. Please specify labels.\n"
+attr(,"class")
+[1] "try-error"
+attr(,"condition")
+<simpleError in prettify.summary.coxph(summary(mod)): Model can't be refitted and no labels are specified. Please specify labels.>
+
+$`no data argument in call`
+         coef Hazard Ratio CI (lower) CI (upper)  se(coef)         z Pr(>|z|)
+1 x -1.714104     0.180125  0.1159805  0.2797454 0.2246108 -7.631443   <0.001
+     
+1 ***
+
+$`local environment`
+[1] "Error in prettify.summary.coxph(summary(mod3)) : \n  Model can't be refitted and no labels are specified. Please specify labels.\n"
+attr(,"class")
+[1] "try-error"
+attr(,"condition")
+<simpleError in prettify.summary.coxph(summary(mod3)): Model can't be refitted and no labels are specified. Please specify labels.>
+
+$`data in global environment changed`
+         coef Hazard Ratio CI (lower) CI (upper)  se(coef)         z Pr(>|z|)
+1 x -1.714104     0.180125 0.05698156  0.1902997 0.2246108 -7.631443   <0.001
+     
+1 ***
+
+Warning message:
+ In prettify.summary.coxphsummary(mod):
+  Summary specified via argument 'object' and summary of refitted model differ.
+  Make shure that the data set has not been changed.
+  Differences are:
+   Component 5: Mean relative difference: 0.08366459 
+   Component 6: Mean relative difference: 0.04081633 
+   Component 7: Mean relative difference: 0.0982385 
+   Component 8: Mean relative difference: 0.4295404 
+   Component 9: Mean relative difference: 0.07228757 
+   Component 10: Mean relative difference: 0.2095481 
+   Component 11: Mean relative difference: 0.02151853 
+   Component 12: Mean relative difference: 0.07712225 
+   Component 14: Mean relative difference: 0.01373349 
+ 
+> stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+> stopifnot(inherits(res[[2]], "try-error"))
+> stopifnot(inherits(res[[4]], "try-error"))
+> ## differences in CIs as different data is used
+> all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+[1] "Component 4: Mean relative difference: 0.508697" 
+[2] "Component 5: Mean relative difference: 0.3197398"
+> 
+> ### check lmer interface
+> if (packageDescription("lme4")$Version >= 1) {
++     (res <- fit_model("lmer"))
++     stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
++     stopifnot(inherits(res[[2]], "try-error"))
++     stopifnot(inherits(res[[4]], "try-error"))
++     ## differences in CIs as different data is used
++     all.equal(res[[1]], res[[5]], check.attributes = FALSE)
++ }
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+[1] "Component 3: Mean relative difference: 0.1367178"
+[2] "Component 4: Mean relative difference: 0.1055768"
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> proc.time()
+   user  system elapsed 
+  5.156   0.076   5.393 

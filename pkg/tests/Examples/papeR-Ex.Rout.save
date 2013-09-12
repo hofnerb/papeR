@@ -1,0 +1,1787 @@
+
+R Under development (unstable) (2013-09-04 r63830) -- "Unsuffered Consequences"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "papeR"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('papeR')
+Loading required package: car
+Loading required package: MASS
+Loading required package: nnet
+Loading required package: nlme
+Loading required package: lme4
+Loading required package: lattice
+Loading required package: Matrix
+
+Attaching package: ‘lme4’
+
+The following object is masked from ‘package:nlme’:
+
+    lmList
+
+Loading required package: survival
+Loading required package: splines
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("Anova.lme")
+> ### * Anova.lme
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Anova.lme
+> ### Title: Anova Function for lme Models
+> ### Aliases: Anova.lme
+> ### Keywords: methods models
+> 
+> ### ** Examples
+> 
+> ## Load data set Orthodont
+> data(Orthodont, package = "nlme")
+> 
+> ## Fit a model for distance with random intercept for Subject
+> mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+> 
+> Anova(mod)
+            numDF denDF  F-value p-value
+(Intercept)     1    80 450.8422  <.0001
+age             1    80 114.8383  <.0001
+Sex             1    25   9.2921  0.0054
+> 
+> 
+> 
+> cleanEx()
+> nameEx("labels.data.frame")
+> ### * labels.data.frame
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: labels
+> ### Title: Extract and Set Labels from / to Data Frames
+> ### Aliases: labels.default labels.data.frame labels<-
+> ###   as.labeled.data.frame as.labelled.data.frame is.labeled.data.frame
+> ###   is.labelled.data.frame [.labeled.data.frame subset.labeled.data.frame
+> ###   cbind.labeled.data.frame rbind.labeled.data.frame
+> ###   plot.labeled.data.frame
+> ### Keywords: methods
+> 
+> ### ** Examples
+> 
+> ############################################################
+> ### Basic labels manipulations
+> 
+> data <- data.frame(a = 1:10, b = 10:1, c = rep(1:2, 5))
+> labels(data)  ## only the variable names
+  a   b   c 
+"a" "b" "c" 
+> is.labeled.data.frame(data) ## not yet
+[1] FALSE
+> 
+> ## now set labels
+> labels(data) <- c("my_a", "my_b", "my_c")
+> ## one gets a named character vector of labels
+> labels(data)
+     a      b      c 
+"my_a" "my_b" "my_c" 
+> ## data is now a labeled.data.frame:
+> is.labeled.data.frame(data)
+[1] TRUE
+> 
+> ## Altervatively one could use as.labeled.data.frame(data);
+> ## This would keep the default labels but set the class
+> ## correctly.
+> 
+> ## set labels for a and b only
+> ## Note that which represents the variable names!
+> labels(data, which = c("a", "b")) <- c("x", "y")
+> labels(data)
+     a      b      c 
+   "x"    "y" "my_c" 
+> 
+> ## reset labels (to variable names):
+> labels(data) <- NULL
+> labels(data)
+  a   b   c 
+"a" "b" "c" 
+> 
+> ## set label for a only and use default for other labels:
+> labels(data, which = "a") <- "x"
+> labels(data)
+  a   b   c 
+"x" "b" "c" 
+> 
+> ## attach label for new variable:
+> data2 <- data
+> data2$z <- as.factor(rep(2:3, each = 5))
+> labels(data2)  ## no real label for z, only variable name
+  a   b   c   z 
+"x" "b" "c" "z" 
+> labels(data2, which = "z") <- "new_label"
+> labels(data2)
+          a           b           c           z 
+        "x"         "b"         "c" "new_label" 
+> 
+> 
+> ############################################################
+> ### Abbreviate labels
+> 
+> ## attach long labels to data
+> labels(data) <- c("This is a long label", "This is another long label",
++                   "This also")
+> labels(data)
+                           a                            b 
+      "This is a long label" "This is another long label" 
+                           c 
+                 "This also" 
+> labels(data, abbreviate = TRUE, minlength = 10)
+           a            b            c 
+"Thsisalngl" "Thsisantll"  "This also" 
+> 
+> 
+> ############################################################
+> ### Data manipulations
+> 
+> ## reorder dataset:
+> tmp <- data2[, c(1, 4, 3, 2)]
+> labels(tmp)
+          a           z           c           b 
+        "x" "new_label"         "c"         "b" 
+> ## labels are kept and order is updated
+> ## (but only if data.set has class "labeled.data.frame")
+> 
+> ## subsetting to single variables:
+> labels(tmp[, 2])  ## label got lost as tmp drops to vector
+ [1] "1"  "2"  "3"  "4"  "5"  "6"  "7"  "8"  "9"  "10"
+> labels(tmp[, 2, drop = FALSE]) ## prevent dropping labels
+          z 
+"new_label" 
+> 
+> ## one can also cbind labeled.data.set objects:
+> labels(cbind(data, tmp[, 2, drop = TRUE]))
+Warning in cbind(deparse.level, ...) :
+  Not all objects are data.frames, some labels might be wrong
+Note: A variable has been removed or renamed. Corresponding variable labels are removed.
+                           a                            b 
+      "This is a long label" "This is another long label" 
+                           c        tmp[, 2, drop = TRUE] 
+                 "This also"      "tmp[, 2, drop = TRUE]" 
+> ## or better:
+> labels(cbind(data, tmp[, 2, drop = FALSE]))
+                           a                            b 
+      "This is a long label" "This is another long label" 
+                           c                            z 
+                 "This also"                  "new_label" 
+> ## or rbind labeled.data.set objects:
+> labels(rbind(data, tmp[, -2]))
+Warning in rbind(deparse.level, ...) :
+  Labels differ; Labels of first data.set are used.
+                           a                            b 
+      "This is a long label" "This is another long label" 
+                           c 
+                 "This also" 
+> 
+> 
+> ############################################################
+> ### Plotting labeled.data.set objects
+> 
+> ## plot the data auto"magically"; numerics as boxplot, factors as barplots
+> par(mfrow = c(2,2))
+> plot(data2)
+> 
+> ## a single plot
+> plot(data2, variables = "a")
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+> ## grouped plot
+> plot(data2, variables = "a", group = "z")
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+> ## make "c" a factor and plot "c" vs. "z"
+> data2$c <- as.factor(data2$c)
+> plot(data2, variables = "c", group = "z")
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+> ## the same
+> plot(data2, variables = 3, group = 4)
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "variables" is not a graphical parameter
+Warning in axis(side = side, at = at, labels = labels, ...) :
+  "group" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy.coords(x, y), type = type, ...) :
+  "group" is not a graphical parameter
+Warning in plot.window(...) : "variables" is not a graphical parameter
+Warning in plot.window(...) : "group" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "variables" is not a graphical parameter
+Warning in plot.xy(xy, type, ...) :
+  "group" is not a graphical parameter
+Warning in title(...) : "variables" is not a graphical parameter
+Warning in title(...) : "group" is not a graphical parameter
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("latex_table_cont")
+> ### * latex_table_cont
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: latex.table.cont
+> ### Title: Produce (LaTeX) Summaries for Continuous Variables
+> ### Aliases: latex.table.cont print.table.cont
+> ### Keywords: univar IO print
+> 
+> ### ** Examples
+> 
+> ## Use dataset Orthodont
+> data(Orthodont, package = "nlme")
+> 
+> ## Get summary for continuous variables
+> latex.table.cont(Orthodont)
+Warning in latex.table.cont(Orthodont) :
+  Factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrrrrrrrr} 
+  \toprule 
+  & N &   & Mean & SD &   & Min & Q1 & Median & Q3 & Max \\ 
+  \cmidrule{2-2}  \cmidrule{4-5} \cmidrule{7-11}
+distance & 108 &  & 24.02 & 2.93 &  & 16.5 & 22 & 23.75 & 26 & 31.5  \\ 
+age & 108 &  & 11.00 & 2.25 &  &  8.0 &  9 & 11.00 & 13 & 14.0  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## Change statistics to display
+> latex.table.cont(Orthodont, quantiles = FALSE)
+Warning in latex.table.cont(Orthodont, quantiles = FALSE) :
+  Factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrr} 
+  \toprule 
+  & N &   & Mean & SD \\ 
+  \cmidrule{2-2}  \cmidrule{4-5}
+distance & 108 &  & 24.02 & 2.93  \\ 
+age & 108 &  & 11.00 & 2.25  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> latex.table.cont(Orthodont, count = FALSE, quantiles = FALSE)
+Warning in latex.table.cont(Orthodont, count = FALSE, quantiles = FALSE) :
+  Factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrr} 
+  \toprule 
+  & Mean & SD \\ 
+  \cmidrule{2-3}
+distance & 24.02 & 2.93  \\ 
+age & 11.00 & 2.25  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> latex.table.cont(Orthodont, mean_sd = FALSE)
+Warning in latex.table.cont(Orthodont, mean_sd = FALSE) :
+  Factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrrrrr} 
+  \toprule 
+  & N &   & Min & Q1 & Median & Q3 & Max \\ 
+  \cmidrule{2-2}  \cmidrule{4-8}
+distance & 108 &  & 16.5 & 22 & 23.75 & 26 & 31.5  \\ 
+age & 108 &  &  8.0 &  9 & 11.00 & 13 & 14.0  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## Show column 'Missing' even if no missings are present
+> latex.table.cont(Orthodont, show.NAs = TRUE)
+Warning in latex.table.cont(Orthodont, show.NAs = TRUE) :
+  Factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrrrrrrrrr} 
+  \toprule 
+  & N & Missing &   & Mean & SD &   & Min & Q1 & Median & Q3 & Max \\ 
+  \cmidrule{2-3}  \cmidrule{5-6} \cmidrule{8-12}
+distance & 108 & 0 &  & 24.02 & 2.93 &  & 16.5 & 22 & 23.75 & 26 & 31.5  \\ 
+age & 108 & 0 &  & 11.00 & 2.25 &  &  8.0 &  9 & 11.00 & 13 & 14.0  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## Change variables to display
+> latex.table.cont(Orthodont, variables = "age")
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrrrrrrrr} 
+  \toprule 
+  & N &   & Mean & SD &   & Min & Q1 & Median & Q3 & Max \\ 
+  \cmidrule{2-2}  \cmidrule{4-5} \cmidrule{7-11}
+age & 108 &  & 11 & 2.25 &  & 8 & 9 & 11 & 13 & 14  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## What happens in the display if we introduce some missing values:
+> set.seed(1907)
+> Orthodont$age[sample(nrow(Orthodont), 20)] <- NA
+> latex.table.cont(Orthodont)
+Warning in latex.table.cont(Orthodont) :
+  Factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrrrrrrrrr} 
+  \toprule 
+  & N & Missing &   & Mean & SD &   & Min & Q1 & Median & Q3 & Max \\ 
+  \cmidrule{2-3}  \cmidrule{5-6} \cmidrule{8-12}
+distance & 108 &  0 &  & 24.02 & 2.93 &  & 16.5 & 22 & 23.75 & 26 & 31.5  \\ 
+age &  88 & 20 &  & 10.89 & 2.20 &  &  8.0 &  8 & 10.00 & 12 & 14.0  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## We can also have a look at the returned object:
+> df.cont <- latex.table.cont(Orthodont)
+Warning in latex.table.cont(Orthodont) :
+  Factors are dropped from the summary
+> ## Structure of object
+> str(df.cont)
+Classes ‘table.cont’ and 'data.frame':	2 obs. of  12 variables:
+ $ variable: chr  "distance" "age"
+ $ N       : int  108 88
+ $ Missing : int  0 20
+ $ blank_1 : chr  "" ""
+ $ Mean    : num  24 10.9
+ $ SD      : num  2.93 2.2
+ $ blank_2 : chr  "" ""
+ $ Min     : num  16.5 8
+ $ Q1      : num  22 8
+ $ Median  : num  23.8 10
+ $ Q3      : num  26 12
+ $ Max     : num  31.5 14
+ - attr(*, "latex.table.options")=List of 12
+  ..$ table    : chr "tabular"
+  ..$ align    : NULL
+  ..$ caption  : NULL
+  ..$ label    : NULL
+  ..$ floating : logi FALSE
+  ..$ center   : logi TRUE
+  ..$ sep      : logi FALSE
+  ..$ sanitize : logi TRUE
+  ..$ count    : logi TRUE
+  ..$ mean_sd  : logi TRUE
+  ..$ quantiles: logi TRUE
+  ..$ colnames : NULL
+> ## Make object a data.frame and have a look at the raw data
+> class(df.cont) <- "data.frame"
+> df.cont
+  variable   N Missing blank_1  Mean   SD blank_2  Min Q1 Median Q3  Max
+1 distance 108       0         24.02 2.93         16.5 22  23.75 26 31.5
+2      age  88      20         10.89 2.20          8.0  8  10.00 12 14.0
+> 
+> print.table.cont(df.cont)
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{lrrrrrrrrrrr} 
+  \toprule 
+  & N & Missing &   & Mean & SD &   & Min & Q1 & Median & Q3 & Max \\ 
+  \cmidrule{2-3}  \cmidrule{5-6} \cmidrule{8-12}
+distance & 108 &  0 &  & 24.02 & 2.93 &  & 16.5 & 22 & 23.75 & 26 & 31.5  \\ 
+age &  88 & 20 &  & 10.89 & 2.20 &  &  8.0 &  8 & 10.00 & 12 & 14.0  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> 
+> 
+> cleanEx()
+> nameEx("latex_table_fac")
+> ### * latex_table_fac
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: latex.table.fac
+> ### Title: Produce (LaTeX) Summaries for Factor Variables
+> ### Aliases: latex.table.fac print.table.fac
+> ### Keywords: univar IO print
+> 
+> ### ** Examples
+> 
+> ## Use dataset Orthodont
+> data(Orthodont, package = "nlme")
+> 
+> ## Get summary for continuous variables
+> latex.table.fac(Orthodont)
+Warning in latex.table.fac(Orthodont) :
+  Non-factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{llrrrr} 
+  \toprule 
+  & Level &   & N & \% & $\sum$ \% \\ 
+  \cmidrule{2-2} \cmidrule{4-6}
+Subject & M16 &  &  4 & 0.04 & 0.04  \\ 
+ & M05 &  &  4 & 0.04 & 0.08  \\ 
+ & M02 &  &  4 & 0.04 & 0.12  \\ 
+ & M11 &  &  4 & 0.04 & 0.16  \\ 
+ & M07 &  &  4 & 0.04 & 0.20  \\ 
+ & M08 &  &  4 & 0.04 & 0.24  \\ 
+ & M03 &  &  4 & 0.04 & 0.28  \\ 
+ & M12 &  &  4 & 0.04 & 0.32  \\ 
+ & M13 &  &  4 & 0.04 & 0.36  \\ 
+ & M14 &  &  4 & 0.04 & 0.40  \\ 
+ & M09 &  &  4 & 0.04 & 0.44  \\ 
+ & M15 &  &  4 & 0.04 & 0.48  \\ 
+ & M06 &  &  4 & 0.04 & 0.52  \\ 
+ & M04 &  &  4 & 0.04 & 0.56  \\ 
+ & M01 &  &  4 & 0.04 & 0.60  \\ 
+ & M10 &  &  4 & 0.04 & 0.64  \\ 
+ & F10 &  &  4 & 0.04 & 0.68  \\ 
+ & F09 &  &  4 & 0.04 & 0.72  \\ 
+ & F06 &  &  4 & 0.04 & 0.76  \\ 
+ & F01 &  &  4 & 0.04 & 0.80  \\ 
+ & F05 &  &  4 & 0.04 & 0.84  \\ 
+ & F07 &  &  4 & 0.04 & 0.88  \\ 
+ & F02 &  &  4 & 0.04 & 0.92  \\ 
+ & F08 &  &  4 & 0.04 & 0.96  \\ 
+ & F03 &  &  4 & 0.04 & 1.00  \\ 
+ & F04 &  &  4 & 0.04 & 1.04  \\ 
+ & F11 &  &  4 & 0.04 & 1.08  \\ 
+  \cmidrule{2-2} \cmidrule{4-6}
+ Sex & Male &  & 64 & 0.59 & 0.59  \\ 
+ & Female &  & 44 & 0.41 & 1.00  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## Reorder data for table:
+> latex.table.fac(Orthodont, variables = c("Sex", "Subject"))
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{llrrrr} 
+  \toprule 
+  & Level &   & N & \% & $\sum$ \% \\ 
+  \cmidrule{2-2} \cmidrule{4-6}
+Sex & Male &  & 64 & 0.59 & 0.59  \\ 
+ & Female &  & 44 & 0.41 & 1.00  \\ 
+  \cmidrule{2-2} \cmidrule{4-6}
+ Subject & M16 &  &  4 & 0.04 & 0.04  \\ 
+ & M05 &  &  4 & 0.04 & 0.08  \\ 
+ & M02 &  &  4 & 0.04 & 0.12  \\ 
+ & M11 &  &  4 & 0.04 & 0.16  \\ 
+ & M07 &  &  4 & 0.04 & 0.20  \\ 
+ & M08 &  &  4 & 0.04 & 0.24  \\ 
+ & M03 &  &  4 & 0.04 & 0.28  \\ 
+ & M12 &  &  4 & 0.04 & 0.32  \\ 
+ & M13 &  &  4 & 0.04 & 0.36  \\ 
+ & M14 &  &  4 & 0.04 & 0.40  \\ 
+ & M09 &  &  4 & 0.04 & 0.44  \\ 
+ & M15 &  &  4 & 0.04 & 0.48  \\ 
+ & M06 &  &  4 & 0.04 & 0.52  \\ 
+ & M04 &  &  4 & 0.04 & 0.56  \\ 
+ & M01 &  &  4 & 0.04 & 0.60  \\ 
+ & M10 &  &  4 & 0.04 & 0.64  \\ 
+ & F10 &  &  4 & 0.04 & 0.68  \\ 
+ & F09 &  &  4 & 0.04 & 0.72  \\ 
+ & F06 &  &  4 & 0.04 & 0.76  \\ 
+ & F01 &  &  4 & 0.04 & 0.80  \\ 
+ & F05 &  &  4 & 0.04 & 0.84  \\ 
+ & F07 &  &  4 & 0.04 & 0.88  \\ 
+ & F02 &  &  4 & 0.04 & 0.92  \\ 
+ & F08 &  &  4 & 0.04 & 0.96  \\ 
+ & F03 &  &  4 & 0.04 & 1.00  \\ 
+ & F04 &  &  4 & 0.04 & 1.04  \\ 
+ & F11 &  &  4 & 0.04 & 1.08  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> ## What happens in the display if we introduce some missing values:
+> set.seed(1907)
+> Orthodont$Sex[sample(nrow(Orthodont), 20)] <- NA
+> latex.table.fac(Orthodont)
+Warning in latex.table.fac(Orthodont) :
+  Non-factors are dropped from the summary
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{llrrrrrrrr} 
+  \toprule 
+& & & & & \multicolumn{2}{c}{(incl. Missings)}  & & \multicolumn{2}{c}{(w/o Missings)} \\  
+  & Level &   & N &   & \% & $\sum$ \% &   & \% & $\sum$ \% \\ 
+  \cmidrule{2-2}\cmidrule{4-4} \cmidrule{6-7} \cmidrule{9-10}
+Subject & M16 &  &  4 &  & 0.04 & 0.04 &  & 0.04 & 0.04  \\ 
+ & M05 &  &  4 &  & 0.04 & 0.08 &  & 0.04 & 0.08  \\ 
+ & M02 &  &  4 &  & 0.04 & 0.12 &  & 0.04 & 0.12  \\ 
+ & M11 &  &  4 &  & 0.04 & 0.16 &  & 0.04 & 0.16  \\ 
+ & M07 &  &  4 &  & 0.04 & 0.20 &  & 0.04 & 0.20  \\ 
+ & M08 &  &  4 &  & 0.04 & 0.24 &  & 0.04 & 0.24  \\ 
+ & M03 &  &  4 &  & 0.04 & 0.28 &  & 0.04 & 0.28  \\ 
+ & M12 &  &  4 &  & 0.04 & 0.32 &  & 0.04 & 0.32  \\ 
+ & M13 &  &  4 &  & 0.04 & 0.36 &  & 0.04 & 0.36  \\ 
+ & M14 &  &  4 &  & 0.04 & 0.40 &  & 0.04 & 0.40  \\ 
+ & M09 &  &  4 &  & 0.04 & 0.44 &  & 0.04 & 0.44  \\ 
+ & M15 &  &  4 &  & 0.04 & 0.48 &  & 0.04 & 0.48  \\ 
+ & M06 &  &  4 &  & 0.04 & 0.52 &  & 0.04 & 0.52  \\ 
+ & M04 &  &  4 &  & 0.04 & 0.56 &  & 0.04 & 0.56  \\ 
+ & M01 &  &  4 &  & 0.04 & 0.60 &  & 0.04 & 0.60  \\ 
+ & M10 &  &  4 &  & 0.04 & 0.64 &  & 0.04 & 0.64  \\ 
+ & F10 &  &  4 &  & 0.04 & 0.68 &  & 0.04 & 0.68  \\ 
+ & F09 &  &  4 &  & 0.04 & 0.72 &  & 0.04 & 0.72  \\ 
+ & F06 &  &  4 &  & 0.04 & 0.76 &  & 0.04 & 0.76  \\ 
+ & F01 &  &  4 &  & 0.04 & 0.80 &  & 0.04 & 0.80  \\ 
+ & F05 &  &  4 &  & 0.04 & 0.84 &  & 0.04 & 0.84  \\ 
+ & F07 &  &  4 &  & 0.04 & 0.88 &  & 0.04 & 0.88  \\ 
+ & F02 &  &  4 &  & 0.04 & 0.92 &  & 0.04 & 0.92  \\ 
+ & F08 &  &  4 &  & 0.04 & 0.96 &  & 0.04 & 0.96  \\ 
+ & F03 &  &  4 &  & 0.04 & 1.00 &  & 0.04 & 1.00  \\ 
+ & F04 &  &  4 &  & 0.04 & 1.04 &  & 0.04 & 1.04  \\ 
+ & F11 &  &  4 &  & 0.04 & 1.08 &  & 0.04 & 1.08  \\ 
+  \cmidrule{2-2}\cmidrule{4-4} \cmidrule{6-7} \cmidrule{9-10}
+ Sex & Male &  & 51 &  & 0.47 & 0.47 &  & 0.58 & 0.58  \\ 
+ & Female &  & 37 &  & 0.34 & 0.81 &  & 0.42 & 1.00  \\ 
+ & $<$Missing$>$ &  & 20 &  & 0.19 & 1.00 &  &  &   \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> latex.table.fac(Orthodont, variables = "Sex")
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{llrrrrrrrr} 
+  \toprule 
+& & & & & \multicolumn{2}{c}{(incl. Missings)}  & & \multicolumn{2}{c}{(w/o Missings)} \\  
+  & Level &   & N &   & \% & $\sum$ \% &   & \% & $\sum$ \% \\ 
+  \cmidrule{2-2}\cmidrule{4-4} \cmidrule{6-7} \cmidrule{9-10}
+Sex & Male &  & 51 &  & 0.47 & 0.47 &  & 0.58 & 0.58  \\ 
+ & Female &  & 37 &  & 0.34 & 0.81 &  & 0.42 & 1.00  \\ 
+ & $<$Missing$>$ &  & 20 &  & 0.19 & 1.00 &  &  &   \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> ## do not show statistics on missing values
+> latex.table.fac(Orthodont, variables = "Sex", show.NAs = FALSE)
+%% Output requires \usepackage{booktabs}.
+\begin{center}
+\begin{tabular}{llrrrr} 
+  \toprule 
+  & Level &   & N & \% & $\sum$ \% \\ 
+  \cmidrule{2-2} \cmidrule{4-6}
+Sex & Male &  & 51 & 0.58 & 0.58  \\ 
+ & Female &  & 37 & 0.42 & 1.00  \\ 
+  \bottomrule 
+\end{tabular} 
+
+\end{center}
+> 
+> 
+> 
+> cleanEx()
+> nameEx("prettify")
+> ### * prettify
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: prettify
+> ### Title: Make Pretty Summary and Anova Tables
+> ### Aliases: prettify prettify.anova prettify.data.frame
+> ###   prettify.summary.lm prettify.summary.glm prettify.summary.coxph
+> ###   prettify.summary.lme prettify.summary.mer prettify.summary.merMod
+> ###   prettifyPValue
+> ### Keywords: methods models
+> 
+> ### ** Examples
+> 
+> ## Load data set Orthodont
+> data(Orthodont, package = "nlme")
+> 
+> ######################################################################
+> # Linear model
+> ######################################################################
+> 
+> ## Fit a linear model
+> linmod <- lm(distance ~ age + Sex, data = Orthodont)
+> ## Extract pretty summary
+> prettify(summary(linmod))
+                Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 17.7067130 15.5014071 19.9120189 1.11220946 15.920304   <0.001
+2         age  0.6601852  0.4663472  0.8540231 0.09775895  6.753194   <0.001
+3 Sex: Female -2.3210227 -3.2031499 -1.4388955 0.44488623 -5.217115   <0.001
+     
+1 ***
+2 ***
+3 ***
+> 
+> ## Extract anova (sequential tests)
+> anova(linmod)
+Analysis of Variance Table
+
+Response: distance
+           Df Sum Sq Mean Sq F value    Pr(>F)    
+age         1 235.36 235.356  45.606 8.253e-10 ***
+Sex         1 140.46 140.465  27.218 9.198e-07 ***
+Residuals 105 541.87   5.161                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> ## now prettify it
+> prettify(anova(linmod))
+      Df   Sum Sq  Mean Sq  F value Pr(>F)    
+1 age  1 235.3560 235.3560 45.60563 <0.001 ***
+2 Sex  1 140.4649 140.4649 27.21829 <0.001 ***
+> 
+> ######################################################################
+> # Random effects model (nlme)
+> ######################################################################
+> 
+> ### (fit a more suitable model with random effects)
+> ## With package nlme:
+> require("nlme")
+> ## Fit a model for distance with random intercept for Subject
+> mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+> summary(mod)
+Linear mixed-effects model fit by REML
+ Data: Orthodont 
+       AIC      BIC    logLik
+  447.5125 460.7823 -218.7563
+
+Random effects:
+ Formula: ~1 | Subject
+        (Intercept) Residual
+StdDev:    1.807425 1.431592
+
+Fixed effects: distance ~ age + Sex 
+                Value Std.Error DF   t-value p-value
+(Intercept) 17.706713 0.8339225 80 21.233044  0.0000
+age          0.660185 0.0616059 80 10.716263  0.0000
+SexFemale   -2.321023 0.7614168 25 -3.048294  0.0054
+ Correlation: 
+          (Intr) age   
+age       -0.813       
+SexFemale -0.372  0.000
+
+Standardized Within-Group Residuals:
+        Min          Q1         Med          Q3         Max 
+-3.74889609 -0.55034466 -0.02516628  0.45341781  3.65746539 
+
+Number of Observations: 108
+Number of Groups: 27 
+> ## Extract fixed effects table, add confidence interval and make it pretty
+> prettify(summary(mod))
+                   Value CI (lower) CI (upper)  Std.Error DF   t-value p-value
+1 (Intercept) 17.7067130 16.0471544 19.3662716 0.83392247 80 21.233044  <0.001
+2         age  0.6601852  0.5375855  0.7827849 0.06160592 80 10.716263  <0.001
+3 Sex: Female -2.3210227 -3.8891901 -0.7528554 0.76141685 25 -3.048294   0.005
+     
+1 ***
+2 ***
+3  **
+> ## Extract fixed effects table only and make it pretty
+> prettify(summary(mod), confint = FALSE)
+                   Value  Std.Error DF   t-value p-value    
+1 (Intercept) 17.7067130 0.83392247 80 21.233044  <0.001 ***
+2         age  0.6601852 0.06160592 80 10.716263  <0.001 ***
+3 Sex: Female -2.3210227 0.76141685 25 -3.048294   0.005  **
+> 
+> ######################################################################
+> # Random effects model (lme4)
+> ######################################################################
+> 
+> ## With package lme4:
+> require("lme4")
+> ## Fit a model for distance with random intercept for Subject
+> mod4 <- lmer(distance ~ age + Sex + (1|Subject), data = Orthodont)
+> summary(mod4)
+Linear mixed model fit by REML ['lmerMod']
+Formula: distance ~ age + Sex + (1 | Subject) 
+   Data: Orthodont 
+
+REML criterion at convergence: 437.5125 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ Subject  (Intercept) 3.267    1.807   
+ Residual             2.049    1.432   
+Number of obs: 108, groups: Subject, 27
+
+Fixed effects:
+            Estimate Std. Error t value
+(Intercept) 17.70671    0.83392  21.233
+age          0.66019    0.06161  10.716
+SexFemale   -2.32102    0.76142  -3.048
+
+Correlation of Fixed Effects:
+          (Intr) age   
+age       -0.813       
+SexFemale -0.372  0.000
+> ## Extract fixed effects table and make it pretty
+> prettify(summary(mod4))
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+                Estimate CI (lower) CI (upper) Std. Error   t value
+1 (Intercept) 17.7067130 16.0848469 19.3285790  0.8339226 21.233042
+2         age  0.6601852  0.5387505  0.7816198  0.0616059 10.716266
+3 Sex: Female -2.3210227 -3.8096622 -0.8323833  0.7614175 -3.048292
+> 
+> ## Extract and prettify anova (sequential tests)
+> prettify(anova(mod4))
+      Df   Sum Sq  Mean Sq    F value
+1 age  1 235.3560 235.3560 114.838350
+2 Sex  1  19.0437  19.0437   9.292083
+> 
+> ## Better: extract Anova (partial instead of sequential tests)
+> library("car")
+> try(Anova(mod4))  ## doesn't currently work with lme4 >= vers. 1.0.0
+Error : $ operator not defined for this S4 class
+> ## now prettify it
+> try(prettify(Anova(mod4))) ## doesn't currently work with lme4 >= vers. 1.0.0
+Error : $ operator not defined for this S4 class
+> 
+> ######################################################################
+> # Cox model
+> ######################################################################
+> 
+> library("survival")
+> ## Load data set ovarian
+> data(ovarian, package = "survival")
+> 
+> ## fit a Cox model
+> mod5 <- coxph(Surv(futime, fustat) ~ age, data=ovarian)
+> summary(mod5)
+Call:
+coxph(formula = Surv(futime, fustat) ~ age, data = ovarian)
+
+  n= 26, number of events= 12 
+
+       coef exp(coef) se(coef)     z Pr(>|z|)   
+age 0.16162   1.17541  0.04974 3.249  0.00116 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+    exp(coef) exp(-coef) lower .95 upper .95
+age     1.175     0.8508     1.066     1.296
+
+Concordance= 0.784  (se = 0.091 )
+Rsquare= 0.423   (max possible= 0.932 )
+Likelihood ratio test= 14.29  on 1 df,   p=0.0001564
+Wald test            = 10.56  on 1 df,   p=0.001157
+Score (logrank) test = 12.26  on 1 df,   p=0.0004629
+
+> ## Make pretty summary
+> prettify(summary(mod5))
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+           coef Hazard Ratio CI (lower) CI (upper)   se(coef)        z Pr(>|z|)
+1 age 0.1616199     1.175413   1.066232   1.295775 0.04974012 3.249285    0.001
+     
+1  **
+> 
+> ## Make pretty summary
+> prettify(Anova(mod5))
+         loglik    Chisq Df Pr(>|Chi|)    
+2 age -27.83815 14.29359  1     <0.001 ***
+> 
+> 
+> 
+> ######################################################################
+> # ATTENTION when confint = TRUE: Do not modify or delete data
+> ######################################################################
+> 
+> ## Fit a linear model (same as above)
+> linmod <- lm(distance ~ age + Sex, data = Orthodont)
+> ## Extract pretty summary
+> prettify(summary(linmod))
+                Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 17.7067130 15.5014071 19.9120189 1.11220946 15.920304   <0.001
+2         age  0.6601852  0.4663472  0.8540231 0.09775895  6.753194   <0.001
+3 Sex: Female -2.3210227 -3.2031499 -1.4388955 0.44488623 -5.217115   <0.001
+     
+1 ***
+2 ***
+3 ***
+> 
+> ## Change the data (age in month instead of years)
+> Orthodont$age <- Orthodont$age * 12
+> prettify(summary(linmod))  ## confidence intervals for age have changed
+Warning:  In prettify.summary.lmsummary(linmod):
+  Summary specified via argument ‘object’ and summary of refitted model differ.
+  Make shure that the data set has not been changed.
+  Differences are:
+   Component 4: Mean relative difference: 0.01402506 
+   Component 11: Mean relative difference: 0.125307 
+
+                Estimate  CI (lower)  CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 17.7067130 15.50140706 19.91201887 1.11220946 15.920304   <0.001
+2         age  0.6601852  0.03886227  0.07116859 0.09775895  6.753194   <0.001
+3 Sex: Female -2.3210227 -3.20314993 -1.43889552 0.44488623 -5.217115   <0.001
+     
+1 ***
+2 ***
+3 ***
+>                            ## but coefficients stayed the same; a
+>                            ## warning is issued
+> 
+> ## Remove data in fitting environment
+> rm(Orthodont)
+> prettify(summary(linmod))  ## confidence intervals are missing as no
+                Estimate Std. Error   t value Pr(>|t|)    
+1 (Intercept) 17.7067130 1.11220946 15.920304   <0.001 ***
+2         age  0.6601852 0.09775895  6.753194   <0.001 ***
+3 Sex: Female -2.3210227 0.44488623 -5.217115   <0.001 ***
+>                            ## data set was available to refit the model
+> 
+> 
+> 
+> ######################################################################
+> # Use confint to specify confidence interval without refitting
+> ######################################################################
+> 
+> ## make labels without using the data set
+> labels <- c("distance", "age", "Subject", "Sex")
+> names(labels) <- labels
+> 
+> ## usually easier via: labels(Orthodont)
+> 
+> prettify(summary(linmod), confint = confint(linmod),
++          labels = labels)
+                Estimate CI (lower) CI (upper) Std. Error   t value Pr(>|t|)
+1 (Intercept) 17.7067130 15.5014071 19.9120189 1.11220946 15.920304   <0.001
+2         age  0.6601852  0.4663472  0.8540231 0.09775895  6.753194   <0.001
+3 Sex: Female -2.3210227 -3.2031499 -1.4388955 0.44488623 -5.217115   <0.001
+     
+1 ***
+2 ***
+3 ***
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("toLatex")
+> ### * toLatex
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: toLatex
+> ### Title: Cleaning R Code for printing in LaTeX environments
+> ### Aliases: toLatex.character toLatex.sessionInfo
+> ### Keywords: univar IO print
+> 
+> ### ** Examples
+> 
+> txt <- "Price: <= 500$ & additional goodies"
+> toLatex(txt)
+[1] "Price: $\\leq$ 500\\$ \\& additional goodies"
+> 
+> ############################################################
+> ## session info for automatic inclusion in reports
+> 
+> info <- toLatex(sessionInfo(), file = NULL)
+> info
+\begin{itemize}\raggedright
+  \item R Under development (unstable) (2013-09-04 r63830)\citep{pkg:base}
+  \item Used packages: 
+  \begin{itemize}
+\item MASS (vers. 7.3-29) \citep{pkg:MASS}
+\item Matrix (vers. 1.0-12) \citep{pkg:Matrix}
+\item car (vers. 2.0-18) \citep{pkg:car}
+\item lattice (vers. 0.20-23) \citep{pkg:lattice}
+\item lme4 (vers. 1.0-4) \citep{pkg:lme4}
+\item nlme (vers. 3.1-111) \citep{pkg:nlme}
+\item nnet (vers. 7.3-7) \citep{pkg:nnet}
+\item papeR (vers. 0.4) \citep{pkg:papeR}
+\item survival (vers. 2.37-4) \citep{pkg:survival1,pkg:survival2}
+  \end{itemize}
+\end{itemize}
+> 
+> ## extract first part (the Latex part)
+> toLatex(info)
+\begin{itemize}\raggedright
+  \item R Under development (unstable) (2013-09-04 r63830)\citep{pkg:base}
+  \item Used packages: 
+  \begin{itemize}
+\item MASS (vers. 7.3-29) \citep{pkg:MASS}
+\item Matrix (vers. 1.0-12) \citep{pkg:Matrix}
+\item car (vers. 2.0-18) \citep{pkg:car}
+\item lattice (vers. 0.20-23) \citep{pkg:lattice}
+\item lme4 (vers. 1.0-4) \citep{pkg:lme4}
+\item nlme (vers. 3.1-111) \citep{pkg:nlme}
+\item nnet (vers. 7.3-7) \citep{pkg:nnet}
+\item papeR (vers. 0.4) \citep{pkg:papeR}
+\item survival (vers. 2.37-4) \citep{pkg:survival1,pkg:survival2}
+  \end{itemize}
+\end{itemize}
+> ## extract second part (the BibTeX part)
+> toBibtex(info)
+@Manual{pkg:base,
+  title = {R: A Language and Environment for Statistical Computing},
+  author = {{R Core Team}},
+  organization = {R Foundation for Statistical Computing},
+  address = {Vienna, Austria},
+  year = {2013},
+  url = {http://www.R-project.org/},
+}
+
+@Book{pkg:MASS,
+  title = {Modern Applied Statistics with S},
+  author = {W. N. Venables and B. D. Ripley},
+  publisher = {Springer},
+  edition = {Fourth},
+  address = {New York},
+  year = {2002},
+  note = {ISBN 0-387-95457-0},
+  url = {http://www.stats.ox.ac.uk/pub/MASS4},
+}
+
+@Manual{pkg:Matrix,
+  title = {Matrix: Sparse and Dense Matrix Classes and Methods},
+  author = {Douglas Bates and Martin Maechler},
+  year = {2013},
+  note = {R package version 1.0-12},
+  url = {http://CRAN.R-project.org/package=Matrix},
+}
+
+@Book{pkg:car,
+  title = {An {R} Companion to Applied Regression},
+  edition = {Second},
+  author = {John Fox and Sanford Weisberg},
+  year = {2011},
+  publisher = {Sage},
+  address = {Thousand Oaks {CA}},
+  url = {http://socserv.socsci.mcmaster.ca/jfox/Books/Companion},
+}
+
+@Book{pkg:lattice,
+  title = {Lattice: Multivariate Data Visualization with R},
+  author = {Deepayan Sarkar},
+  publisher = {Springer},
+  address = {New York},
+  year = {2008},
+  note = {ISBN 978-0-387-75968-5},
+  url = {http://lmdvr.r-forge.r-project.org},
+}
+
+@Manual{pkg:lme4,
+  title = {lme4: Linear mixed-effects models using Eigen and S4},
+  author = {Douglas Bates and Martin Maechler and Ben Bolker and Steven Walker},
+  year = {2013},
+  note = {R package version 1.0-4},
+  url = {http://lme4.r-forge.r-project.org/},
+}
+
+@Manual{pkg:nlme,
+  title = {nlme: Linear and Nonlinear Mixed Effects Models},
+  author = {Jose Pinheiro and Douglas Bates and Saikat DebRoy and Deepayan Sarkar and {R Core Team}},
+  year = {2013},
+  note = {R package version 3.1-111},
+}
+
+@Book{pkg:nnet,
+  title = {Modern Applied Statistics with S},
+  author = {W. N. Venables and B. D. Ripley},
+  publisher = {Springer},
+  edition = {Fourth},
+  address = {New York},
+  year = {2002},
+  note = {ISBN 0-387-95457-0},
+  url = {http://www.stats.ox.ac.uk/pub/MASS4},
+}
+
+@Manual{pkg:papeR,
+  title = {papeR: A toolbox for writing Sweave or other LaTeX-based papers and
+reports},
+  author = {Benjamin Hofner},
+  year = {2013},
+  note = {R package version 0.4},
+  url = {http://r-forge.r-project.org/projects/paper/},
+}
+
+@Manual{pkg:survival1,
+  title = {A Package for Survival Analysis in S},
+  author = {Terry M Therneau},
+  year = {2013},
+  note = {R package version 2.37-4},
+  url = {http://CRAN.R-project.org/package=survival},
+}
+
+@Book{pkg:survival2,
+  title = {Modeling Survival Data: Extending the {C}ox Model},
+  author = {{Terry M. Therneau} and {Patricia M. Grambsch}},
+  year = {2000},
+  publisher = {Springer},
+  address = {New York},
+  isbn = {0-387-98784-3},
+}
+> 
+> 
+> ############################################################
+> ## usual usage scenario
+> 
+> ## Do not run automatically as it needs write access to the current
+> ## working directory. This code (without removing the file) could
+> ## for example be included in a Latex chunk of your Sweave or knitr
+> ## report.
+> 
+> ## Not run: 
+> ##D getwd()     ## location where write access is needed
+> ##D toLatex(sessionInfo(), file = "packages.bib")
+> ##D file.remove("packages.bib")
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  3.632 0.064 3.89 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')
