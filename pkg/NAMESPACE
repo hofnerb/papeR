@@ -1,6 +1,10 @@
+import(lme4)
+import(survival)
+
 importFrom(car, Anova)
 importFrom(utils, toLatex)
 importFrom(utils, toBibtex)
+importFrom(gmodels, ci)
 
 export(as.labeled.data.frame,
        is.labeled.data.frame,
