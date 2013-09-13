@@ -1,7 +1,7 @@
 Package: papeR
 Title: A toolbox for writing Sweave or other LaTeX-based papers and reports
-Version: 0.4
-Date: 2013-08-07
+Version: 0.4-0
+Date: 2013-09-13
 Author: Benjamin Hofner
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
 Description: A toolbox for writing Sweave or other LaTeX-based reports

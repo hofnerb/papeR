@@ -239,6 +239,8 @@ prettify(summary(mod), confint = FALSE)
 # Random effects model (lme4)
 ######################################################################
 
+set.seed(130913)
+
 ## With package lme4:
 require("lme4")
 ## Fit a model for distance with random intercept for Subject

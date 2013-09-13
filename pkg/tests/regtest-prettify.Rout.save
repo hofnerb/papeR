@@ -437,30 +437,59 @@ Warning message:
 [2] "Component 5: Mean relative difference: 0.3197398"
 > 
 > ### check lmer interface
+> (res <- fit_model("lmer"))
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+Computing profile confidence intervals ...
+Confidence intervals are experimental only;
+Model refitted but original environment not available.
+
+$standard
+                Estimate CI (lower) CI (upper) Std. Error    t value
+1 (Intercept) 0.01212116 -0.2316018  0.2604222  0.1090540  0.1111482
+2           x 1.93619139  1.7127873  2.1595955  0.1140369 16.9786334
+
+$`data removed from global environment`
+[1] "Error in prettify.summary.merMod(summary(mod)) : \n  Model can't be refitted and no labels are specified. Please specify labels.\n"
+attr(,"class")
+[1] "try-error"
+attr(,"condition")
+<simpleError in prettify.summary.merMod(summary(mod)): Model can't be refitted and no labels are specified. Please specify labels.>
+
+$`no data argument in call`
+                Estimate CI (lower) CI (upper) Std. Error    t value
+1 (Intercept) 0.01212116 -0.2316018  0.2604222  0.1090540  0.1111482
+2           x 1.93619139  1.7127873  2.1595955  0.1140369 16.9786334
+
+$`local environment`
+[1] "Error in prettify.summary.merMod(summary(mod3)) : \n  Model can't be refitted and no labels are specified. Please specify labels.\n"
+attr(,"class")
+[1] "try-error"
+attr(,"condition")
+<simpleError in prettify.summary.merMod(summary(mod3)): Model can't be refitted and no labels are specified. Please specify labels.>
+
+$`data in global environment changed`
+                Estimate  CI (lower) CI (upper) Std. Error    t value
+1 (Intercept) 0.01212116 -0.05267931  0.3631393  0.1090540  0.1111482
+2           x 1.93619139  1.62587715  2.0068150  0.1140369 16.9786334
+
+There were 50 or more warnings (use warnings() to see the first 50)
 > if (packageDescription("lme4")$Version >= 1) {
-+     (res <- fit_model("lmer"))
 +     stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
 +     stopifnot(inherits(res[[2]], "try-error"))
 +     stopifnot(inherits(res[[4]], "try-error"))
 +     ## differences in CIs as different data is used
-+     all.equal(res[[1]], res[[5]], check.attributes = FALSE)
++ 
++     ## CURRENTLY NOT USE
++     # all.equal(res[[1]], res[[5]], check.attributes = FALSE)
 + }
-Computing profile confidence intervals ...
-Confidence intervals are experimental only;
-Model refitted but original environment not available.
-
-Computing profile confidence intervals ...
-Confidence intervals are experimental only;
-Model refitted but original environment not available.
-
-Computing profile confidence intervals ...
-Confidence intervals are experimental only;
-Model refitted but original environment not available.
-
-[1] "Component 3: Mean relative difference: 0.1367178"
-[2] "Component 4: Mean relative difference: 0.1055768"
-There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
    user  system elapsed 
-  5.156   0.076   5.393 
+  4.940   0.072   5.153 

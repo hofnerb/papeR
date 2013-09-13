@@ -1,4 +1,24 @@
 ------------------------------------------------------------------------
+r39 | hofner | 2013-09-12 17:06:37 +0200 (Do, 12. Sep 2013) | 2 Zeilen
+
+added helper script for package preparation
+
+------------------------------------------------------------------------
+r38 | hofner | 2013-09-12 17:06:03 +0200 (Do, 12. Sep 2013) | 5 Zeilen
+
+- make lme4 >= 1.0 happy
+- minor bugfixes 
+- changes in NAMESPACE and imports
+- added .Rout.save files
+
+------------------------------------------------------------------------
+r37 | hofner | 2013-09-05 11:51:13 +0200 (Do, 05. Sep 2013) | 4 Zeilen
+
+- included better handling of environments in prettify functions
+  and checks if the data has changed
+- added SOPs for releasing package
+
+------------------------------------------------------------------------
 r36 | hofner | 2013-09-03 19:19:30 +0200 (Di, 03. Sep 2013) | 8 Zeilen
 
 - better guessing and handling of environments for model refitting
