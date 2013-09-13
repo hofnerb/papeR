@@ -159,11 +159,13 @@ stopifnot(inherits(res[[4]], "try-error"))
 all.equal(res[[1]], res[[5]], check.attributes = FALSE)
 
 ### check lmer interface
+(res <- fit_model("lmer"))
 if (packageDescription("lme4")$Version >= 1) {
-    (res <- fit_model("lmer"))
     stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
     stopifnot(inherits(res[[2]], "try-error"))
     stopifnot(inherits(res[[4]], "try-error"))
     ## differences in CIs as different data is used
-    all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+
+    ## CURRENTLY NOT USE
+    # all.equal(res[[1]], res[[5]], check.attributes = FALSE)
 }

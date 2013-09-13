@@ -20,6 +20,18 @@ Type 'q()' to quit R.
 > pkgname <- "papeR"
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
+> base::assign(".ExTimings", "papeR-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
 > library('papeR')
 Loading required package: car
 Loading required package: MASS
@@ -45,6 +57,7 @@ Loading required package: splines
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: Anova.lme
 > ### Title: Anova Function for lme Models
 > ### Aliases: Anova.lme
@@ -66,12 +79,15 @@ Sex             1    25   9.2921  0.0054
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("Anova.lme", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("labels.data.frame")
 > ### * labels.data.frame
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: labels
 > ### Title: Extract and Set Labels from / to Data Frames
 > ### Aliases: labels.default labels.data.frame labels<-
@@ -944,6 +960,8 @@ Warning in title(...) : "group" is not a graphical parameter
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("labels.data.frame", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > graphics::par(get("par.postscript", pos = 'CheckExEnv'))
 > cleanEx()
 > nameEx("latex_table_cont")
@@ -951,6 +969,7 @@ Warning in title(...) : "group" is not a graphical parameter
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: latex.table.cont
 > ### Title: Produce (LaTeX) Summaries for Continuous Variables
 > ### Aliases: latex.table.cont print.table.cont
@@ -1130,12 +1149,15 @@ age &  88 & 20 &  & 10.89 & 2.20 &  &  8.0 &  8 & 10.00 & 12 & 14.0  \\
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("latex_table_cont", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("latex_table_fac")
 > ### * latex_table_fac
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: latex.table.fac
 > ### Title: Produce (LaTeX) Summaries for Factor Variables
 > ### Aliases: latex.table.fac print.table.fac
@@ -1314,12 +1336,15 @@ Sex & Male &  & 51 & 0.58 & 0.58  \\
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("latex_table_fac", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("prettify")
 > ### * prettify
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: prettify
 > ### Title: Make Pretty Summary and Anova Tables
 > ### Aliases: prettify prettify.anova prettify.data.frame
@@ -1423,6 +1448,8 @@ Number of Groups: 27
 > ######################################################################
 > # Random effects model (lme4)
 > ######################################################################
+> 
+> set.seed(130913)
 > 
 > ## With package lme4:
 > require("lme4")
@@ -1596,12 +1623,15 @@ Warning:  In prettify.summary.lmsummary(linmod):
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("prettify", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > cleanEx()
 > nameEx("toLatex")
 > ### * toLatex
 > 
 > flush(stderr()); flush(stdout())
 > 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
 > ### Name: toLatex
 > ### Title: Cleaning R Code for printing in LaTeX environments
 > ### Aliases: toLatex.character toLatex.sessionInfo
@@ -1629,7 +1659,7 @@ Warning:  In prettify.summary.lmsummary(linmod):
 \item lme4 (vers. 1.0-4) \citep{pkg:lme4}
 \item nlme (vers. 3.1-111) \citep{pkg:nlme}
 \item nnet (vers. 7.3-7) \citep{pkg:nnet}
-\item papeR (vers. 0.4) \citep{pkg:papeR}
+\item papeR (vers. 0.4-0) \citep{pkg:papeR}
 \item survival (vers. 2.37-4) \citep{pkg:survival1,pkg:survival2}
   \end{itemize}
 \end{itemize}
@@ -1647,7 +1677,7 @@ Warning:  In prettify.summary.lmsummary(linmod):
 \item lme4 (vers. 1.0-4) \citep{pkg:lme4}
 \item nlme (vers. 3.1-111) \citep{pkg:nlme}
 \item nnet (vers. 7.3-7) \citep{pkg:nnet}
-\item papeR (vers. 0.4) \citep{pkg:papeR}
+\item papeR (vers. 0.4-0) \citep{pkg:papeR}
 \item survival (vers. 2.37-4) \citep{pkg:survival1,pkg:survival2}
   \end{itemize}
 \end{itemize}
@@ -1732,7 +1762,7 @@ Warning:  In prettify.summary.lmsummary(linmod):
 reports},
   author = {Benjamin Hofner},
   year = {2013},
-  note = {R package version 0.4},
+  note = {R package version 0.4-0},
   url = {http://r-forge.r-project.org/projects/paper/},
 }
 
@@ -1771,11 +1801,13 @@ reports},
 > 
 > 
 > 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("toLatex", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
 > ### * <FOOTER>
 > ###
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  3.632 0.064 3.89 0 0 
+Time elapsed:  3.532 0.032 3.74 0 0 
 > grDevices::dev.off()
 null device 
           1 

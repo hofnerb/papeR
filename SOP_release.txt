@@ -4,9 +4,70 @@
   ###########################################################
 
 
-  Creating ChangeLog
+  Update ChangeLog
   ------------------
 
   Go to root directory of project:
 
     svn log -rHEAD:2 > pkg/ChangeLog
+
+
+  Checking the package with latest development verstion of R
+  ----------------------------------------------------------
+
+  Get source from
+    ftp://ftp.stat.math.ethz.ch/Software/R/
+
+  UnTar and install according to guide in INSTALL (source directory).
+
+  Go to mboost directory and call
+    ../relative/path/to/R-devel/bin/R
+
+  Run
+    install.packages(c("car", "nlme", "lme4", "survival", "gmodels"))
+
+  Quit R and run
+   ../relative/path/to/R-devel/bin/R CMD check --as-cran papeR_XXX.tar.gz
+
+
+  Making a release
+  ----------------
+
+    Increase patch or minor level in DESCRIPTION
+    Update Date: field in DESCRIPTION
+    Update NEWS
+    Update ChangeLog
+
+    R CMD build --resave-data --compact-vignettes pkg && R CMD check --as-cran papeR_XXX.tar.gz
+
+    Run check with R-devel
+    (see section "Checking the package with latest development version of R")
+
+    If differences to .Rout.save occure:
+       - Manually check differences. You might want to use something like:
+            cd papeR.Rcheck/tests
+	    meld Examples/papeR-Ex.Rout.save ../papeR-Ex.Rout &
+	or
+	    meld regtest-XXX.Rout.save regtest-XXX.Rout &
+
+       - If ok, copy new .Rout files to .Rout.save:
+
+       	    Rscript copy_Rout_to_Routsave.R "vignettes=FALSE"
+
+       - Update vignette .Rout.save files if necessary
+
+            Rscript copy_Rout_to_Routsave.R "vignettes=TRUE"
+
+	 For details see
+         http://r.789695.n4.nabble.com/Generate-Rout-save-files-for-vignettes-td4652752.html
+
+    Gives no warnings / errors.
+
+    Commit changes
+
+    Add latest svn LATEST version to NEWS
+
+    Now build package without test folder to be submitted to CRAN
+       R CMD buildCRAN --resave-data --compact-vignettes pkg && R CMD check --as-cran papeR_XXX.tar.gz
+
+    Ftp source package to CRAN or use web form at http://xmpalantir.wu.ac.at/cransubmit/.

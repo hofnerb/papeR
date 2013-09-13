@@ -1,4 +1,4 @@
-        CHANGES in `papeR' VERSION 0.4-0 (2013-08-07)
+        CHANGES in `papeR' VERSION 0.4-0 (2013-09-13, r40)
 
   o  included (experimental) version of prettify.summary.merMod
      to make lme4 (>= 1.0.0) happy
@@ -10,9 +10,11 @@
      via confint, e.g.
        prettify(summary(mod), confint = confint(mod))
 
-  o  added first software tests
+  o  better handling of NAMESPACES and Imports
 
-        CHANGES in `papeR' VERSION 0.3-0 (2013-08-07)
+  o  added (first) software tests
+
+        CHANGES in `papeR' VERSION 0.3-0 (2013-08-07, r33)
 
   o  first release to CRAN
 
