@@ -10,6 +10,10 @@ export(as.labeled.data.frame,
        is.labeled.data.frame,
        as.labelled.data.frame,
        is.labelled.data.frame,
+       plot.labeled.data.frame,
+       cbind.labeled.data.frame,
+       rbind.labeled.data.frame,
+       subset.labeled.data.frame,
        get_options,
        labels.data.frame,
        latex.table.cont,
@@ -32,6 +36,7 @@ S3method("[", labeled.data.frame)
 S3method(subset, labeled.data.frame)
 S3method(cbind, labeled.data.frame)
 S3method(rbind, labeled.data.frame)
+S3method(plot, labeled.data.frame)
 S3method(prettify, summary.lm)
 S3method(prettify, summary.glm)
 S3method(prettify, summary.coxph)
