@@ -1,3 +1,9 @@
+        CHANGES in `papeR' VERSION 0.4-1 (2013-XX-YY, rZZ)
+
+  o  exported plot.labeled.data.frame (and some other functions
+     for labeled data.frames)
+
+
         CHANGES in `papeR' VERSION 0.4-0 (2013-09-13, r40)
 
   o  included (experimental) version of prettify.summary.merMod

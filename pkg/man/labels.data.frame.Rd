@@ -43,7 +43,7 @@ as.labeled.data.frame(object, ...)
 
 ## special plotting function for labeled.data.frame objects
 \method{plot}{labeled.data.frame}(data, variables = names(data),
-     labels = TRUE, group = NULL, ...)
+     labels = TRUE, by = NULL, with = NULL, ...)
 }
 
 \arguments{
@@ -107,9 +107,20 @@ as.labeled.data.frame(object, ...)
     \code{labels = NULL} \code{variables} is used as label.
     \code{labels} can also be specified as character vector.
   }
-  \item{group}{
-    character or numeric specifying a grouping factor. Per default no
-    grouping is applied.
+  \item{by}{
+    a character or numeric value specifying a variable in the data set.
+    This variable can be either a grouping \code{factor} or is used as
+    numeric y-variable (see \code{with} for details). Per default no
+    grouping is applied. See also \sQuote{Details} and \sQuote{Examples}.
+  }
+  \item{with}{
+    a character or numeric value specifying a numeric variable
+    \code{with} which to \dQuote{correlate} all variables specified in
+    \code{variables}. For numeric \code{variables} a scatterplot is
+    plotted, for factor \code{variables} one gets a grouped boxplot.
+    Per default no variable is given here. Instead of \code{with} one
+    can also specify a numeric variable in \code{by} with the same
+    results. See also \sQuote{Details} and \sQuote{Examples}.
   }
 }
 \details{
@@ -123,6 +134,18 @@ as.labeled.data.frame(object, ...)
   Using \code{abbreviate = TRUE}, all labels are abbreviated to (at
   least) 4 characters such that they are unique. Other minimal lengths
   can specified by setting \code{minlength} (see examples below).
+
+  Univariate plots can be easily obtained for all numeric and factor
+  variables in a data set \code{data} by using \code{plot(data)}.
+  Bivariate plots can be obtained by specifying \code{by}. In case of a
+  factor variable, grouped \code{boxplot}s or \code{spineplot}s are
+  plotted depending on the class of the variable specified in
+  \code{variables}. In case of a numeric variable, grouped
+  \code{boxplot}s or scatter plots are plotted depending on the
+  class of the variable specified in \code{variables}. Note that one
+  cannot specify \code{by} and \code{with} at the same time (as they are
+  internally identical). Note that missings are excluded plot wise (also
+  for bivariate plots).
 }
 \value{
   \code{labels(data)} returns a named vector of variable labels, where
@@ -223,12 +246,15 @@ plot(data2)
 ## a single plot
 plot(data2, variables = "a")
 ## grouped plot
-plot(data2, variables = "a", group = "z")
+plot(data2, variables = "a", by = "z")
 ## make "c" a factor and plot "c" vs. "z"
 data2$c <- as.factor(data2$c)
-plot(data2, variables = "c", group = "z")
+plot(data2, variables = "c", by = "z")
 ## the same
-plot(data2, variables = 3, group = 4)
+plot(data2, variables = 3, by = 4)
+
+## plot everithing against "b"
+plot(data2, with = "b")
 }
 
 \keyword{methods}

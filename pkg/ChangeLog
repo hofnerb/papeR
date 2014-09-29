@@ -1,4 +1,18 @@
 ------------------------------------------------------------------------
+r41 | hofner | 2013-10-04 14:55:22 +0200 (Fr, 04. Okt 2013) | 3 Zeilen
+
+- add plot method to NAMESPACE
+- export some of the labeled.data.frame functions
+
+------------------------------------------------------------------------
+r40 | hofner | 2013-09-13 10:52:37 +0200 (Fr, 13. Sep 2013) | 5 Zeilen
+
+release papeR 0.4-0
+- added .Rbuildignore
+- minor changes in tests and examples
+- updated release SOPs
+
+------------------------------------------------------------------------
 r39 | hofner | 2013-09-12 17:06:37 +0200 (Do, 12. Sep 2013) | 2 Zeilen
 
 added helper script for package preparation
