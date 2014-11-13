@@ -9,7 +9,7 @@
 
   Go to root directory of project:
 
-    svn log -rHEAD:2 > pkg/ChangeLog
+    git log a2a74..HEAD --pretty=short > pkg/ChangeLog
 
 
   Checking the package with latest development verstion of R
@@ -63,11 +63,22 @@
 
     Gives no warnings / errors.
 
-    Commit changes
-
-    Add latest svn LATEST version to NEWS
+    Commit changes    
 
     Now build package without test folder to be submitted to CRAN
        R CMD buildCRAN --resave-data --compact-vignettes pkg && R CMD check --as-cran papeR_XXX.tar.gz
 
     Ftp source package to CRAN or use web form at http://xmpalantir.wu.ac.at/cransubmit/.
+
+
+  How to preview NEWS.Rd files
+  ----------------------------
+
+  Create NEWS.Rd from plain text NEWS:
+  tools:::news2Rd("NEWS", "inst/NEWS.Rd")
+
+  For HTML preview:
+      R CMD Rdconv -t 'html' -o 'NEWS.html' NEWS.Rd && firefox NEWS.html
+
+  and for PDF preview:
+      R CMD Rd2pdf NEWS.Rd

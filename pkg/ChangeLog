@@ -1,264 +1,269 @@
-------------------------------------------------------------------------
-r41 | hofner | 2013-10-04 14:55:22 +0200 (Fr, 04. Okt 2013) | 3 Zeilen
+commit 2be302673464f4348b18df8439bf04b83d4c0a0b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
-- add plot method to NAMESPACE
-- export some of the labeled.data.frame functions
+    - fixed bug in toLatex.sessionInfo(, citations = FALSE)
+      (spotted by Brian S. Diggs <brian.s.diggs __at__ gmail.com>)
 
-------------------------------------------------------------------------
-r40 | hofner | 2013-09-13 10:52:37 +0200 (Fr, 13. Sep 2013) | 5 Zeilen
+commit 6e539575e82122f92364a4a056c381420b4284da
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-release papeR 0.4-0
-- added .Rbuildignore
-- minor changes in tests and examples
-- updated release SOPs
+    - strongly improved plot function
 
-------------------------------------------------------------------------
-r39 | hofner | 2013-09-12 17:06:37 +0200 (Do, 12. Sep 2013) | 2 Zeilen
+commit 33ccd65b1d76b1825fcbecfcf085a844d616fdd7
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added helper script for package preparation
+    - add plot method to NAMESPACE
+    - export some of the labeled.data.frame functions
 
-------------------------------------------------------------------------
-r38 | hofner | 2013-09-12 17:06:03 +0200 (Do, 12. Sep 2013) | 5 Zeilen
+commit 2db46aa38a378df0ba7c181ac895dc84f75cdc06
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-- make lme4 >= 1.0 happy
-- minor bugfixes 
-- changes in NAMESPACE and imports
-- added .Rout.save files
+    release papeR 0.4-0
+    - added .Rbuildignore
+    - minor changes in tests and examples
+    - updated release SOPs
 
-------------------------------------------------------------------------
-r37 | hofner | 2013-09-05 11:51:13 +0200 (Do, 05. Sep 2013) | 4 Zeilen
+commit 9724356eca78356fc95af96eb04a0c87f148cac7
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-- included better handling of environments in prettify functions
-  and checks if the data has changed
-- added SOPs for releasing package
+    added helper script for package preparation
 
-------------------------------------------------------------------------
-r36 | hofner | 2013-09-03 19:19:30 +0200 (Di, 03. Sep 2013) | 8 Zeilen
+commit 62c20def27ea641cbdfb57feed6666fb82cd985f
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-- better guessing and handling of environments for model refitting
-- experimental version of environments for coxph and lmer models
-- users can now specify confidence intervals directly via confint, e.g. 
-    prettify(summary(mod), confint = confint(mod))
-  This helps to in case of environment problems. 
-  In this case, labels should also be user-specified!
-- added first tests
+    - make lme4 >= 1.0 happy
+    - minor bugfixes
+    - changes in NAMESPACE and imports
+    - added .Rout.save files
 
-------------------------------------------------------------------------
-r35 | hofner | 2013-08-09 10:09:35 +0200 (Fr, 09. Aug 2013) | 4 Zeilen
+commit 1ed6b32c13f218aed209c2b4ac1f66561f163379
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-- updated news file with missing items (for version 0.3)
-- included (experimental) version of prettify.summary.merMod
-  to make lme4 (>= 1.0.0) happy
+    - included better handling of environments in prettify functions
+      and checks if the data has changed
+    - added SOPs for releasing package
 
-------------------------------------------------------------------------
-r34 | hofner | 2013-08-07 17:11:09 +0200 (Mi, 07. Aug 2013) | 8 Zeilen
+commit f2dc013dc7c7d7c5209efc5e73ce3c974e66bc66
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-- improvement/bugfix in rbind.labeled.data.frame()
-- bugfix in is.labeled.data.frame()
-- improvement of toLatex.sessionInfo()
-- numerous improvements in manuals
-- added missing items to NAMESPACE
+    - better guessing and handling of environments for model refitting
+    - experimental version of environments for coxph and lmer models
+    - users can now specify confidence intervals directly via confint, e.g.
+        prettify(summary(mod), confint = confint(mod))
+      This helps to in case of environment problems.
+      In this case, labels should also be user-specified!
+    - added first tests
 
-- Now really push release to CRAN
+commit fec391a80b4c1268ea82200620b013c5f14cf873
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r33 | hofner | 2013-08-06 16:42:28 +0200 (Di, 06. Aug 2013) | 2 Zeilen
+    - updated news file with missing items (for version 0.3)
+    - included (experimental) version of prettify.summary.merMod
+      to make lme4 (>= 1.0.0) happy
 
-release 0.3 to CRAN
+commit 6692a024829bdc30d690bcd76e67d7c50d9f55de
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r32 | hofner | 2013-08-05 18:42:25 +0200 (Mo, 05. Aug 2013) | 3 Zeilen
+    - improvement/bugfix in rbind.labeled.data.frame()
+    - bugfix in is.labeled.data.frame()
+    - improvement of toLatex.sessionInfo()
+    - numerous improvements in manuals
+    - added missing items to NAMESPACE
 
-- added plot function for labeled.data.frame objects that 
-  allows for univariate plots and grouped, bivariate plots
+commit 063fbb8534c2e0edda047057d981b6e2829fb12e
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r31 | hofner | 2013-08-05 12:07:48 +0200 (Mo, 05. Aug 2013) | 4 Zeilen
+    release 0.3 to CRAN
 
-- added NEWS and ChangeLog
-- started preparation of release candidate
-- increased version to 0.3
+commit aae17d69e487d5f608215f262fca2b25b7738510
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r30 | hofner | 2013-08-02 14:17:08 +0200 (Fr, 02. Aug 2013) | 3 Zeilen
+    - added plot function for labeled.data.frame objects that
+      allows for univariate plots and grouped, bivariate plots
 
-minor changes
-peparations for release candidate
+commit b07341e270c6c3903965d2c48f7b8b6da514daa4
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r29 | hofner | 2013-07-17 19:18:43 +0200 (Mi, 17. Jul 2013) | 3 Zeilen
+    - added NEWS and ChangeLog
+    - started preparation of release candidate
+    - increased version to 0.3
 
-- fixed bug in prettify.summary.coxph (labels were not correctly guessed)
-- changed default to x[..., drop = TRUE] for labeled.data.frame
+commit ab7409c4dfdde5b2b296e9d5c964d39629662787
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r28 | hofner | 2013-07-17 12:08:40 +0200 (Mi, 17. Jul 2013) | 2 Zeilen
+    minor changes
+    peparations for release candidate
 
-added missing file
+commit 2ff233d5d3a00a0e41ab5ac64a4a4bced27c515b
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r27 | hofner | 2013-07-17 12:08:20 +0200 (Mi, 17. Jul 2013) | 7 Zeilen
+    - fixed bug in prettify.summary.coxph (labels were not correctly guessed)
+    - changed default to x[..., drop = TRUE] for labeled.data.frame
 
-- removed summary_fixef 
-  (better results can be achieved using prettify() on summaries from random effects models)
-- added confint functions for mixed models
-- added function is.labeled.data.frame
-- added documentation for new functions and for extraction and subset functions 
-  for 'labeled.data.frame's
+commit 59837493b9bd2d6a9e30ec7858f48387eb3fe13c
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r26 | hofner | 2013-07-11 19:42:10 +0200 (Do, 11. Jul 2013) | 8 Zeilen
+    added missing file
 
-- defined new class "labeled.data.frame" with special 
-  subset, cbind and rbind function (to keep labels when changing data set)
-- new function as.labeled.data.frame
-- new prettify function for summary.coxph
-- new toLatex function for sessionInfo() 
-  [with nicer results than the default function: e.g. citations included]
+commit 602cdd3499a7f731800e0644c8f41ba6ed646dc8
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
+    - removed summary_fixef
+      (better results can be achieved using prettify() on summaries from random effects models)
+    - added confint functions for mixed models
+    - added function is.labeled.data.frame
+    - added documentation for new functions and for extraction and subset functions
+      for 'labeled.data.frame's
 
-------------------------------------------------------------------------
-r25 | hofner | 2013-07-05 12:06:03 +0200 (Fr, 05. Jul 2013) | 3 Zeilen
+commit d925f0f7ab394b8391f4528f5f3eed2d054f841b
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added prettify methods for lme and mer summaries
-lots of improvements in prettify
+    - defined new class "labeled.data.frame" with special
+      subset, cbind and rbind function (to keep labels when changing data set)
+    - new function as.labeled.data.frame
+    - new prettify function for summary.coxph
+    - new toLatex function for sessionInfo()
+      [with nicer results than the default function: e.g. citations included]
 
-------------------------------------------------------------------------
-r24 | hofner | 2013-07-02 19:14:54 +0200 (Di, 02. Jul 2013) | 5 Zeilen
+commit b1491b15989b39e8889013c3c9dbe746790a5cff
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-bugfix in labels(..., abbreviate = TRUE)
-added prettify.anova for Anova and anova results
-refactored code in prettify
-latex.tables.XXX now with argument labels = TRUE for easy labeling
+    added prettify methods for lme and mer summaries
+    lots of improvements in prettify
 
-------------------------------------------------------------------------
-r23 | hofner | 2013-07-02 19:02:48 +0200 (Di, 02. Jul 2013) | 2 Zeilen
+commit 717043839c5b517937ba87c3ab0bf3024fe5d459
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-add manual for toLatex.character
+    bugfix in labels(..., abbreviate = TRUE)
+    added prettify.anova for Anova and anova results
+    refactored code in prettify
+    latex.tables.XXX now with argument labels = TRUE for easy labeling
 
-------------------------------------------------------------------------
-r22 | hofner | 2013-07-02 17:09:24 +0200 (Di, 02. Jul 2013) | 4 Zeilen
+commit 4a7f66a077dc5552f2620da9c80b04afb6c4444b
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-make checks happy
-include significance stars
-improved manuals
+    add manual for toLatex.character
 
-------------------------------------------------------------------------
-r21 | hofner | 2013-07-01 17:36:37 +0200 (Mo, 01. Jul 2013) | 4 Zeilen
+commit 13c615cd4f07a7a1bfee8a29daa2da0394bb8bf7
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-improved prettify
-bugfix in latex.table.fac
-increased version to 0.2
+    make checks happy
+    include significance stars
+    improved manuals
 
-------------------------------------------------------------------------
-r20 | hofner | 2013-07-01 14:56:34 +0200 (Mo, 01. Jul 2013) | 3 Zeilen
+commit 8c2d9145fb43b919a543e09bf88f202fc8889270
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-new prettify function for summary.glm
-improved prettify function for summary.lm
+    improved prettify
+    bugfix in latex.table.fac
+    increased version to 0.2
 
-------------------------------------------------------------------------
-r19 | hofner | 2013-06-10 11:59:43 +0200 (Mo, 10. Jun 2013) | 3 Zeilen
+commit 419e98125d6f2bba53b9884479c39ba3e2be685f
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added toLatex function to sanitize R output for usage within latex
-added automatic sanitization to latex.table functions
+    new prettify function for summary.glm
+    improved prettify function for summary.lm
 
-------------------------------------------------------------------------
-r18 | hofner | 2013-06-10 11:57:31 +0200 (Mo, 10. Jun 2013) | 2 Zeilen
+commit 92fe3710d46d3c66db618ec566adbdcec23956e0
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added prettify method for summary.lm objects
+    added toLatex function to sanitize R output for usage within latex
+    added automatic sanitization to latex.table functions
 
-------------------------------------------------------------------------
-r17 | hofner | 2013-05-22 13:31:43 +0200 (Mi, 22. Mai 2013) | 2 Zeilen
+commit 99cded04857b9295c4895aef32e96a5e6132d180
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-improved label handling when data set is alterd (e.g. variables dropped, added or renamed)
+    added prettify method for summary.lm objects
 
-------------------------------------------------------------------------
-r16 | hofner | 2013-03-07 19:46:48 +0100 (Do, 07. Mär 2013) | 2 Zeilen
+commit 01689b0a5667f03350d8106dbb4cb74589502b1b
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-first implementation of grouped statistics in latex.table.XXX
+    improved label handling when data set is alterd (e.g. variables dropped, added or renamed)
 
-------------------------------------------------------------------------
-r15 | hofner | 2013-03-07 15:43:28 +0100 (Do, 07. Mär 2013) | 3 Zeilen
+commit 0c6ca4b9ce6a50ec5eeeaf1adfe58b841cbd40ca
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added level argument to summary.fixef
-fixed example
+    first implementation of grouped statistics in latex.table.XXX
 
-------------------------------------------------------------------------
-r14 | hofner | 2013-03-04 10:36:28 +0100 (Mo, 04. Mär 2013) | 5 Zeilen
+commit b9e216426e3c827445a46bdb2764aa98666fe39b
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-changes in labels():
-- don't set labels to NA
-- export labels.data.frame
-- report which labels are not matching (if any)
+    added level argument to summary.fixef
+    fixed example
 
-------------------------------------------------------------------------
-r13 | hofner | 2013-02-28 19:38:22 +0100 (Do, 28. Feb 2013) | 2 Zeilen
+commit 1f1a0f9aff9349f970b0aaad43bc2abd3007eb14
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added confidence intervals to summary_fixef functions
+    changes in labels():
+    - don't set labels to NA
+    - export labels.data.frame
+    - report which labels are not matching (if any)
 
-------------------------------------------------------------------------
-r12 | hofner | 2013-02-28 18:57:41 +0100 (Do, 28. Feb 2013) | 3 Zeilen
+commit ed5045db0fa9ec307af5a59cb2323360edf9553d
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added missing manual for get_options
-added functions to extract confidence intervals for mixed models
+    added confidence intervals to summary_fixef functions
 
-------------------------------------------------------------------------
-r11 | hofner | 2013-02-18 17:12:25 +0100 (Mo, 18. Feb 2013) | 3 Zeilen
+commit 69cd468beb625cde0b99d00abc4ef25d91f09e18
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-refactored code in latex.table.xxx functions
-new arguments caption, label and center in latex.table.xxx function
+    added missing manual for get_options
+    added functions to extract confidence intervals for mixed models
 
-------------------------------------------------------------------------
-r10 | hofner | 2013-02-05 19:14:53 +0100 (Di, 05. Feb 2013) | 3 Zeilen
+commit c40f1631a69fb475c609504e5a1f434f82f091fb
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added labels to latex.table functions
-try to fix lme4 error ("summary not exported")
+    refactored code in latex.table.xxx functions
+    new arguments caption, label and center in latex.table.xxx function
 
-------------------------------------------------------------------------
-r9 | hofner | 2013-01-28 18:49:15 +0100 (Mo, 28. Jan 2013) | 5 Zeilen
+commit d2968dacb045ab6e960163b882e2b4d30dad3ecb
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-improvements in latex.table functions:
-- new print functions
-- other internal changes
-bug in summary.fixef now really fixed
+    added labels to latex.table functions
+    try to fix lme4 error ("summary not exported")
 
-------------------------------------------------------------------------
-r8 | hofner | 2013-01-28 15:06:38 +0100 (Mo, 28. Jan 2013) | 2 Zeilen
+commit 2df3f7830c08a8eda1e3b79bc1e2d88a5403a77e
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-restructure code
+    improvements in latex.table functions:
+    - new print functions
+    - other internal changes
+    bug in summary.fixef now really fixed
 
-------------------------------------------------------------------------
-r7 | hofner | 2013-01-28 14:13:40 +0100 (Mo, 28. Jan 2013) | 2 Zeilen
+commit 854b61ef2afcfe00ea7ec78e0aef9e67d33af39f
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-fixed problems with latex.table.cont (with only one variable)
+    restructure code
 
-------------------------------------------------------------------------
-r6 | hofner | 2013-01-28 12:12:50 +0100 (Mo, 28. Jan 2013) | 5 Zeilen
+commit 38e95be3e0efc9eba0e81ac49d888433ba97253b
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-added new arguments to latex.table functions
-added examples for latex.table and summary.fixef
-bugfix in summary.fixef: used to terminate when no p-value present
+    fixed problems with latex.table.cont (with only one variable)
 
+commit 494d38917427d38c2190e811755ce0f4d9a59c9f
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r5 | hofner | 2013-01-22 17:20:34 +0100 (Di, 22. Jan 2013) | 2 Zeilen
+    added new arguments to latex.table functions
+    added examples for latex.table and summary.fixef
+    bugfix in summary.fixef: used to terminate when no p-value present
 
-summary.fixef: small improvements in display of p-values
+commit c378929485dce98ebead2b1272a3eaa0164052b0
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r4 | hofner | 2013-01-22 16:54:02 +0100 (Di, 22. Jan 2013) | 2 Zeilen
+    summary.fixef: small improvements in display of p-values
 
-removed default files from project
+commit d4da872fbc164ec6932fd98f374753dab2c619c1
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r3 | hofner | 2013-01-22 16:53:00 +0100 (Di, 22. Jan 2013) | 3 Zeilen
+    removed default files from project
 
-added prettify function to improve summary tables
-improved summary.fixef functions
+commit d1188474d45da454e0e4e666810be01603271810
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
-r2 | hofner | 2013-01-21 14:48:17 +0100 (Mo, 21. Jan 2013) | 2 Zeilen
+    added prettify function to improve summary tables
+    improved summary.fixef functions
 
-initialization
+commit 090c3c9ca90ae9d040cd8dff64417d8b9d1bec69
+Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
 
-------------------------------------------------------------------------
+    initialization
