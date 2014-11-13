@@ -15,7 +15,7 @@
 \alias{plot.labeled.data.frame}
 
 \title{
-  Extract and Set Labels from / to Data Frames
+  Extract labels from and set labels for data frames
 }
 \description{
   Labels can be stored to an attribute \code{"variable.labels"} using
