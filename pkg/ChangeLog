@@ -1,3 +1,35 @@
+commit 9ad88957257dcc3d4941bfec3984c4457b0c3c1e
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Release papeR 0.5-0:
+    - moved nlme, lme4 and survial from "Depends" to "Enhances"
+    - reflext this in tests and manuals by only executing the code
+      conditionally on the availability of the packages
+    - some small fixes in prettify.Rd
+    - updated ChangeLog
+
+commit 1ab6a8b1d97ebbdd149666d7a371728fe82d1a7c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    - additions to NEWS.Rd
+    - minor changes in manual
+
+commit 6c03a3d02689f14f56227f0f52110a3b5482a717
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    - change plot(data, ...) to plot(x, ...) to make generic happy
+
+commit 5d47a952df7229fb35218cfdcd943f7366afa614
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    - started preparing a new release version papeR 0.5-0
+
+commit b2591f861040b3b7d0111708358458147d0d0d4e
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    - Changed plain text \file{NEWS} to \file{inst/NEWS.Rd}
+    - Updated SOPs
+
 commit 2be302673464f4348b18df8439bf04b83d4c0a0b
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 

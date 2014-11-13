@@ -3,21 +3,23 @@
 \section{Changes in papeR version 0.5-0 (2014-11-13)}{
     \subsection{User-visible changes}{
       \itemize{
-      \item exported \code{plot.labeled.data.frame} (and some other
+      \item Exported \code{plot.labeled.data.frame} (and some other
       functions for labeled \code{data.frame}s)
-      \item greatly improved \code{plot} function for labeled
+      \item Greatly improved \code{plot} function for labeled
       \code{data.frame}s
     }
   }
   \subsection{Miscellaneous}{
     \itemize{
       \item Changed plain text \file{NEWS} to \file{inst/NEWS.Rd}
-      \item Import \pkg{nlme}
+      \item The package now \emph{enhances} \pkg{nlme}, \pkg{lme4} and
+      \pkg{survival}. Thus, we no longer import \pkg{lme4} and
+      \pkg{survival}.
     }
   }
   \subsection{Bug-fixes}{
     \itemize{
-      \item fixed bug in \code{toLatex.sessionInfo(, citations = FALSE)}
+      \item Fixed bug in \code{toLatex.sessionInfo(, citations = FALSE)}
       (spotted by Brian S. Diggs <brian.s.diggs __at__ gmail.com>)
       \item Changed \code{plot(data, ...)} to \code{plot(x, ...)} to
       make the generic function happy.

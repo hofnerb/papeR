@@ -141,31 +141,35 @@ all.equal(res[[1]], res[[5]], check.attributes = FALSE)
 ## CI dropped. Other values equal
 stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
 
-### check lme interface
-(res <- fit_model("lme"))
-stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
-stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
-## differences in CIs as different data is used
-all.equal(res[[1]], res[[5]], check.attributes = FALSE)
-## CI dropped. Other values equal
-stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+if (require("nlme")) {
+    ### check lme interface
+    (res <- fit_model("lme"))
+    stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+    stopifnot(all.equal(res[[1]], res[[4]], check.attributes = FALSE))
+    ## differences in CIs as different data is used
+    all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+    ## CI dropped. Other values equal
+    stopifnot(all.equal(res[[1]][, -(3:4)], res[[2]], check.attributes = FALSE))
+}
 
-### check coxph interfaces
-(res <- fit_model("coxph"))
-stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
-stopifnot(inherits(res[[2]], "try-error"))
-stopifnot(inherits(res[[4]], "try-error"))
-## differences in CIs as different data is used
-all.equal(res[[1]], res[[5]], check.attributes = FALSE)
-
-### check lmer interface
-(res <- fit_model("lmer"))
-if (packageDescription("lme4")$Version >= 1) {
+if (require("survival")) {
+    ### check coxph interfaces
+    (res <- fit_model("coxph"))
     stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
     stopifnot(inherits(res[[2]], "try-error"))
     stopifnot(inherits(res[[4]], "try-error"))
     ## differences in CIs as different data is used
+    all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+}
 
-    ## CURRENTLY NOT USE
-    # all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+if (require("lme4")) {
+    ### check lmer interface
+    (res <- fit_model("lmer"))
+    if (packageDescription("lme4")$Version >= 1) {
+        stopifnot(all.equal(res[[1]], res[[3]], check.attributes = FALSE))
+        stopifnot(inherits(res[[2]], "try-error"))
+        stopifnot(inherits(res[[4]], "try-error"))
+        ## differences in CIs as different data is used
+        all.equal(res[[1]], res[[5]], check.attributes = FALSE)
+    }
 }

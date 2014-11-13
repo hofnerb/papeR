@@ -27,13 +27,16 @@
   \code{\link[car]{Anova}} (package \pkg{car})
 }
 \examples{
-## Load data set Orthodont
-data(Orthodont, package = "nlme")
+## Example requires package nlme to be installed and loaded
+if (require("nlme")) {
+    ## Load data set Orthodont
+    data(Orthodont, package = "nlme")
 
-## Fit a model for distance with random intercept for Subject
-mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+    ## Fit a model for distance with random intercept for Subject
+    mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
 
-Anova(mod)
+    Anova(mod)
+}
 }
 
 \keyword{methods}

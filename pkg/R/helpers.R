@@ -41,7 +41,7 @@ get_options <- function(object, name) {
 ## Inside archive path: /src/library/stats/R/confint.R
 ## Licence of R package utils: >= GPL-2
 confint.lme <- function (object, parm, level = 0.95, ...) {
-    cf <- fixef(object)
+    cf <- nlme::fixef(object)
     pnames <- names(cf)
     if (missing(parm))
         parm <- pnames
@@ -85,7 +85,7 @@ confint.mer <- function (object, parm, level = 0.95,
         return(CI)
     }
 
-    cf <- fixef(object)
+    cf <- lme4::fixef(object)
     pnames <- names(cf)
     if (missing(parm))
         parm <- pnames
