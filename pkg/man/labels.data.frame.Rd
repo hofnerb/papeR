@@ -42,7 +42,7 @@ as.labeled.data.frame(object, ...)
 \method{rbind}{labeled.data.frame}(..., deparse.level = 1)
 
 ## special plotting function for labeled.data.frame objects
-\method{plot}{labeled.data.frame}(data, variables = names(data),
+\method{plot}{labeled.data.frame}(x, variables = names(x),
      labels = TRUE, by = NULL, with = NULL,
      regression.line = TRUE, line.col = "red", ...)
 }
