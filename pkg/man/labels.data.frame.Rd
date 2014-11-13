@@ -43,7 +43,8 @@ as.labeled.data.frame(object, ...)
 
 ## special plotting function for labeled.data.frame objects
 \method{plot}{labeled.data.frame}(data, variables = names(data),
-     labels = TRUE, by = NULL, with = NULL, ...)
+     labels = TRUE, by = NULL, with = NULL,
+     regression.line = TRUE, line.col = "red", ...)
 }
 
 \arguments{
@@ -122,6 +123,14 @@ as.labeled.data.frame(object, ...)
     can also specify a numeric variable in \code{by} with the same
     results. See also \sQuote{Details} and \sQuote{Examples}.
   }
+  \item{regression.line}{
+    a logical argument specifying if a regression line should be added
+    to scatter plots (which are plotted if both \code{variables} and
+    \code{by} are numeric values).
+  }
+  \item{line.col}{
+    the color of the regression line.
+  }
 }
 \details{
   One can set or extract labels from \code{\link{data.frame}} objects.
@@ -137,6 +146,7 @@ as.labeled.data.frame(object, ...)
 
   Univariate plots can be easily obtained for all numeric and factor
   variables in a data set \code{data} by using \code{plot(data)}.
+
   Bivariate plots can be obtained by specifying \code{by}. In case of a
   factor variable, grouped \code{boxplot}s or \code{spineplot}s are
   plotted depending on the class of the variable specified in
@@ -254,6 +264,7 @@ plot(data2, variables = "c", by = "z")
 plot(data2, variables = 3, by = 4)
 
 ## plot everithing against "b"
+## (grouped boxplots, stacked barplots or scatterplots)
 plot(data2, with = "b")
 }
 
