@@ -35,7 +35,7 @@
 
     Increase patch or minor level in DESCRIPTION
     Update Date: field in DESCRIPTION
-    Update date and version in man/papeR-package.Rd 
+    Update date and version in man/papeR-package.Rd
     Update inst/NEWS.Rd
     Update ChangeLog
 
@@ -64,10 +64,10 @@
 
     Gives no warnings / errors.
 
-    Commit changes    
+    Commit changes
 
-    Now build package without test folder to be submitted to CRAN
-       R CMD buildCRAN --resave-data --compact-vignettes pkg && R CMD check --as-cran papeR_XXX.tar.gz
+    Now build package (perhaps in future without test folder) to be submitted to CRAN
+       R CMD build --resave-data --compact-vignettes pkg && R CMD check --as-cran papeR_XXX.tar.gz
 
     Ftp source package to CRAN or use web form at http://xmpalantir.wu.ac.at/cransubmit/.
 
