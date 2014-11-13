@@ -35,7 +35,8 @@
 
     Increase patch or minor level in DESCRIPTION
     Update Date: field in DESCRIPTION
-    Update NEWS
+    Update date and version in man/papeR-package.Rd 
+    Update inst/NEWS.Rd
     Update ChangeLog
 
     R CMD build --resave-data --compact-vignettes pkg && R CMD check --as-cran papeR_XXX.tar.gz
