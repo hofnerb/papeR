@@ -100,7 +100,7 @@ toBibtex(info)
 ## for example be included in a Latex chunk of your Sweave or knitr
 ## report.
 
-\dontrun{getwd()     ## location where write access is needed
+\donttest{getwd()     ## location where write access is needed
 toLatex(sessionInfo(), file = "packages.bib")
 file.remove("packages.bib")
 }

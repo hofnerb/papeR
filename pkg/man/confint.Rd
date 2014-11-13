@@ -28,13 +28,13 @@
     corresponding \code{summary} and asymptotic confidence intervals
     will be returned elsewhise. If \code{TRUE} (or \dQuote{"TRUE"})
     confidence intervals will be estimated using \code{\link{ci}} from
-    package \pkg{gmodels} which uses \code{\link{mcmcsamp}} internally.
+    package \pkg{gmodels} which uses \code{\link[lme4]{mcmcsamp}} internally.
     If \code{FALSE} (or \dQuote{"FALSE"}), asymptotic confidence
     intervals will be returned and an error is given if not possible.
   }
 
   \item{B}{
-    number of samples to take in \code{\link{mcmcsamp}}. Per default
+    number of samples to take in \code{\link[lme4]{mcmcsamp}}. Per default
     1000 samples are used.
   }
 

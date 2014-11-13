@@ -129,7 +129,7 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
     See \code{\link{confint.mer}} for details.
   }
   \item{B}{
-    number of samples to take in \code{\link{mcmcsamp}}. See
+    number of samples to take in \code{\link[lme4]{mcmcsamp}}. See
     \code{\link{confint.mer}} for details.
   }
   \item{method}{
@@ -203,115 +203,119 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
   \code{\link{confint.lme}} and \code{\link{confint.mer}}.
 }
 \examples{
-## Load data set Orthodont
-data(Orthodont, package = "nlme")
+## Example requires package nlme to be installed and loaded
+if (require("nlme")) {
+    ## Load data set Orthodont
+    data(Orthodont, package = "nlme")
 
-######################################################################
-# Linear model
-######################################################################
+    ######################################################################
+    # Linear model
+    ######################################################################
 
-## Fit a linear model
-linmod <- lm(distance ~ age + Sex, data = Orthodont)
-## Extract pretty summary
-prettify(summary(linmod))
+    ## Fit a linear model
+    linmod <- lm(distance ~ age + Sex, data = Orthodont)
+    ## Extract pretty summary
+    prettify(summary(linmod))
 
-## Extract anova (sequential tests)
-anova(linmod)
-## now prettify it
-prettify(anova(linmod))
+    ## Extract anova (sequential tests)
+    anova(linmod)
+    ## now prettify it
+    prettify(anova(linmod))
 
-######################################################################
-# Random effects model (nlme)
-######################################################################
+    ######################################################################
+    # Random effects model (nlme)
+    ######################################################################
 
-### (fit a more suitable model with random effects)
-## With package nlme:
-require("nlme")
-## Fit a model for distance with random intercept for Subject
-mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
-summary(mod)
-## Extract fixed effects table, add confidence interval and make it pretty
-prettify(summary(mod))
-## Extract fixed effects table only and make it pretty
-prettify(summary(mod), confint = FALSE)
+    ### (fit a more suitable model with random effects)
+    ## With package nlme:
+    require("nlme")
+    ## Fit a model for distance with random intercept for Subject
+    mod <- lme(distance ~ age + Sex, data = Orthodont, random = ~ 1 | Subject)
+    summary(mod)
+    ## Extract fixed effects table, add confidence interval and make it pretty
+    prettify(summary(mod))
+    ## Extract fixed effects table only and make it pretty
+    prettify(summary(mod), confint = FALSE)
 
-######################################################################
-# Random effects model (lme4)
-######################################################################
+    ######################################################################
+    # Random effects model (lme4)
+    ######################################################################
 
-set.seed(130913)
+    set.seed(130913)
 
-## With package lme4:
-require("lme4")
-## Fit a model for distance with random intercept for Subject
-mod4 <- lmer(distance ~ age + Sex + (1|Subject), data = Orthodont)
-summary(mod4)
-## Extract fixed effects table and make it pretty
-prettify(summary(mod4))
+    ## With package lme4:
+    if (require("lme4") && require("car")) {
+        ## Fit a model for distance with random intercept for Subject
+        mod4 <- lmer(distance ~ age + Sex + (1|Subject), data = Orthodont)
+        summary(mod4)
+        ## Extract fixed effects table and make it pretty
+        prettify(summary(mod4))
 
-## Extract and prettify anova (sequential tests)
-prettify(anova(mod4))
+        ## Extract and prettify anova (sequential tests)
+        prettify(anova(mod4))
 
-## Better: extract Anova (partial instead of sequential tests)
-library("car")
-try(Anova(mod4))  ## doesn't currently work with lme4 >= vers. 1.0.0
-## now prettify it
-try(prettify(Anova(mod4))) ## doesn't currently work with lme4 >= vers. 1.0.0
+        ## Better: extract Anova (partial instead of sequential tests)
+        library("car")
+        Anova(mod4)
+        ## now prettify it
+        prettify(Anova(mod4))
+    }
 
-######################################################################
-# Cox model
-######################################################################
+    ######################################################################
+    # Cox model
+    ######################################################################
 
-library("survival")
-## Load data set ovarian
-data(ovarian, package = "survival")
+    ## survival models
+    if (require("survival")) {
+        ## Load data set ovarian
+        data(ovarian, package = "survival")
 
-## fit a Cox model
-mod5 <- coxph(Surv(futime, fustat) ~ age, data=ovarian)
-summary(mod5)
-## Make pretty summary
-prettify(summary(mod5))
+        ## fit a Cox model
+        mod5 <- coxph(Surv(futime, fustat) ~ age, data=ovarian)
+        summary(mod5)
+        ## Make pretty summary
+        prettify(summary(mod5))
 
-## Make pretty summary
-prettify(Anova(mod5))
-
-
-
-######################################################################
-# ATTENTION when confint = TRUE: Do not modify or delete data
-######################################################################
-
-## Fit a linear model (same as above)
-linmod <- lm(distance ~ age + Sex, data = Orthodont)
-## Extract pretty summary
-prettify(summary(linmod))
-
-## Change the data (age in month instead of years)
-Orthodont$age <- Orthodont$age * 12
-prettify(summary(linmod))  ## confidence intervals for age have changed
-                           ## but coefficients stayed the same; a
-                           ## warning is issued
-
-## Remove data in fitting environment
-rm(Orthodont)
-prettify(summary(linmod))  ## confidence intervals are missing as no
-                           ## data set was available to refit the model
+        ## Make pretty summary
+        prettify(Anova(mod5))
+    }
 
 
+    ######################################################################
+    # ATTENTION when confint = TRUE: Do not modify or delete data
+    ######################################################################
 
-######################################################################
-# Use confint to specify confidence interval without refitting
-######################################################################
+    ## Fit a linear model (same as above)
+    linmod <- lm(distance ~ age + Sex, data = Orthodont)
+    ## Extract pretty summary
+    prettify(summary(linmod))
 
-## make labels without using the data set
-labels <- c("distance", "age", "Subject", "Sex")
-names(labels) <- labels
+    ## Change the data (age in month instead of years)
+    Orthodont$age <- Orthodont$age * 12
+    prettify(summary(linmod))  ## confidence intervals for age have changed
+                               ## but coefficients stayed the same; a
+                               ## warning is issued
 
-## usually easier via: labels(Orthodont)
+    ## Remove data in fitting environment
+    rm(Orthodont)
+    prettify(summary(linmod))  ## confidence intervals are missing as no
+                               ## data set was available to refit the model
 
-prettify(summary(linmod), confint = confint(linmod),
-         labels = labels)
 
+
+    ######################################################################
+    # Use confint to specify confidence interval without refitting
+    ######################################################################
+
+    ## make labels without using the data set
+    labels <- c("distance", "age", "Subject", "Sex")
+    names(labels) <- labels
+
+    ## usually easier via: labels(Orthodont)
+
+    prettify(summary(linmod), confint = confint(linmod),
+             labels = labels)
+}
 }
 
 \keyword{methods}

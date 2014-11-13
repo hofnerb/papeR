@@ -160,37 +160,40 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   \code{\link{latex.table.fac}} and \code{\link{get_options}}
 }
 \examples{
-## Use dataset Orthodont
-data(Orthodont, package = "nlme")
+## Example requires package nlme to be installed and loaded
+if (require("nlme")) {
+    ## Use dataset Orthodont
+    data(Orthodont, package = "nlme")
 
-## Get summary for continuous variables
-latex.table.cont(Orthodont)
+    ## Get summary for continuous variables
+    latex.table.cont(Orthodont)
 
-## Change statistics to display
-latex.table.cont(Orthodont, quantiles = FALSE)
-latex.table.cont(Orthodont, count = FALSE, quantiles = FALSE)
-latex.table.cont(Orthodont, mean_sd = FALSE)
+    ## Change statistics to display
+    latex.table.cont(Orthodont, quantiles = FALSE)
+    latex.table.cont(Orthodont, count = FALSE, quantiles = FALSE)
+    latex.table.cont(Orthodont, mean_sd = FALSE)
 
-## Show column 'Missing' even if no missings are present
-latex.table.cont(Orthodont, show.NAs = TRUE)
+    ## Show column 'Missing' even if no missings are present
+    latex.table.cont(Orthodont, show.NAs = TRUE)
 
-## Change variables to display
-latex.table.cont(Orthodont, variables = "age")
+    ## Change variables to display
+    latex.table.cont(Orthodont, variables = "age")
 
-## What happens in the display if we introduce some missing values:
-set.seed(1907)
-Orthodont$age[sample(nrow(Orthodont), 20)] <- NA
-latex.table.cont(Orthodont)
+    ## What happens in the display if we introduce some missing values:
+    set.seed(1907)
+    Orthodont$age[sample(nrow(Orthodont), 20)] <- NA
+    latex.table.cont(Orthodont)
 
-## We can also have a look at the returned object:
-df.cont <- latex.table.cont(Orthodont)
-## Structure of object
-str(df.cont)
-## Make object a data.frame and have a look at the raw data
-class(df.cont) <- "data.frame"
-df.cont
+    ## We can also have a look at the returned object:
+    df.cont <- latex.table.cont(Orthodont)
+    ## Structure of object
+    str(df.cont)
+    ## Make object a data.frame and have a look at the raw data
+    class(df.cont) <- "data.frame"
+    df.cont
 
-print.table.cont(df.cont)
+    print.table.cont(df.cont)
+}
 }
 
 \keyword{univar}

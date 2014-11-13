@@ -1,6 +1,3 @@
-import(lme4)
-import(survival)
-
 importFrom(car, Anova)
 importFrom(utils, toLatex)
 importFrom(utils, toBibtex)

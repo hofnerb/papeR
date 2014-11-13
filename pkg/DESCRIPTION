@@ -6,11 +6,12 @@ Author: Benjamin Hofner
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
 Description: A toolbox for writing Sweave or other LaTeX-based reports
 Depends:
-    car,
+    utils,
+    car
+Enhances:
     nlme,
     lme4,
-    survival,
-    utils
+    survival
 Imports:
     gmodels
 License: GPL-2
