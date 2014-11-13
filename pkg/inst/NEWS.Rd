@@ -6,18 +6,21 @@
       \item exported \code{plot.labeled.data.frame} (and some other
       functions for labeled \code{data.frame}s)
       \item greatly improved \code{plot} function for labeled
-      \code{data.frame}s 
+      \code{data.frame}s
     }
   }
   \subsection{Miscellaneous}{
     \itemize{
       \item Changed plain text \file{NEWS} to \file{inst/NEWS.Rd}
+      \item Import \pkg{nlme}
     }
   }
   \subsection{Bug-fixes}{
     \itemize{
       \item fixed bug in \code{toLatex.sessionInfo(, citations = FALSE)}
       (spotted by Brian S. Diggs <brian.s.diggs __at__ gmail.com>)
+      \item Changed \code{plot(data, ...)} to \code{plot(x, ...)} to
+      make the generic function happy.
     }
   }
 }
@@ -25,13 +28,13 @@
   \itemize{
     \item included (experimental) version of
     \code{prettify.summary.merMod} to make \pkg{lme4} (>= 1.0.0) happy
-    \item included better handling of environments in \code{prettify} 
+    \item included better handling of environments in \code{prettify}
     functions and checks if the data has changed
     \item included possibility to specify confidence intervals directly
     via \code{confint}, e.g.
-    
+
     \code{prettify(summary(mod), confint = confint(mod))}
-    
+
     \item better handling of \code{NAMESPACES} and \code{Imports}
     \item added (first) software tests
   }
@@ -52,22 +55,22 @@
     \item greatly improved \code{prettify} functions:
     \itemize{
       \item added prettify functions for \code{summary.coxph},
-      \code{summary.lme}, \code{summary.mer} and \code{anova} 
+      \code{summary.lme}, \code{summary.mer} and \code{anova}
       \item  added confidence intervals to all model based
       \code{prettify} functions and made \code{confint = TRUE} the
       default; confidence intervalls are computed by refitting the
       model within \code{prettify} and using \code{confint()} on this
-      model (experimental) 
+      model (experimental)
       \item  improved handling of p-values
     }
     \item added new class \code{"labeled.data.frame"} with special
     \code{subset}, \code{cbind} and \code{rbind} functions (to keep
-    labels when changing data set) 
+    labels when changing data set)
     \item added "shortcut" to define labels using \code{labels =
-      TRUE} in \code{latex.tables.XXX}: 
-    
+      TRUE} in \code{latex.tables.XXX}:
+
     labels are extracted from \code{labeled.data.frame} directly
-    
+
     \item new \code{toLatex} function for \code{sessionInfo()}
     [with nicer results than the default function from base \pkg{R}:
     e.g. citations are included]
