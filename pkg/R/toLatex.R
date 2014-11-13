@@ -58,6 +58,7 @@ toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
 
     opkgver <- sapply(object$otherPkgs, function(x) x$Version)
     nspkgver <- sapply(object$loadedOnly, function(x) x$Version)
+    key <- NULL
 
     if (citations) {
         bibs <- write.bib("base", file = file, append = append, verbose = FALSE)
@@ -67,7 +68,8 @@ toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
 
     z <- c("\\begin{itemize}\\raggedright",
            paste0("  \\item ", object$R.version$version.string,
-                  if (!is.null(key)) paste0(citecommand, "{", key, "}")))
+                  if (citations)
+                      paste0(citecommand, "{", key, "}")))
 
     if (locale) {
         z <- c(z, paste0("  \\item Locale: \\verb|",
@@ -139,11 +141,15 @@ toBibtex.LatexBibtex <- function(object, ...) {
 }
 
 formatPkgs <- function(name, vers, key, citecommand = "\\citep") {
-    key <- sapply(name, function(x)
-                  paste(key[grep(paste0("^pkg:", x, "[[:digit:]]*$"), key)],
-                        collapse = ","))
-    cites <- paste0(citecommand, "{", key, "}")
-    cites[is.null(key)] <- ""
+    if (!is.null(key)) {
+        key <- sapply(name, function(x)
+            paste(key[grep(paste0("^pkg:", x, "[[:digit:]]*$"), key)],
+                  collapse = ","))
+        cites <- paste0(citecommand, "{", key, "}")
+        cites[is.null(key)] <- ""
+    } else {
+        cites <- rep("", length(name))
+    }
     paste0("\\item ", name, " (vers. ", vers, ") ", cites)
 }
 
