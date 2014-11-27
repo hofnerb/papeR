@@ -1,2 +1,6 @@
 ^\..*
+.travis.yml
+SOP_release.txt
+copy_Rout_to_Routsave.R
 tests/.*\.Rout\.save$
+^\.travis\.yml$
