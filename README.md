@@ -3,4 +3,23 @@ papeR
 
 [![Build Status](https://travis-ci.org/hofnerb/papeR.svg?branch=master)](https://travis-ci.org/hofnerb/papeR)
 
-A toolbox for writing Sweave or other LaTeX-based papers and reports and to prettify the output of various estimated models.
+`papeR`  provides a toolbox for writing Sweave or other LaTeX-based papers and reports and to prettify the output of various estimated models.
+
+## Installation:
+
+- Current version (from CRAN): 
+
+        install.packages("papeR")
+
+- Latest development version from GitHub:
+
+        library("devtools")
+        install_github("hofnerb/papeR")
+
+  To be able to use the `install_github()` command, one needs to install `devtools` first:
+  
+        install.packages("devtools")
+
+## Using papeR
+
+tbc.
