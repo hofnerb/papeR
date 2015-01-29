@@ -189,9 +189,18 @@ latex.table.fac <- function(data, variables = names(data),
         }
         res <- lapply(levels(group_var), print_single_tabs,
                       data = data, grp_var = group_var)
-        class(res) <- "table.list"
-        names(res) <- paste(group, levels(group_var), sep = ": ")
-        return(res)
+
+        # if (length(res) != 2)
+        #     stop("Combining more than 2 groups not yet implemented")
+        # tab <- cbind(res[[1]], res[[2]][, -c(1:2)])
+
+        res[-1] <- lapply(res[-1], function(x) x[, -c(1:2)])
+        tab <- do.call("cbind", res)
+
+        attr(tab, "latex.table.options") <- attr(res[[1]], "latex.table.options")
+        attr(tab, "group_labels") <- paste(group, levels(group_var), sep = ": ")
+        class(tab) <- c("table.fac", "data.frame")
+        return(tab)
     }
 
     table <- match.arg(table)
@@ -505,14 +514,4 @@ print_table <- function(tab, table, floating, caption, label,
     ## if captionof is used end minipage
     if (!floating && table != "longtable" && !is.null(caption))
         cat("\\end{minipage}\n")
-}
-
-print.table.list <- function(x, ...) {
-    if (length(x) != 2)
-        stop("Printing more than 2 groups not yet implemented")
-    tab <- cbind(x[[1]], x[[2]][, -c(1:2)])
-    attr(tab, "latex.table.options") <- attr(x[[1]], "latex.table.options")
-    attr(tab, "group_labels") <- names(x)
-    class(tab) <- c("table.fac", "data.frame")
-    print.table.fac(tab, ...)
 }
