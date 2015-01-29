@@ -151,3 +151,25 @@ format.perc <- function(probs, digits) {
     txt <- format(100 * probs, trim = TRUE, scientific = FALSE, digits = digits)
     paste(txt, "%")
 }
+
+
+## Function that makes NAs to a new level with given label
+NAtoLvl <- function(x, na.lab){
+    if (any(is.na(x))) {
+        lvls <- levels(x)
+        x <- as.character(x)
+        x[is.na(x)] <- na.lab
+        return(factor(x, levels = c(lvls, na.lab)))
+    }
+    return(x)
+}
+
+## make sure no fatcor level is dropped if grouped latex.table.fac is computed
+keep_levels <- function(sub_data, complete_data) {
+    for (i in 1:ncol(sub_data)) {
+        if (is.factor(sub_data[, i])) {
+            levels(sub_data[, i]) <- levels(complete_data[, i])
+        }
+    }
+    return(sub_data)
+}

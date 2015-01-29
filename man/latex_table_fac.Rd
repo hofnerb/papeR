@@ -50,8 +50,8 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
     applied.
   }
   \item{colnames}{
-    a vector of character strings of length 4 (variable, label, N, and
-    fraction in \%). The vector supplies alternative column names for
+    a vector of character strings of appropriate length.
+    The vector supplies alternative column names for
     the resulting LaTeX table. If \code{NULL} default names are used.
   }
   \item{digits}{
