@@ -208,6 +208,7 @@ latex.table.fac <- function(data, variables = names(data),
                 pval <- eval(call(test[i], test_tab))$p.value
                 p[i] <- format.pval(pval, digits = 3, eps = 0.001)
             }
+            tab$blank_p <- ""
             tab$p.value[!duplicated(tab$variable)] <- p
         }
 
@@ -422,7 +423,7 @@ print.table.fac <- function(x,
             ## if p.values exist last multicolumn
             ## should not include this column
             if (colNames[length(colNames)] == "p.value")
-                idx[length(idx)] <- idx[length(idx)] - 1
+                idx <- idx[-length(idx)]
             header <- paste(rep("&", idx[1]), collapse = " ")
             for (i in 1:(length(idx) - 1)) {
                 header <- paste0(header, "\\multicolumn{", idx[i+1] - idx[i] - 1, "}{c}{", lab[i],"}")
@@ -430,7 +431,7 @@ print.table.fac <- function(x,
                     header <- paste0(header, " & & ")
             }
             if (colNames[length(colNames)] == "p.value")
-                header <- paste0(header, " & ")
+                header <- paste0(header, " &  & ")
             header <- paste0(header, "\\\\\n")
         }
     }
