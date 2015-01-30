@@ -1,11 +1,6 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
-### for package testing:
-# pkgEnv <- getNamespace("papeR")
-# attach(pkgEnv)
-
-
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 latex.table.cont <- function(data, variables = names(data),
@@ -208,8 +203,10 @@ latex.table.fac <- function(data, variables = names(data),
             testdat <- as.matrix(tab[, grep("N", colnames(tab))])
             p <- rep(NA, length(variables))
             for (i in 1:length(variables)) {
-                p <- eval(call(test, testdat[tab$variable == variables[i], ]))$p.value
-                p <- format.pval(p, eps = 0.001)
+                test_tab <- testdat[tab$variable == unique(tab$variable)[i], ]
+## what about missing values?
+                pval <- eval(call(test[i], test_tab))$p.value
+                p[i] <- format.pval(pval, digits = 3, eps = 0.001)
             }
             tab$p.value[!duplicated(tab$variable)] <- p
         }
@@ -422,12 +419,18 @@ print.table.fac <- function(x,
         ## if more than one blank add group label
         if (!is.null(attr(tab, "group_labels"))) {
             lab <- attr(tab, "group_labels")
+            ## if p.values exist last multicolumn
+            ## should not include this column
+            if (colNames[length(colNames)] == "p.value")
+                idx[length(idx)] <- idx[length(idx)] - 1
             header <- paste(rep("&", idx[1]), collapse = " ")
             for (i in 1:(length(idx) - 1)) {
                 header <- paste0(header, "\\multicolumn{", idx[i+1] - idx[i] - 1, "}{c}{", lab[i],"}")
                 if (i != length(idx) - 1)
                     header <- paste0(header, " & & ")
             }
+            if (colNames[length(colNames)] == "p.value")
+                header <- paste0(header, " & ")
             header <- paste0(header, "\\\\\n")
         }
     }

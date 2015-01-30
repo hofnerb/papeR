@@ -9,7 +9,7 @@
 
   Go to root directory of project:
 
-     git log a2a74..HEAD --pretty=short > ChangeLog
+    git log a2a74..HEAD --pretty=short > pkg/ChangeLog
 
 
   Checking the package with latest development verstion of R
