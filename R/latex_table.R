@@ -124,17 +124,17 @@ latex.table.cont <- function(data, variables = names(data),
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
 latex.table.fac <- function(data, variables = names(data),
-                             cumulative = FALSE,
-                             labels = NULL, group = NULL,
-                             colnames = NULL, digits = 2,
-                             table = c("tabular", "longtable"),
-                             align = NULL,
-                             caption = NULL, label = NULL, floating = FALSE,
-                             center = TRUE,
-                             sep = TRUE, sanitize = TRUE,
-                             drop = TRUE,
-                             show.NAs = any(is.na(data[, variables])),
-                             na.lab = "<Missing>") {
+                            cumulative = FALSE,
+                            labels = NULL, group = NULL,
+                            test = FALSE, colnames = NULL, digits = 2,
+                            table = c("tabular", "longtable"),
+                            align = NULL,
+                            caption = NULL, label = NULL, floating = FALSE,
+                            center = TRUE,
+                            sep = TRUE, sanitize = TRUE,
+                            drop = TRUE,
+                            show.NAs = any(is.na(data[, variables])),
+                            na.lab = "<Missing>") {
 
     ## get factors
     fac <- mySapply(data[, variables], is.factor)
@@ -182,6 +182,8 @@ latex.table.fac <- function(data, variables = names(data),
             ## make sure no fatcor level is dropped
             dat <- keep_levels(dat, data)
             cl[["data"]] <- dat
+            ## test is not needed in single tables
+            cl[["test"]] <- FALSE
             if (!is.null(label))
                 cl[["label"]] <- paste(label, level, sep = "_")
             ## re-evaluate modified call
@@ -197,11 +199,30 @@ latex.table.fac <- function(data, variables = names(data),
         res[-1] <- lapply(res[-1], function(x) x[, -c(1:2)])
         tab <- do.call("cbind", res)
 
+        if (test)
+            test <- "fisher.test"
+
+        if (is.character(test)) {
+            if (length(test) == 1)
+                test <- rep(test, length(variables))
+            testdat <- as.matrix(tab[, grep("N", colnames(tab))])
+            p <- rep(NA, length(variables))
+            for (i in 1:length(variables)) {
+                p <- eval(call(test, testdat[tab$variable == variables[i], ]))$p.value
+                p <- format.pval(p, eps = 0.001)
+            }
+            tab$p.value[!duplicated(tab$variable)] <- p
+        }
+
         attr(tab, "latex.table.options") <- attr(res[[1]], "latex.table.options")
         attr(tab, "group_labels") <- paste(group, levels(group_var), sep = ": ")
         class(tab) <- c("table.fac", "data.frame")
         return(tab)
     }
+
+    ## test not sensible
+    if (test || is.character(test))
+        warning(sQuote("test"), " is ignored if no ", sQuote("group"), " is given")
 
     table <- match.arg(table)
     if (is.null(labels)) {
