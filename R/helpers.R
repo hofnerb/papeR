@@ -168,7 +168,7 @@ NAtoLvl <- function(x, na.lab){
 keep_levels <- function(sub_data, complete_data) {
     for (i in 1:ncol(sub_data)) {
         if (is.factor(sub_data[, i])) {
-            levels(sub_data[, i]) <- levels(complete_data[, i])
+            sub_data[, i] <- factor(sub_data[, i], levels = levels(complete_data[, i]))
         }
     }
     return(sub_data)
