@@ -122,6 +122,7 @@ latex.table.fac <- function(data, variables = names(data),
                             cumulative = FALSE,
                             labels = NULL, group = NULL,
                             test = FALSE, colnames = NULL, digits = 2,
+                            digits.pval = 3, smallest.pval = 0.001,
                             table = c("tabular", "longtable"),
                             align = NULL,
                             caption = NULL, label = NULL, floating = FALSE,
@@ -201,15 +202,15 @@ latex.table.fac <- function(data, variables = names(data),
             if (length(test) == 1)
                 test <- rep(test, length(variables))
             testdat <- as.matrix(tab[, grep("N", colnames(tab))])
-            p <- rep(NA, length(variables))
+            pval <- rep(NA, length(variables))
             for (i in 1:length(variables)) {
                 test_tab <- testdat[tab$variable == unique(tab$variable)[i], ]
 ## what about missing values?
-                pval <- eval(call(test[i], test_tab))$p.value
-                p[i] <- format.pval(pval, digits = 3, eps = 0.001)
+                pval[i] <- eval(call(test[i], test_tab))$p.value
             }
+            pval <- format.pval(pval, digits = digits.pval, eps = smallest.pval)
             tab$blank_p <- ""
-            tab$p.value[!duplicated(tab$variable)] <- p
+            tab$p.value[!duplicated(tab$variable)] <- pval
         }
 
         attr(tab, "latex.table.options") <- attr(res[[1]], "latex.table.options")
