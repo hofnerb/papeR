@@ -122,6 +122,7 @@ latex.table.fac <- function(data, variables = names(data),
                             cumulative = FALSE,
                             labels = NULL, group = NULL,
                             test = FALSE, colnames = NULL, digits = 2,
+                            percent = FALSE,
                             digits.pval = 3, smallest.pval = 0.001,
                             table = c("tabular", "longtable"),
                             align = NULL,
@@ -262,14 +263,18 @@ latex.table.fac <- function(data, variables = names(data),
         notna <- sum(!is.na(data[, var2[i]]))
         stats$N[i] <- sum(data[, var2[i]] == lvls[i], na.rm = TRUE)
         stats$Fraction[i] <- round(stats$N[i]/notna, digits = digits)
-        if (cumulative) {
+        if (cumulative)
             stats$CumSum[i] <- sum(stats$Fraction[1:i][var2[1:i] == var2[i]])
-        }
+    }
+    if (percent) {
+        stats$Fraction <- stats$Fraction * 100
+        if (cumulative)
+            stats$CumSum <- stats$CumSum * 100
     }
     add_options(stats, table = table, align = align, caption = caption,
                 label = label, floating = floating, center = center,
                 sep = sep, sanitize = sanitize, colnames = colnames,
-                class = "table.fac")
+                percent = percent, class = "table.fac")
 }
 
 ################################################################################
@@ -413,8 +418,12 @@ print.table.fac <- function(x,
         colNames[nms] <- colnames
     } else {
         colNames <- names(tab)
-        colNames[grepl("Fraction", colNames)] <- "\\%"
-        colNames[grepl("CumSum", colNames)] <- "$\\sum$ \\%"
+        if (get_options(x, "percent")) {
+            colNames[grepl("Fraction", colNames)] <- "\\%"
+            colNames[grepl("CumSum", colNames)] <- "$\\sum$ \\%"
+        } else {
+            colNames[grepl("CumSum", colNames)] <- "$\\sum$"
+        }
         colNames[1] <- " "
 
         header <- ""
