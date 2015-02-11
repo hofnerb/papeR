@@ -209,7 +209,13 @@ latex.table.fac <- function(data, variables = names(data),
 ## what about missing values?
                 pval[i] <- eval(call(test[i], test_tab))$p.value
             }
-            pval <- format.pval(pval, digits = digits.pval, eps = smallest.pval)
+            ## make sure rounding is to digits.pval digits
+            pval <- format.pval(round(pval, digits = digits.pval),
+                                eps = smallest.pval)
+            ## make sure notto drop trailing zeros
+            pval2 <- suppressWarnings(as.numeric(pval))
+            pval[is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
+                                          pval2[is.na(pval2)])
             tab$blank_p <- ""
             tab$p.value[!duplicated(tab$variable)] <- pval
         }
@@ -267,9 +273,15 @@ latex.table.fac <- function(data, variables = names(data),
             stats$CumSum[i] <- sum(stats$Fraction[1:i][var2[1:i] == var2[i]])
     }
     if (percent) {
-        stats$Fraction <- stats$Fraction * 100
+        stats$Fraction <- sprintf(paste0("%3.", digits - 2,"f"),
+                                  stats$Fraction * 100)
         if (cumulative)
-            stats$CumSum <- stats$CumSum * 100
+            stats$CumSum <- sprintf(paste0("%3.", digits - 2,"f"),
+                                    stats$CumSum * 100)
+    } else {
+        stats$Fraction <- sprintf(paste0("%1.", digits,"f"), stats$Fraction)
+        if (cumulative)
+            stats$CumSum <- sprintf(paste0("%1.", digits,"f"), stats$CumSum)
     }
     add_options(stats, table = table, align = align, caption = caption,
                 label = label, floating = floating, center = center,
