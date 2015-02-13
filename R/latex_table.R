@@ -5,7 +5,9 @@
 # LaTeX Tables with Descriptves for Continuous Variables
 latex.table.cont <- function(data, variables = names(data),
                              labels = NULL, group = NULL,
+                             test = TRUE,
                              colnames = NULL, digits = 2,
+                             digits.pval = 3, smallest.pval = 0.001,
                              table = c("tabular", "longtable"), align = NULL,
                              caption = NULL, label = NULL, floating = FALSE,
                              center = TRUE, sep = !is.null(group),
@@ -100,6 +102,31 @@ latex.table.cont <- function(data, variables = names(data),
         sums$Max[i] <- Q[5]
     }
 
+    if (!is.null(group)) {
+        if (test)
+            test <- "t.test"
+
+        if (all(is.character(test))) {
+            if (length(test) == 1)
+                test <- rep(test, length(variables))
+
+            pval <- rep(NA, length(variables))
+            for (i in 1:length(variables)) {
+                fm <- as.formula(paste(variables[i], " ~ ", group))
+                pval[i] <- do.call(test[i], list(formula = fm, data = data))$p.value
+            }
+            ## make sure rounding is to digits.pval digits
+            pval <- format.pval(round(pval, digits = digits.pval),
+                                eps = smallest.pval)
+            ## make sure not to drop trailing zeros
+            pval2 <- suppressWarnings(as.numeric(pval))
+            pval[is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
+                                          pval2[is.na(pval2)])
+            sums$blank_p <- ""
+            sums$p.value[!duplicated(sums$var)] <- pval
+        }
+    }
+
     ## remove superfluous variables
     sums$var <- NULL
     if (!show.NAs) {
@@ -121,7 +148,7 @@ latex.table.cont <- function(data, variables = names(data),
 latex.table.fac <- function(data, variables = names(data),
                             cumulative = FALSE,
                             labels = NULL, group = NULL,
-                            test = FALSE, colnames = NULL, digits = 2,
+                            test = TRUE, colnames = NULL, digits = 2,
                             percent = FALSE,
                             digits.pval = 3, smallest.pval = 0.001,
                             table = c("tabular", "longtable"),
@@ -199,7 +226,7 @@ latex.table.fac <- function(data, variables = names(data),
         if (test)
             test <- "fisher.test"
 
-        if (is.character(test)) {
+        if (all(is.character(test))) {
             if (length(test) == 1)
                 test <- rep(test, length(variables))
             testdat <- as.matrix(tab[, grep("N", colnames(tab))])
@@ -212,7 +239,7 @@ latex.table.fac <- function(data, variables = names(data),
             ## make sure rounding is to digits.pval digits
             pval <- format.pval(round(pval, digits = digits.pval),
                                 eps = smallest.pval)
-            ## make sure notto drop trailing zeros
+            ## make sure not to drop trailing zeros
             pval2 <- suppressWarnings(as.numeric(pval))
             pval[is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
                                           pval2[is.na(pval2)])
