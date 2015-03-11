@@ -4,12 +4,15 @@
 \section{Changes in papeR version 0.6-0 (2015-03-11)}{
     \subsection{User-visible changes}{
       \itemize{
-      \item ...
+	\item ...
     }
   }
   \subsection{Miscellaneous}{
     \itemize{
       \item ...
+      \item Added \file{CITATION} file.
+      \item Changed URL in \file{DESCRIPTION} to
+      \url{http://github.com/hofnerb/papeR}.
     }
   }
   \subsection{Bug-fixes}{
