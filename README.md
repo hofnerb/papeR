@@ -9,16 +9,22 @@ papeR
 
 - Current version (from CRAN): 
 
-        install.packages("papeR")
+  ```r
+  install.packages("papeR")
+  ```
 
 - Latest development version from GitHub:
 
-        library("devtools")
-        install_github("hofnerb/papeR")
+  ```r
+  library("devtools")
+  install_github("hofnerb/papeR")
+  ```
 
   To be able to use the `install_github()` command, one needs to install `devtools` first:
   
-        install.packages("devtools")
+  ```r
+  install.packages("devtools")
+  ```
 
 ## Using papeR
 
