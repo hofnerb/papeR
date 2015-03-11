@@ -1,5 +1,23 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
+
+\section{Changes in papeR version 0.6-0 (2015-03-11)}{
+    \subsection{User-visible changes}{
+      \itemize{
+      \item ...
+    }
+  }
+  \subsection{Miscellaneous}{
+    \itemize{
+      \item ...
+    }
+  }
+  \subsection{Bug-fixes}{
+    \itemize{
+      \item ...
+    }
+  }
+}
 \section{Changes in papeR version 0.5-0 (2014-11-13)}{
     \subsection{User-visible changes}{
       \itemize{
