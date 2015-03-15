@@ -9,9 +9,11 @@
   tables with a nice layout.
 }
 \usage{
-
+                             
 latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
-                 colnames = NULL, digits = 2, table = c("tabular", "longtable"),
+                 test = TRUE, colnames = NULL, digits = 2, 
+                 digits.pval = 3, smallest.pval = 0.001,
+                 table = c("tabular", "longtable"),
                  align = NULL, caption = NULL, label = NULL, floating = FALSE,
                  center = TRUE, sep = !is.null(group), sanitize = TRUE,
                  count = TRUE, mean_sd = TRUE, quantiles = TRUE,
@@ -54,6 +56,13 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
     character specifying a grouping factor. Per default no grouping is
     applied.
   }
+  \item{test}{
+    logical or character string. If a \code{group} is given, this argument
+    determines whether a test for differences is computed. Per default, a 
+    t-test is used. To compute another test specify the test name as character
+    string. A vector with the same length as the number of \code{variables} can be 
+    used to have different tests for different variables.
+  }
   \item{colnames}{
     a vector of character strings of length 9 (variable, N, standard
     deviation, minimum, first quartile, median, third quartile and
@@ -64,6 +73,15 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   }
   \item{digits}{
     number of digits to round to.
+  }
+  \item{digits.pval}{
+    number of significant digits used for p-values.
+  }
+  \item{smallest.pval}{
+    determines the smallest p-value to be printed
+    exactly. Smaller values are given as \dQuote{< smallest.pval}.
+    This argument is passed to the \code{eps} argument of
+    \code{\link{format.pval}}. See there for details.
   }
   \item{table}{
     character string. LaTeX table format, currently either

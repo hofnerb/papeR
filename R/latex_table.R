@@ -146,12 +146,11 @@ latex.table.cont <- function(data, variables = names(data),
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
 latex.table.fac <- function(data, variables = names(data),
-                            cumulative = FALSE,
                             labels = NULL, group = NULL,
                             test = TRUE, colnames = NULL, digits = 3,
-                            percent = TRUE,
                             digits.pval = 3, smallest.pval = 0.001,
                             table = c("tabular", "longtable"),
+                            percent = TRUE, cumulative = FALSE,
                             align = NULL,
                             caption = NULL, label = NULL, floating = FALSE,
                             center = TRUE,

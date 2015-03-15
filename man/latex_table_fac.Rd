@@ -9,9 +9,12 @@
   tables with a nice layout.
 }
 \usage{
-
-latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
-                colnames = NULL, digits = 2, table = c("tabular", "longtable"),
+      
+latex.table.fac(data, variables = names(data),
+                labels = NULL, group = NULL, test = TRUE, 
+                colnames = NULL, digits = 3, digits.pval = 3, smallest.pval = 0.001,
+                table = c("tabular", "longtable"),
+                percent = TRUE, cumulative = FALSE,  
                 align = NULL, caption = NULL, label = NULL, floating = FALSE,
                 center = TRUE, sep = TRUE, sanitize = TRUE, drop = TRUE,
                 show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
@@ -49,6 +52,13 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
     character specifying a grouping factor. Per default no grouping is
     applied.
   }
+  \item{test}{
+    logical or character string. If a \code{group} is given, this argument
+    determines whether a test for differences is computed. Per default, a 
+    t-test is used. To compute another test specify the test name as character
+    string. A vector with the same length as the number of \code{variables} can be 
+    used to have different tests for different variables.
+  }
   \item{colnames}{
     a vector of character strings of appropriate length.
     The vector supplies alternative column names for
@@ -57,9 +67,25 @@ latex.table.fac(data, variables = names(data), labels = NULL, group = NULL,
   \item{digits}{
     number of digits to round to (only used for fractions).
   }
+  \item{digits.pval}{
+    number of significant digits used for p-values.
+  }
+  \item{smallest.pval}{
+    determines the smallest p-value to be printed
+    exactly. Smaller values are given as \dQuote{< smallest.pval}.
+    This argument is passed to the \code{eps} argument of
+    \code{\link{format.pval}}. See there for details.
+  }
   \item{table}{
     character string. LaTeX table format, currently either
     \code{"tabular"} (default) or \code{"longtable"}.
+  }
+  \item{percent}{
+    logical. Should the fractions be given as percent values? Otherwise,
+    fractions are given as decimal numbers.
+  }
+  \item{cumulative}{
+    logical. Should cumulative fractions be displayed?
   }
   \item{align}{
     character string. LaTeX alignment of table rows, per default
