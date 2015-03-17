@@ -1,15 +1,24 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
+summary.labeled.data.frame <- function(..., type = c("continuous", "factors")) {
+    type <- match.args(type)
+    if (type == "continuous")
+        return(table.cont(...))
+    if (type == "factors")
+        return(table.fac(...))
+}
+
+### for backward compatibility define
 latex.table.cont <- function(...) {
     tab <- table.cont(..., type = "latex")
     prettify(tab)
 }
-
 latex.table.fac <- function(...) {
     tab <- table.fac(..., type = "latex")
     prettify(tab)
 }
+
 
 # table = c("tabular", "longtable"), align = NULL, caption = NULL, 
 # label = NULL, floating = FALSE, center = TRUE,
@@ -584,4 +593,4 @@ toLatex.table <- function(tab, table, floating, caption, label,
         cat("\\end{table}\n\n")
     ## if captionof is used end minipage
     if (!floating && table != "longtable" && !is.null(caption))
-        cat("\\end{minipage}\n")
+        cat("\\end{minipag
