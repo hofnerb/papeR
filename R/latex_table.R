@@ -1,20 +1,25 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
+latex.table.cont <- function(...) {
+    table.cont(..., type = "latex")
+}
+
+latex.table.fac <- function(...) {
+    table.fac(..., type = "latex")
+}
+
+# table = c("tabular", "longtable"), align = NULL, caption = NULL, 
+# label = NULL, floating = FALSE, center = TRUE,
+
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
-latex.table.cont <- function(data, variables = names(data),
-                             labels = NULL, group = NULL,
-                             test = TRUE,
-                             colnames = NULL, digits = 2,
-                             digits.pval = 3, smallest.pval = 0.001,
-                             table = c("tabular", "longtable"), align = NULL,
-                             caption = NULL, label = NULL, floating = FALSE,
-                             center = TRUE, sep = !is.null(group),
-                             sanitize = TRUE,
-                             count = TRUE, mean_sd = TRUE, quantiles = TRUE,
-                             incl_outliers = TRUE, drop = TRUE,
-                             show.NAs = any(is.na(data[, variables]))) {
+table.cont <- function(data, variables = names(data), labels = NULL, group = NULL,
+                       test = TRUE, colnames = NULL, digits = 2, digits.pval = 3, 
+                       smallest.pval = 0.001, sep = !is.null(group), sanitize = TRUE,
+                       count = TRUE, mean_sd = TRUE, quantiles = TRUE,
+                       incl_outliers = TRUE, drop = TRUE,
+                       show.NAs = any(is.na(data[, variables])), ...) {
 
     table <- match.arg(table)
     if (is.null(labels)) {
@@ -143,21 +148,16 @@ latex.table.cont <- function(data, variables = names(data),
                 colnames = colnames, class = "table.cont")
 }
 
+# table = c("tabular", "longtable"), align = NULL, 
+# caption = NULL, label = NULL, floating = FALSE, center = TRUE,
+
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
-latex.table.fac <- function(data, variables = names(data),
-                            labels = NULL, group = NULL,
-                            test = TRUE, colnames = NULL, digits = 3,
-                            digits.pval = 3, smallest.pval = 0.001,
-                            table = c("tabular", "longtable"),
-                            percent = TRUE, cumulative = FALSE,
-                            align = NULL,
-                            caption = NULL, label = NULL, floating = FALSE,
-                            center = TRUE,
-                            sep = TRUE, sanitize = TRUE,
-                            drop = TRUE,
-                            show.NAs = any(is.na(data[, variables])),
-                            na.lab = "<Missing>") {
+table.fac <- function(data, variables = names(data), labels = NULL, group = NULL, 
+                      test = TRUE, colnames = NULL, digits = 3, digits.pval = 3, 
+                      smallest.pval = 0.001, percent = TRUE, cumulative = FALSE,
+                      sep = TRUE, sanitize = TRUE, drop = TRUE, show.NAs = any(is.na(data[, variables])),
+                      na.lab = "<Missing>", ...) {
 
     ## get factors
     fac <- mySapply(data[, variables], is.factor)
@@ -214,10 +214,6 @@ latex.table.fac <- function(data, variables = names(data),
         }
         res <- lapply(levels(group_var), print_single_tabs,
                       data = data, grp_var = group_var)
-
-        # if (length(res) != 2)
-        #     stop("Combining more than 2 groups not yet implemented")
-        # tab <- cbind(res[[1]], res[[2]][, -c(1:2)])
 
         res[-1] <- lapply(res[-1], function(x) x[, -c(1:2)])
         tab <- do.call("cbind", res)
@@ -317,7 +313,7 @@ latex.table.fac <- function(data, variables = names(data),
 
 ################################################################################
 ## Helper for latex.table.cont
-print.table.cont <- function(x,
+.table.cont <- function(x,
                              colnames = get_options(x, "colnames"),
                              table = get_options(x, "table"),
                              align = get_options(x, "align"),
@@ -416,7 +412,7 @@ print.table.cont <- function(x,
 
 ################################################################################
 ## Helper for latex.table.fac
-print.table.fac <- function(x,
+.table.fac <- function(x,
                             colnames = get_options(x, "colnames"),
                             table = get_options(x, "table"),
                             align = get_options(x, "align"),
@@ -493,8 +489,8 @@ print.table.fac <- function(x,
 }
 
 
-print_table <- function(tab, table, floating, caption, label,
-                        center, align, colNames, rules, sep, sanitize, header) {
+toLatex.table <- function(tab, table, floating, caption, label,
+                          center, align, colNames, rules, sep, sanitize, header) {
     cat("%% Output requires \\usepackage{booktabs}.\n")
     if (table == "longtable")
         cat("%% Output requires \\usepackage{longtable}.\n")
