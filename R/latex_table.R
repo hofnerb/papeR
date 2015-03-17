@@ -2,11 +2,13 @@
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
 latex.table.cont <- function(...) {
-    table.cont(..., type = "latex")
+    tab <- table.cont(..., type = "latex")
+    prettify(tab)
 }
 
 latex.table.fac <- function(...) {
-    table.fac(..., type = "latex")
+    tab <- table.fac(..., type = "latex")
+    prettify(tab)
 }
 
 # table = c("tabular", "longtable"), align = NULL, caption = NULL, 
@@ -313,7 +315,7 @@ table.fac <- function(data, variables = names(data), labels = NULL, group = NULL
 
 ################################################################################
 ## Helper for latex.table.cont
-.table.cont <- function(x,
+prettify.table.cont <- function(x,
                              colnames = get_options(x, "colnames"),
                              table = get_options(x, "table"),
                              align = get_options(x, "align"),
@@ -412,7 +414,7 @@ table.fac <- function(data, variables = names(data), labels = NULL, group = NULL
 
 ################################################################################
 ## Helper for latex.table.fac
-.table.fac <- function(x,
+prettify.table.fac <- function(x,
                             colnames = get_options(x, "colnames"),
                             table = get_options(x, "table"),
                             align = get_options(x, "align"),
@@ -583,4 +585,3 @@ toLatex.table <- function(tab, table, floating, caption, label,
     ## if captionof is used end minipage
     if (!floating && table != "longtable" && !is.null(caption))
         cat("\\end{minipage}\n")
-}
