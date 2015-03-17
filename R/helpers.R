@@ -23,13 +23,13 @@ Anova.lme <- function(mod, type = c("marginal", "sequential"), ...) {
 ################################################################################
 # add and get options from tables
 add_options <- function(object, ..., class) {
-    attr(object, "latex.table.options") <- list(...)
+    attr(object, "table.options") <- list(...)
     class(object) <- c(class, class(object))
     object
 }
 
 get_options <- function(object, name) {
-    attr(object, "latex.table.options")[[name]]
+    attr(object, "table.options")[[name]]
 }
 
 
