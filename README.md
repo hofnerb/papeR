@@ -28,4 +28,4 @@ papeR
 
 ## Using papeR
 
-tbc.
+A tutorial on how to use **papeR** can be found [here](https://github.com/hofnerb/RR_Course/blob/master/Using_papeR.md).
