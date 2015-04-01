@@ -37,6 +37,11 @@ latex.table.cont <- function(data, variables = names(data),
             variables <- variables[idx]
             labels <- labels[idx]
         }
+        ## remove observations with missing group:
+        if (any(is.na(data[, group]))) {
+            warning("Removed observations with missing group")
+            data <- data[!is.na(data[, group]), ]
+        }
         group_var <- data[, group]
     }
     ## get numerical variables
@@ -194,6 +199,11 @@ latex.table.fac <- function(data, variables = names(data),
             idx <- variables != group
             variables <- variables[idx]
             labels <- labels[idx]
+        }
+        ## remove observations with missing group:
+        if (any(is.na(data[, group]))) {
+            warning("Removed observations with missing group")
+            data <- data[!is.na(data[, group]), ]
         }
         group_var <- data[, group]
 
