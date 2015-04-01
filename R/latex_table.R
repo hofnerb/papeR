@@ -231,8 +231,7 @@ latex.table.fac <- function(data, variables = names(data),
             testdat <- as.matrix(tab[, grep("N", colnames(tab))])
             pval <- rep(NA, length(variables))
             for (i in 1:length(variables)) {
-                test_tab <- testdat[tab$variable == unique(tab$variable)[i], ]
-## what about missing values?
+                test_tab <- testdat[tab$variable == unique(tab$variable)[i] & tab$Level != na.lab, ]
                 pval[i] <- eval(call(test[i], test_tab))$p.value
             }
             ## make sure rounding is to digits.pval digits
