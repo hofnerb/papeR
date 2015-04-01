@@ -103,7 +103,7 @@ latex.table.cont <- function(data, variables = names(data),
     }
 
     if (!is.null(group)) {
-        if (test)
+        if (!is.character(test) && test)
             test <- "t.test"
 
         if (all(is.character(test))) {
@@ -222,7 +222,7 @@ latex.table.fac <- function(data, variables = names(data),
         res[-1] <- lapply(res[-1], function(x) x[, -c(1:2)])
         tab <- do.call("cbind", res)
 
-        if (test)
+        if (!is.character(test) && test)
             test <- "fisher.test"
 
         if (all(is.character(test))) {
