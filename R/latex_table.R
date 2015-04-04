@@ -2,56 +2,59 @@
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
 ## re-define table as generic
-table <- function(...) 
+table <- function(...)
     UseMethod("table")
 
 ## per default use standard table function
-table.default <- function(...) 
+table.default <- function(...)
     base::table(...)
 
-table.labeled.data.frame <- function(..., type = c("continuous", "factors")) {
-    type <- match.args(type)
+## for data.frames use
+table.data.frame <- function(..., type = c("continuous", "factors")) {
+    type <- match.arg(type)
     if (type == "continuous")
-        return(table.numeric(...))
+        return(table_numeric(...))
     if (type == "factors")
-        return(table.factor(...))
+        return(table_factor(...))
 }
 
 ################################################################################
-### for backward compatibility define 
-latex.table.cont <- function(..., 
-                             table = c("tabular", "longtable"), align = NULL, caption = NULL, 
-                             label = NULL, floating = FALSE, center = TRUE) {
-    tab <- table.numeric(...)
-    
-    # table = table, align = align, caption = caption,
-    # label = label, floating = floating, center = center
-    
-    prettify(tab)
+### for backward compatibility define
+latex.table.cont <- function(...,
+                             table = c("tabular", "longtable"), align = NULL,
+                             caption = NULL, label = NULL, floating = FALSE,
+                             center = TRUE) {
+
+    tab <- table_numeric(...)
+    if (is.null(align))
+        align <- get_option(tab, "align")
+    toLatex.table(tab, table = table, align = align, caption = caption,
+                  label = label, floating = floating, center = center)
 }
 
 latex.table.fac <- function(...,
-                            table = c("tabular", "longtable"), align = NULL, 
-                            caption = NULL, label = NULL, floating = FALSE, center = TRUE) {
-    tab <- table.factor(...)
-    
-    # table = table, align = align, caption = caption,
-    # label = label, floating = floating, center = center
-    prettify(tab)
+                            table = c("tabular", "longtable"), align = NULL,
+                            caption = NULL, label = NULL, floating = FALSE,
+                            center = TRUE) {
+
+    tab <- table_factor(...)
+    if (is.null(align))
+        align <- get_option(tab, "align")
+    toLatex.table(tab, table = table, align = align, caption = caption,
+                  label = label, floating = floating, center = center)
 }
 ################################################################################
 
 
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
-table.numeric <- function(data, variables = names(data), labels = NULL, group = NULL,
-                       test = TRUE, colnames = NULL, digits = 2, digits.pval = 3, 
+table_numeric <- function(data, variables = names(data), labels = NULL, group = NULL,
+                       test = TRUE, colnames = NULL, digits = 2, digits.pval = 3,
                        smallest.pval = 0.001, sep = !is.null(group), sanitize = TRUE,
                        count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                        incl_outliers = TRUE, drop = TRUE,
                        show.NAs = any(is.na(data[, variables])), ...) {
 
-    table <- match.arg(table)
     if (is.null(labels)) {
         labels <- variables
     } else {
@@ -171,15 +174,16 @@ table.numeric <- function(data, variables = names(data), labels = NULL, group = 
         names(sums)[names(sums) == "group"] <- labels(data, group)
     }
 
-    add_options(sums, sep = sep, sanitize = sanitize,
-                count = count, mean_sd = mean_sd, quantiles = quantiles,
-                colnames = colnames, class = "table.numeric")
+    sums <- set_options(sums, sep = sep, sanitize = sanitize,
+                        count = count, mean_sd = mean_sd, quantiles = quantiles,
+                        colnames = colnames, class = "table.numeric")
+    prettify(sums)
 }
 
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
-table.factor <- function(data, variables = names(data), labels = NULL, group = NULL, 
-                      test = TRUE, colnames = NULL, digits = 3, digits.pval = 3, 
+table_factor <- function(data, variables = names(data), labels = NULL, group = NULL,
+                      test = TRUE, colnames = NULL, digits = 3, digits.pval = 3,
                       smallest.pval = 0.001, percent = TRUE, cumulative = FALSE,
                       sep = TRUE, sanitize = TRUE, drop = TRUE, show.NAs = any(is.na(data[, variables])),
                       na.lab = "<Missing>", ...) {
@@ -232,8 +236,8 @@ table.factor <- function(data, variables = names(data), labels = NULL, group = N
             cl[["data"]] <- dat
             ## test is not needed in single tables
             cl[["test"]] <- FALSE
-            if (!is.null(label))
-                cl[["label"]] <- paste(label, level, sep = "_")
+            if (!is.null(labels))
+                cl[["labels"]] <- paste(labels, level, sep = "_")
             ## re-evaluate modified call
             eval(cl)
         }
@@ -269,7 +273,7 @@ table.factor <- function(data, variables = names(data), labels = NULL, group = N
 
         attr(tab, "latex.table.options") <- attr(res[[1]], "latex.table.options")
         attr(tab, "group_labels") <- paste(group, levels(group_var), sep = ": ")
-        class(tab) <- c("table.fac", "data.frame")
+        class(tab) <- c("table.factor", "data.frame")
         return(tab)
     }
 
@@ -277,7 +281,6 @@ table.factor <- function(data, variables = names(data), labels = NULL, group = N
     if (test || is.character(test))
         warning(sQuote("test"), " is ignored if no ", sQuote("group"), " is given")
 
-    table <- match.arg(table)
     if (is.null(labels)) {
         labels <- variables
     } else {
@@ -330,26 +333,21 @@ table.factor <- function(data, variables = names(data), labels = NULL, group = N
         if (cumulative)
             stats$CumSum <- sprintf(paste0("%1.", digits,"f"), stats$CumSum)
     }
-    add_options(stats, sep = sep, sanitize = sanitize, colnames = colnames,
-                percent = percent, class = "table.factor")
+    stats <- set_options(stats, sep = sep, sanitize = sanitize, colnames = colnames,
+                         percent = percent, class = "table.factor")
+    prettify(stats)
 }
 
 ################################################################################
 ## Helper for latex.table.cont
 prettify.table.numeric <- function(x,
-                             colnames = get_options(x, "colnames"),
-                             table = get_options(x, "table"),
-                             align = get_options(x, "align"),
-                             caption = get_options(x, "caption"),
-                             label = get_options(x, "label"),
-                             floating = get_options(x, "floating"),
-                             center = get_options(x, "center"),
-                             sep = get_options(x, "sep"),
-                             sanitize = get_options(x, "sanitize"),
-                             count = get_options(x, "count"),
-                             mean_sd = get_options(x, "mean_sd"),
-                             quantiles = get_options(x, "quantiles"),
-                             ...) {
+                                   colnames = get_option(x, "colnames"),
+                                   sep = get_option(x, "sep"),
+                                   sanitize = get_option(x, "sanitize"),
+                                   count = get_option(x, "count"),
+                                   mean_sd = get_option(x, "mean_sd"),
+                                   quantiles = get_option(x, "quantiles"),
+                                   ...) {
 
     tab <- x
     ## drop duplicted variable names
@@ -408,10 +406,10 @@ prettify.table.numeric <- function(x,
         rules <- paste("  \\cmidrule{", start, "-", length(names(tab)), "}\n",
                        sep = "")
     }
-    if (is.null(align))
-        align <- paste("l",
-                       paste(rep("r", length(names(tab)) - 1), collapse = ""),
-                       sep = "")
+
+    align <- paste("l",
+                   paste(rep("r", length(names(tab)) - 1), collapse = ""),
+                   sep = "")
 
     ## Define column names
     if (!is.null(colnames)) {
@@ -426,21 +424,18 @@ prettify.table.numeric <- function(x,
     }
     colNames[grep("blank", colNames)] <- " "
 
-    #    ## start printing
-    #    print_table(tab = tab, table = table, floating = floating,
-    #                caption = caption, label = label, center = center, sep = sep,
-    #                sanitize = sanitize, align = align, colNames = colNames,
-    #                rules = rules, header = NULL)
-    
-    return(tab)
+    set_options(tab, colnames = colNames,
+                rules = rules, align = align,
+                sep = sep, sanitize = sanitize,
+                class = "pretty.table")
 }
 
 ################################################################################
 ## Helper for latex.table.fac
 prettify.table.factor <- function(x,
-                                  colnames = get_options(x, "colnames"),                                
-                                  sep = get_options(x, "sep"),
-                                  sanitize = get_options(x, "sanitize"),
+                                  colnames = get_option(x, "colnames"),
+                                  sep = get_option(x, "sep"),
+                                  sanitize = get_option(x, "sanitize"),
                                   ...) {
 
     tab <- x
@@ -457,10 +452,9 @@ prettify.table.factor <- function(x,
     }
     rules <- paste0(rules, "\n")
 
-    if (is.null(align))
-        align <- paste("ll",
-                       paste(rep("r", length(names(tab)) - 2), collapse = ""),
-                       sep = "")
+    align <- paste("ll",
+                   paste(rep("r", length(names(tab)) - 2), collapse = ""),
+                   sep = "")
 
     ## Define column names
     if (!is.null(colnames)) {
@@ -471,7 +465,7 @@ prettify.table.factor <- function(x,
         colNames[nms] <- colnames
     } else {
         colNames <- names(tab)
-        if (get_options(x, "percent")) {
+        if (get_option(x, "percent")) {
             colNames[grepl("Fraction", colNames)] <- "\\%"
             colNames[grepl("CumSum", colNames)] <- "$\\sum$ \\%"
         } else {
@@ -500,25 +494,30 @@ prettify.table.factor <- function(x,
     }
     colNames[grep("blank", colNames)] <- " "
 
-#    ## start printing
-#    print_table(tab = tab, table = table, floating = floating,
-#                caption = caption, label = label, center = center,
-#                align = align, colNames = colNames, rules = rules,
-#                sep = sep, sanitize = sanitize, header = header)
-    return(tab)
+    set_options(tab, colnames = colNames,
+                rules = rules, align = align,
+                sep = sep, sanitize = sanitize,
+                header = header, class = "pretty.table")
 }
 
 ## can we use xtable to produce this output?
 ## rules perhaps can be added using the add.to.rows = list(pos = c(), command = rep(rules, ...))
-toLatex.table <- function(tab, 
-                          table = get_options(x, "table"),
-                          floating = get_options(x, "floating"),
-                          caption = get_options(x, "caption"),
-                          label = get_options(x, "label"),
-                          center = get_options(x, "center"),
-                          align = get_options(x, "align"),
-                          colNames = get_options(x, "colNames"),
-                          rules, sep, sanitize, header) {
+toLatex.table <- function(object,
+                          table = c("tabular", "longtable"),
+                          align = NULL,
+                          caption = NULL,
+                          label = NULL,
+                          floating = FALSE,
+                          center = TRUE,
+                          colnames = get_option(object, "colnames"),
+                          rules = get_option(object, "rules"),
+                          sep = get_option(object, "sep"),
+                          sanitize = get_option(object, "sanitize"),
+                          header = get_option(object, "header")) {
+
+    table <- match.arg(table)
+    tab <- object
+
     cat("%% Output requires \\usepackage{booktabs}.\n")
     if (table == "longtable")
         cat("%% Output requires \\usepackage{longtable}.\n")
@@ -569,7 +568,7 @@ toLatex.table <- function(tab,
     if (!is.null(header))
         cat(header, " \n")
 
-    cat(paste(colNames, collapse = " & "), "\\\\ \n")
+    cat(paste(colnames, collapse = " & "), "\\\\ \n")
     cat(rules)
     if (table == "longtable")
         cat("  \\endhead  \n")
@@ -593,7 +592,7 @@ toLatex.table <- function(tab,
         tab <- matrix(tab, nrow = 1)
 
     ## if separators should be added after each factor variable:
-    if (sep) {
+    if (sep == TRUE) {
         tab[tab[,1] != "", 1][-1] <- paste(rules, tab[tab[,1] != "", 1][-1])
     }
 

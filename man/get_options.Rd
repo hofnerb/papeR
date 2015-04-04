@@ -1,5 +1,5 @@
-\name{get_options}
-\alias{get_options}
+\name{get_option}
+\alias{get_option}
 
 \title{ Extract printing options from \code{table.cont} and
   \code{table.fac} objects }

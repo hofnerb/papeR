@@ -9,9 +9,9 @@
   tables with a nice layout.
 }
 \usage{
-                             
+
 latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
-                 test = TRUE, colnames = NULL, digits = 2, 
+                 test = TRUE, colnames = NULL, digits = 2,
                  digits.pval = 3, smallest.pval = 0.001,
                  table = c("tabular", "longtable"),
                  align = NULL, caption = NULL, label = NULL, floating = FALSE,
@@ -58,9 +58,9 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   }
   \item{test}{
     logical or character string. If a \code{group} is given, this argument
-    determines whether a test for differences is computed. Per default, a 
+    determines whether a test for differences is computed. Per default, a
     t-test is used. To compute another test specify the test name as character
-    string. A vector with the same length as the number of \code{variables} can be 
+    string. A vector with the same length as the number of \code{variables} can be
     used to have different tests for different variables.
   }
   \item{colnames}{
@@ -201,16 +201,6 @@ if (require("nlme")) {
     set.seed(1907)
     Orthodont$age[sample(nrow(Orthodont), 20)] <- NA
     latex.table.cont(Orthodont)
-
-    ## We can also have a look at the returned object:
-    df.cont <- latex.table.cont(Orthodont)
-    ## Structure of object
-    str(df.cont)
-    ## Make object a data.frame and have a look at the raw data
-    class(df.cont) <- "data.frame"
-    df.cont
-
-    print.table.cont(df.cont)
 }
 }
 
