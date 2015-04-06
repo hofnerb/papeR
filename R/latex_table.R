@@ -422,7 +422,9 @@ prettify.table.numeric <- function(x,
         colNames <- names(tab)
         colNames[1] <- " "
     }
+
     colNames[grep("blank", colNames)] <- " "
+    colnames(tab) <- colNames
 
     set_options(tab, colnames = colNames,
                 rules = rules, align = align,
@@ -493,6 +495,7 @@ prettify.table.factor <- function(x,
         }
     }
     colNames[grep("blank", colNames)] <- " "
+    colnames(tab) <- colNames
 
     set_options(tab, colnames = colNames,
                 rules = rules, align = align,
