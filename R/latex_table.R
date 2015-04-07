@@ -532,11 +532,11 @@ print.pretty.xtable <- function(x, rules = NULL, header = NULL,
 
     if (is.null(add.to.row)) {
         if (get_option(x, "sep") == TRUE) {
-            pos.rules <- which(x[, 1] != "")
+            pos.rules <- which(x[, 1] != "") - 1
         } else {
-            pos.rules <- 1
+            pos.rules <- 0
         }
-        add.to.row <- list(pos = list(-1, -1, pos.rules, nrow(x)),
+        add.to.row <- list(pos = as.list(c(-1, -1, pos.rules, nrow(x))),
                            command = c("\\toprule\n", header,
                                        rep(rules, length(pos.rules)),
                                        "\\bottomrule\n"))
