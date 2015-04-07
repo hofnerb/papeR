@@ -407,7 +407,7 @@ prettify.table.numeric <- function(x,
                        sep = "")
     }
 
-    align <- paste("l",
+    align <- paste("ll",
                    paste(rep("r", length(names(tab)) - 1), collapse = ""),
                    sep = "")
 
@@ -454,7 +454,7 @@ prettify.table.factor <- function(x,
     }
     rules <- paste0(rules, "\n")
 
-    align <- paste("ll",
+    align <- paste("lll",
                    paste(rep("r", length(names(tab)) - 2), collapse = ""),
                    sep = "")
 
@@ -501,6 +501,54 @@ prettify.table.factor <- function(x,
                 rules = rules, align = align,
                 sep = sep, sanitize = sanitize,
                 header = header, class = "pretty.table")
+}
+
+xtable.pretty.table <- function(x, caption = NULL, label = NULL, align = NULL,
+                                digits = NULL, display = NULL, ...) {
+
+    ## options that must be set
+    align <- ifelse(is.null(align), get_option(x, "align"), align)
+
+    x <- NextMethod("xtable", object = x, caption = caption, label = label,
+                    align = align, digits = digits,
+                    display = display, ...)
+    class(x) <- c("pretty.xtable", "xtable","data.frame")
+    return(x)
+}
+
+print.pretty.xtable <- function(x, rules = NULL, header = NULL,
+                                caption.placement = getOption("xtable.caption.placement", "top"),
+                                hline.after = getOption("xtable.hline.after", NULL),
+                                add.to.row = getOption("xtable.add.to.row", NULL),
+                                include.rownames = getOption("xtable.include.rownames", FALSE),
+                                booktabs = getOption("xtable.booktabs", TRUE),
+                                ...) {
+
+    ## extract rules and headers from object
+    rules <- ifelse(is.null(rules), get_option(x, "rules"), rules)
+    tmp <- ifelse(is.null(get_option(x, "header")),
+                  "",  get_option(x, "header"))
+    header <- ifelse(is.null(header), tmp, header)
+
+    if (is.null(add.to.row)) {
+        if (get_option(x, "sep") == TRUE) {
+            pos.rules <- which(x[, 1] != "")
+        } else {
+            pos.rules <- 1
+        }
+        add.to.row <- list(pos = list(-1, -1, pos.rules, nrow(x)),
+                           command = c("\\toprule\n", header,
+                                       rep(rules, length(pos.rules)),
+                                       "\\bottomrule\n"))
+    }
+
+    print.xtable(x,
+                 caption.placement = caption.placement,
+                 hline.after = hline.after,
+                 include.rownames = include.rownames,
+                 booktabs = booktabs,
+                 add.to.row = add.to.row,
+                 ...)
 }
 
 ## can we use xtable to produce this output?

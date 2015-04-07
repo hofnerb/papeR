@@ -8,11 +8,13 @@ Description: A toolbox for writing knitr, Sweave or other LaTeX-based reports
 	     and to prettify the output of various estimated models.
 Depends:
     utils,
-    car
+    car,
+    xtable
 Enhances:
     nlme,
     lme4,
-    survival
+    survival,
+    knitr
 Imports:
     gmodels
 License: GPL-2

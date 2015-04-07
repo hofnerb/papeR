@@ -2,6 +2,7 @@ importFrom(car, Anova)
 importFrom(utils, toLatex)
 importFrom(utils, toBibtex)
 importFrom(gmodels, ci)
+import(xtable)
 
 export(as.labeled.data.frame,
        is.labeled.data.frame,
@@ -44,6 +45,8 @@ S3method(mySapply, default)
 S3method(mySapply, data.frame)
 S3method(table, default)
 S3method(table, data.frame)
+S3method(xtable, pretty.table)
+S3method(print, pretty.xtable)
 S3method(toLatex, character)
 S3method(toLatex, sessionInfo)
 S3method(toLatex, LatexBibtex)
