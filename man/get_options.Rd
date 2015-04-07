@@ -10,7 +10,7 @@
 }
 \usage{
 
-get_options(object, name)
+get_option(object, name)
 
 }
 

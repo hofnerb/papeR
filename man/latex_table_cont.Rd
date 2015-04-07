@@ -21,18 +21,18 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
                  show.NAs = any(is.na(data[, variables])))
 
 \method{print}{table.cont}(x,
-      colnames = get_options(x, "colnames"),
-      table = get_options(x, "table"),
-      align = get_options(x, "align"),
-      caption = get_options(x, "caption"),
-      label = get_options(x, "label"),
-      floating = get_options(x, "floating"),
-      center = get_options(x, "center"),
-      sep = get_options(x, "sep"),
-      sanitize = get_options(x, "sanitize"),
-      count = get_options(x, "count"),
-      mean_sd = get_options(x, "mean_sd"),
-      quantiles = get_options(x, "quantiles"),
+      colnames = get_option(x, "colnames"),
+      table = get_option(x, "table"),
+      align = get_option(x, "align"),
+      caption = get_option(x, "caption"),
+      label = get_option(x, "label"),
+      floating = get_option(x, "floating"),
+      center = get_option(x, "center"),
+      sep = get_option(x, "sep"),
+      sanitize = get_option(x, "sanitize"),
+      count = get_option(x, "count"),
+      mean_sd = get_option(x, "mean_sd"),
+      quantiles = get_option(x, "quantiles"),
       ...)
 
 }
@@ -166,7 +166,7 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   \code{latex.table.cont}. Addtional attributes required for the print
   function are contained (see \code{attr(x, "latex.table.options")}).
   These are extracted in the print function using the function
-  \code{\link{get_options}}.
+  \code{\link{get_option}}.
 
   The output is printed with LaTeX style syntax highlighting to be used
   e.g. in Sweave chunks with \code{results=tex}.
@@ -175,7 +175,7 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
   Benjamin Hofner
 }
 \seealso{
-  \code{\link{latex.table.fac}} and \code{\link{get_options}}
+  \code{\link{latex.table.fac}} and \code{\link{get_option}}
 }
 \examples{
 ## Example requires package nlme to be installed and loaded

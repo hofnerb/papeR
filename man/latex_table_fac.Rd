@@ -9,26 +9,26 @@
   tables with a nice layout.
 }
 \usage{
-      
+
 latex.table.fac(data, variables = names(data),
-                labels = NULL, group = NULL, test = TRUE, 
+                labels = NULL, group = NULL, test = TRUE,
                 colnames = NULL, digits = 3, digits.pval = 3, smallest.pval = 0.001,
                 table = c("tabular", "longtable"),
-                percent = TRUE, cumulative = FALSE,  
+                percent = TRUE, cumulative = FALSE,
                 align = NULL, caption = NULL, label = NULL, floating = FALSE,
                 center = TRUE, sep = TRUE, sanitize = TRUE, drop = TRUE,
                 show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
 
 \method{print}{table.fac}(x,
-      colnames = get_options(x, "colnames"),
-      table = get_options(x, "table"),
-      align = get_options(x, "align"),
-      caption = get_options(x, "caption"),
-      label = get_options(x, "label"),
-      floating = get_options(x, "floating"),
-      center = get_options(x, "center"),
-      sep = get_options(x, "sep"),
-      sanitize = get_options(x, "sanitize"),
+      colnames = get_option(x, "colnames"),
+      table = get_option(x, "table"),
+      align = get_option(x, "align"),
+      caption = get_option(x, "caption"),
+      label = get_option(x, "label"),
+      floating = get_option(x, "floating"),
+      center = get_option(x, "center"),
+      sep = get_option(x, "sep"),
+      sanitize = get_option(x, "sanitize"),
       ...)
 
 }
@@ -54,9 +54,9 @@ latex.table.fac(data, variables = names(data),
   }
   \item{test}{
     logical or character string. If a \code{group} is given, this argument
-    determines whether a test for differences is computed. Per default, a 
+    determines whether a test for differences is computed. Per default, a
     t-test is used. To compute another test specify the test name as character
-    string. A vector with the same length as the number of \code{variables} can be 
+    string. A vector with the same length as the number of \code{variables} can be
     used to have different tests for different variables.
   }
   \item{colnames}{
@@ -152,7 +152,7 @@ latex.table.fac(data, variables = names(data),
   \code{latex.table.cont}. Addtional attributes required for the print
   function are contained (see \code{attr(x, "latex.table.options")}).
   These are extracted in the print function using the function
-  \code{\link{get_options}}.
+  \code{\link{get_option}}.
 
   The output is printed with LaTeX style syntax highlighting to be used
   e.g. in Sweave chunks with \code{results=tex}.
@@ -161,7 +161,7 @@ latex.table.fac(data, variables = names(data),
   Benjamin Hofner
 }
 \seealso{
-  \code{\link{latex.table.cont}} and \code{\link{get_options}}
+  \code{\link{latex.table.cont}} and \code{\link{get_option}}
 }
 \examples{
 ## Example requires package nlme to be installed and loaded
