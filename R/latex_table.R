@@ -1,21 +1,13 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
-## re-define table as generic
-table <- function(...)
-    UseMethod("table")
-
-## per default use standard table function
-table.default <- function(...)
-    base::table(...)
-
-## for data.frames use
-table.data.frame <- function(..., type = c("continuous", "factors")) {
+## define summarize
+summarize <- summarise <- function(..., type = c("continuous", "factors")) {
     type <- match.arg(type)
     if (type == "continuous")
-        return(table_numeric(...))
+        return(summarize_numeric(...))
     if (type == "factors")
-        return(table_factor(...))
+        return(summarize_factor(...))
 }
 
 ################################################################################
@@ -25,7 +17,7 @@ latex.table.cont <- function(...,
                              caption = NULL, label = NULL, floating = FALSE,
                              center = TRUE) {
 
-    tab <- table_numeric(...)
+    tab <- summarize_numeric(...)
     if (is.null(align))
         align <- get_option(tab, "align")
     toLatex.table(tab, table = table, align = align, caption = caption,
@@ -37,7 +29,7 @@ latex.table.fac <- function(...,
                             caption = NULL, label = NULL, floating = FALSE,
                             center = TRUE) {
 
-    tab <- table_factor(...)
+    tab <- summarize_factor(...)
     if (is.null(align))
         align <- get_option(tab, "align")
     toLatex.table(tab, table = table, align = align, caption = caption,
@@ -48,7 +40,7 @@ latex.table.fac <- function(...,
 
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
-table_numeric <- function(data, variables = names(data), labels = NULL, group = NULL,
+summarize_numeric <- function(data, variables = names(data), labels = NULL, group = NULL,
                        test = TRUE, colnames = NULL, digits = 2, digits.pval = 3,
                        smallest.pval = 0.001, sep = !is.null(group), sanitize = TRUE,
                        count = TRUE, mean_sd = TRUE, quantiles = TRUE,
@@ -176,13 +168,108 @@ table_numeric <- function(data, variables = names(data), labels = NULL, group = 
 
     sums <- set_options(sums, sep = sep, sanitize = sanitize,
                         count = count, mean_sd = mean_sd, quantiles = quantiles,
-                        colnames = colnames, class = "table.numeric")
+                        colnames = colnames, class = "summarize.numeric")
     prettify(sums)
 }
 
 ################################################################################
+## Helper for summarize_continuous
+prettify.summarize.numeric <- function(x,
+                                       colnames = get_option(x, "colnames"),
+                                       sep = get_option(x, "sep"),
+                                       sanitize = get_option(x, "sanitize"),
+                                       count = get_option(x, "count"),
+                                       mean_sd = get_option(x, "mean_sd"),
+                                       quantiles = get_option(x, "quantiles"),
+                                       ...) {
+
+    tab <- x
+    ## drop duplicted variable names
+    tmp <- tab$variable
+    tmp[duplicated(tmp)] <- ""
+    tab$variable <- tmp
+
+    ## if not all are TRUE subset results object
+    if (!all(count, mean_sd, quantiles)) {
+
+        ## if not any is TRUE (i.e. all are FALSE):
+        if (!any(count, mean_sd, quantiles)) {
+            stop("Nothing to compute. All quantities are set to FALSE.")
+        }
+        if (count == FALSE) {
+            tab$N <- NULL
+            tab$Missing <- NULL
+        }
+        if (mean_sd == FALSE) {
+            tab$Mean <- NULL
+            tab$SD <- NULL
+        }
+        if (quantiles == FALSE) {
+            tab$Min <- NULL
+            tab$Q1 <- NULL
+            tab$Median <- NULL
+            tab$Q3 <- NULL
+            tab$Max <- NULL
+        }
+        if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
+            tab$blank_1 <- NULL
+        }
+        if (mean_sd == FALSE || quantiles == FALSE) {
+            tab$blank_2 <- NULL
+        }
+    }
+
+    if (any(names(tab) == "blank")) {
+        start <- which(names(tab) == "blank") + 1
+    } else {
+        start <- 2
+    }
+    if (any(grepl("blank_", names(tab)))) {
+        idx <- grep("blank_", names(tab))
+        if (length(idx) == 1) {
+            rules <- paste("  \\cmidrule{", start, "-", idx - 1, "}  ",
+                           "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
+                           sep = "")
+        } else {
+            rules <- paste("  \\cmidrule{", start, "-", idx[1] - 1, "}  ",
+                           "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
+                           "\\cmidrule{", idx[2] + 1, "-", length(names(tab)), "}\n",
+                           sep = "")
+        }
+    } else {
+        rules <- paste("  \\cmidrule{", start, "-", length(names(tab)), "}\n",
+                       sep = "")
+    }
+
+    align <- paste("ll",
+                   paste(rep("r", length(names(tab)) - 1), collapse = ""),
+                   sep = "")
+
+    ## Define column names
+    if (!is.null(colnames)) {
+        colNames <- names(tab)
+        ## blank doesn't need to be specified in colnames
+        if (sum(nms <- !grepl("blank", colNames)) != length(colnames))
+            stop(sQuote("colnames"), " has wrong length")
+        colNames[nms] <- colnames
+    } else {
+        colNames <- names(tab)
+        colNames[1] <- " "
+    }
+
+    colNames[grep("blank", colNames)] <- " "
+    colnames(tab) <- colNames
+
+    set_options(tab, colnames = colNames,
+                rules = rules, align = align,
+                sep = sep, sanitize = sanitize,
+                class = "summary")
+}
+
+
+################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
-table_factor <- function(data, variables = names(data), labels = NULL, group = NULL,
+summarize_factor <- function(data, variables = names(data), labels = NULL, group = NULL,
                       test = TRUE, colnames = NULL, digits = 3, digits.pval = 3,
                       smallest.pval = 0.001, percent = TRUE, cumulative = FALSE,
                       sep = TRUE, sanitize = TRUE, drop = TRUE, show.NAs = any(is.na(data[, variables])),
@@ -273,7 +360,7 @@ table_factor <- function(data, variables = names(data), labels = NULL, group = N
 
         attr(tab, "latex.table.options") <- attr(res[[1]], "latex.table.options")
         attr(tab, "group_labels") <- paste(group, levels(group_var), sep = ": ")
-        class(tab) <- c("table.factor", "data.frame")
+        class(tab) <- c("summarize.factor", "data.frame")
         return(tab)
     }
 
@@ -334,111 +421,17 @@ table_factor <- function(data, variables = names(data), labels = NULL, group = N
             stats$CumSum <- sprintf(paste0("%1.", digits,"f"), stats$CumSum)
     }
     stats <- set_options(stats, sep = sep, sanitize = sanitize, colnames = colnames,
-                         percent = percent, class = "table.factor")
+                         percent = percent, class = "summarize.factor")
     prettify(stats)
 }
 
 ################################################################################
-## Helper for latex.table.cont
-prettify.table.numeric <- function(x,
-                                   colnames = get_option(x, "colnames"),
-                                   sep = get_option(x, "sep"),
-                                   sanitize = get_option(x, "sanitize"),
-                                   count = get_option(x, "count"),
-                                   mean_sd = get_option(x, "mean_sd"),
-                                   quantiles = get_option(x, "quantiles"),
-                                   ...) {
-
-    tab <- x
-    ## drop duplicted variable names
-    tmp <- tab$variable
-    tmp[duplicated(tmp)] <- ""
-    tab$variable <- tmp
-
-    ## if not all are TRUE subset results object
-    if (!all(count, mean_sd, quantiles)) {
-
-        ## if not any is TRUE (i.e. all are FALSE):
-        if (!any(count, mean_sd, quantiles)) {
-            stop("Nothing to compute. All quantities are set to FALSE.")
-        }
-        if (count == FALSE) {
-            tab$N <- NULL
-            tab$Missing <- NULL
-        }
-        if (mean_sd == FALSE) {
-            tab$Mean <- NULL
-            tab$SD <- NULL
-        }
-        if (quantiles == FALSE) {
-            tab$Min <- NULL
-            tab$Q1 <- NULL
-            tab$Median <- NULL
-            tab$Q3 <- NULL
-            tab$Max <- NULL
-        }
-        if (count == FALSE || (mean_sd == FALSE && quantiles == FALSE)) {
-            tab$blank_1 <- NULL
-        }
-        if (mean_sd == FALSE || quantiles == FALSE) {
-            tab$blank_2 <- NULL
-        }
-    }
-
-    if (any(names(tab) == "blank")) {
-        start <- which(names(tab) == "blank") + 1
-    } else {
-        start <- 2
-    }
-    if (any(grepl("blank_", names(tab)))) {
-        idx <- grep("blank_", names(tab))
-        if (length(idx) == 1) {
-            rules <- paste("  \\cmidrule{", start, "-", idx - 1, "}  ",
-                           "\\cmidrule{", idx + 1, "-", length(names(tab)), "}\n",
-                           sep = "")
-        } else {
-            rules <- paste("  \\cmidrule{", start, "-", idx[1] - 1, "}  ",
-                           "\\cmidrule{", idx[1] + 1, "-", idx[2] - 1, "} ",
-                           "\\cmidrule{", idx[2] + 1, "-", length(names(tab)), "}\n",
-                           sep = "")
-        }
-    } else {
-        rules <- paste("  \\cmidrule{", start, "-", length(names(tab)), "}\n",
-                       sep = "")
-    }
-
-    align <- paste("ll",
-                   paste(rep("r", length(names(tab)) - 1), collapse = ""),
-                   sep = "")
-
-    ## Define column names
-    if (!is.null(colnames)) {
-        colNames <- names(tab)
-        ## blank doesn't need to be specified in colnames
-        if (sum(nms <- !grepl("blank", colNames)) != length(colnames))
-            stop(sQuote("colnames"), " has wrong length")
-        colNames[nms] <- colnames
-    } else {
-        colNames <- names(tab)
-        colNames[1] <- " "
-    }
-
-    colNames[grep("blank", colNames)] <- " "
-    colnames(tab) <- colNames
-
-    set_options(tab, colnames = colNames,
-                rules = rules, align = align,
-                sep = sep, sanitize = sanitize,
-                class = "pretty.table")
-}
-
-################################################################################
-## Helper for latex.table.fac
-prettify.table.factor <- function(x,
-                                  colnames = get_option(x, "colnames"),
-                                  sep = get_option(x, "sep"),
-                                  sanitize = get_option(x, "sanitize"),
-                                  ...) {
+## Helper for summarize_factor
+prettify.summarize.factor <- function(x,
+                                      colnames = get_option(x, "colnames"),
+                                      sep = get_option(x, "sep"),
+                                      sanitize = get_option(x, "sanitize"),
+                                      ...) {
 
     tab <- x
     ## drop duplicted variable names
@@ -500,10 +493,10 @@ prettify.table.factor <- function(x,
     set_options(tab, colnames = colNames,
                 rules = rules, align = align,
                 sep = sep, sanitize = sanitize,
-                header = header, class = "pretty.table")
+                header = header, class = "summary")
 }
 
-xtable.pretty.table <- function(x, caption = NULL, label = NULL, align = NULL,
+xtable.summary <- function(x, caption = NULL, label = NULL, align = NULL,
                                 digits = NULL, display = NULL, ...) {
 
     ## options that must be set
@@ -512,17 +505,17 @@ xtable.pretty.table <- function(x, caption = NULL, label = NULL, align = NULL,
     x <- NextMethod("xtable", object = x, caption = caption, label = label,
                     align = align, digits = digits,
                     display = display, ...)
-    class(x) <- c("pretty.xtable", "xtable","data.frame")
+    class(x) <- c("xtable.summary", "xtable","data.frame")
     return(x)
 }
 
-print.pretty.xtable <- function(x, rules = NULL, header = NULL,
-                                caption.placement = getOption("xtable.caption.placement", "top"),
-                                hline.after = getOption("xtable.hline.after", NULL),
-                                add.to.row = getOption("xtable.add.to.row", NULL),
-                                include.rownames = getOption("xtable.include.rownames", FALSE),
-                                booktabs = getOption("xtable.booktabs", TRUE),
-                                ...) {
+print.xtable.summary <- function(x, rules = NULL, header = NULL,
+                                 caption.placement = getOption("xtable.caption.placement", "top"),
+                                 hline.after = getOption("xtable.hline.after", NULL),
+                                 add.to.row = getOption("xtable.add.to.row", NULL),
+                                 include.rownames = getOption("xtable.include.rownames", FALSE),
+                                 booktabs = getOption("xtable.booktabs", TRUE),
+                                 ...) {
 
     ## extract rules and headers from object
     rules <- ifelse(is.null(rules), get_option(x, "rules"), rules)

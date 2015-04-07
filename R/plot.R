@@ -65,7 +65,7 @@ plot.labeled.data.frame <- function(x, variables = names(x),
             boxplot(x[, i], main = variables[i], ylab = labels[i], ...)
         }
         for (i in which.fac) {
-            barplot(table.default(x[, i]),
+            barplot(table(x[, i]),
                     main = variables[i], ylab = labels[i], ...)
         }
     } else {
