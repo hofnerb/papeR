@@ -19,6 +19,7 @@ export(as.labeled.data.frame,
        prettify,
        prettifyPValue,
        summarize, summarise,
+       summarize_numeric, summarize_factor,
        toLatex.character,
        "labels<-")
 

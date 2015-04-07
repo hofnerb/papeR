@@ -11,26 +11,14 @@
 \usage{
 
 latex.table.fac(data, variables = names(data),
-                labels = NULL, group = NULL, test = TRUE,
+                variable.labels = NULL, group = NULL, test = TRUE,
                 colnames = NULL, digits = 3, digits.pval = 3, smallest.pval = 0.001,
                 table = c("tabular", "longtable"),
                 percent = TRUE, cumulative = FALSE,
                 align = NULL, caption = NULL, label = NULL, floating = FALSE,
                 center = TRUE, sep = TRUE, sanitize = TRUE, drop = TRUE,
-                show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
-
-\method{print}{table.fac}(x,
-      colnames = get_option(x, "colnames"),
-      table = get_option(x, "table"),
-      align = get_option(x, "align"),
-      caption = get_option(x, "caption"),
-      label = get_option(x, "label"),
-      floating = get_option(x, "floating"),
-      center = get_option(x, "center"),
-      sep = get_option(x, "sep"),
-      sanitize = get_option(x, "sanitize"),
-      ...)
-
+                show.NAs = any(is.na(data[, variables])), na.lab =
+                "<Missing>", ...)
 }
 
 \arguments{
@@ -42,9 +30,9 @@ latex.table.fac(data, variables = names(data),
     in the table. Per default, all factor variables of \code{data} are
     used.
   }
-  \item{labels}{
-    labels for the variables. If \code{labels = NULL} (default)
-    \code{variables} is used as label. If \code{labels = TRUE},
+  \item{variable.labels}{
+    labels for the variables. If \code{variable.labels = NULL} (default)
+    \code{variables} is used as label. If \code{variable.labels = TRUE},
     \code{labels(data, which = variables)} is used as
     labels.
   }

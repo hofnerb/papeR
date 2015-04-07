@@ -2,59 +2,70 @@
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
 ## define summarize
-summarize <- summarise <- function(..., type = c("continuous", "factors")) {
+summarize <- summarise <- function(data, type = c("numeric", "factor"),
+                                   variables = names(data),
+                                   variable.labels = NULL, group = NULL,
+                                   test = TRUE, ...) {
     type <- match.arg(type)
-    if (type == "continuous")
-        return(summarize_numeric(...))
-    if (type == "factors")
-        return(summarize_factor(...))
+    if (type == "numeric")
+        return(summarize_numeric(data = data, variables = variables,
+                                 variable.labels = variable.labels,
+                                 group = group, test = test, ...))
+    if (type == "factor")
+        return(summarize_factor(data = data, variables = variables,
+                                variable.labels = variable.labels,
+                                group = group, test = test, ...))
 }
 
 ################################################################################
 ### for backward compatibility define
 latex.table.cont <- function(...,
+                             caption = NULL, label = NULL,
                              table = c("tabular", "longtable"), align = NULL,
-                             caption = NULL, label = NULL, floating = FALSE,
-                             center = TRUE) {
+                             floating = FALSE, center = TRUE) {
 
     tab <- summarize_numeric(...)
-    if (is.null(align))
-        align <- get_option(tab, "align")
-    toLatex.table(tab, table = table, align = align, caption = caption,
-                  label = label, floating = floating, center = center)
+    print(xtable(tab, caption = caption, label = label, align = align),
+          floating = floating, latex.environments = ifelse(center, "center", c()),
+          tabular.environment = table)
+    message("  This function exists for backward compatibility.\n  Consider using ",
+            sQuote('summarize(..., type = "continuous")'), " instead.")
 }
 
 latex.table.fac <- function(...,
+                            caption = NULL, label = NULL,
                             table = c("tabular", "longtable"), align = NULL,
-                            caption = NULL, label = NULL, floating = FALSE,
-                            center = TRUE) {
+                            floating = FALSE, center = TRUE) {
 
     tab <- summarize_factor(...)
-    if (is.null(align))
-        align <- get_option(tab, "align")
-    toLatex.table(tab, table = table, align = align, caption = caption,
-                  label = label, floating = floating, center = center)
+    print(xtable(tab, caption = caption, label = label, align = align),
+          floating = floating, latex.environments = ifelse(center, "center", c()),
+          tabular.environment = table)
+    message("  This function exists for backward compatibility.\n  Consider using ",
+            sQuote('summarize(..., type = "continuous")'), " instead.")
+
 }
 ################################################################################
 
 
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
-summarize_numeric <- function(data, variables = names(data), labels = NULL, group = NULL,
-                       test = TRUE, colnames = NULL, digits = 2, digits.pval = 3,
-                       smallest.pval = 0.001, sep = !is.null(group), sanitize = TRUE,
-                       count = TRUE, mean_sd = TRUE, quantiles = TRUE,
-                       incl_outliers = TRUE, drop = TRUE,
-                       show.NAs = any(is.na(data[, variables])), ...) {
+summarize_numeric <- function(data, variables = names(data),
+                              variable.labels = NULL, group = NULL, test = TRUE,
+                              colnames = NULL, digits = 2, digits.pval = 3,
+                              smallest.pval = 0.001, sep = !is.null(group),
+                              sanitize = TRUE, count = TRUE, mean_sd = TRUE,
+                              quantiles = TRUE, incl_outliers = TRUE, drop = TRUE,
+                              show.NAs = any(is.na(data[, variables])), ...) {
 
-    if (is.null(labels)) {
-        labels <- variables
+    if (is.null(variable.labels)) {
+        variable.labels <- variables
     } else {
-        if (is.logical(labels) && labels) {
-            labels <- labels(data, which = variables)
+        if (is.logical(variable.labels) && variable.labels) {
+            variable.labels <- labels(data, which = variables)
         } else {
-            if (length(variables) != length(labels))
-                stop(sQuote("variables"), " and ", sQuote("labels"),
+            if (length(variables) != length(variable.labels))
+                stop(sQuote("variables"), " and ", sQuote("variable.labels"),
                      " must have the same length")
         }
     }
@@ -65,7 +76,7 @@ summarize_numeric <- function(data, variables = names(data), labels = NULL, grou
         if (group %in% variables) {
             idx <- variables != group
             variables <- variables[idx]
-            labels <- labels[idx]
+            variable.labels <- variable.labels[idx]
         }
         group_var <- data[, group]
     }
@@ -89,10 +100,10 @@ summarize_numeric <- function(data, variables = names(data), labels = NULL, grou
 
     ## subset variables to non-factors only
     variables <- variables[num]
-    labels <- labels[num]
+    variable.labels <- variable.labels[num]
 
     ## setup results object
-    sums <- data.frame(variable = labels, group = NA, blank = "",
+    sums <- data.frame(variable = variable.labels, group = NA, blank = "",
                        N=NA, Missing = NA, blank_1 = "",
                        Mean=NA, SD=NA, blank_2 = "",
                        Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA, var = variables,
@@ -269,11 +280,13 @@ prettify.summarize.numeric <- function(x,
 
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
-summarize_factor <- function(data, variables = names(data), labels = NULL, group = NULL,
-                      test = TRUE, colnames = NULL, digits = 3, digits.pval = 3,
-                      smallest.pval = 0.001, percent = TRUE, cumulative = FALSE,
-                      sep = TRUE, sanitize = TRUE, drop = TRUE, show.NAs = any(is.na(data[, variables])),
-                      na.lab = "<Missing>", ...) {
+summarize_factor <- function(data, variables = names(data),
+                             variable.labels = NULL, group = NULL, test = TRUE,
+                             colnames = NULL, digits = 3, digits.pval = 3,
+                             smallest.pval = 0.001, percent = TRUE,
+                             cumulative = FALSE, sep = TRUE, sanitize = TRUE,
+                             drop = TRUE, show.NAs = any(is.na(data[, variables])),
+                             na.lab = "<Missing>", ...) {
 
     ## get factors
     fac <- mySapply(data[, variables], is.factor)
@@ -292,7 +305,7 @@ summarize_factor <- function(data, variables = names(data), labels = NULL, group
 
     ## subset variables to non-factors only
     variables <- variables[fac]
-    labels <- labels[fac]
+    variable.labels <- variable.labels[fac]
 
     if (show.NAs) {
         ## convert NAs to factor levels
@@ -309,7 +322,7 @@ summarize_factor <- function(data, variables = names(data), labels = NULL, group
         if (group %in% variables) {
             idx <- variables != group
             variables <- variables[idx]
-            labels <- labels[idx]
+            variable.labels <- variable.labels[idx]
         }
         group_var <- data[, group]
 
@@ -323,8 +336,8 @@ summarize_factor <- function(data, variables = names(data), labels = NULL, group
             cl[["data"]] <- dat
             ## test is not needed in single tables
             cl[["test"]] <- FALSE
-            if (!is.null(labels))
-                cl[["labels"]] <- paste(labels, level, sep = "_")
+            if (!is.null(variable.labels))
+                cl[["variable.labels"]] <- paste(variable.labels, level, sep = "_")
             ## re-evaluate modified call
             eval(cl)
         }
@@ -368,14 +381,14 @@ summarize_factor <- function(data, variables = names(data), labels = NULL, group
     if (test || is.character(test))
         warning(sQuote("test"), " is ignored if no ", sQuote("group"), " is given")
 
-    if (is.null(labels)) {
-        labels <- variables
+    if (is.null(variable.labels)) {
+        variable.labels <- variables
     } else {
-        if (is.logical(labels) && labels) {
-            labels <- labels(data, which = variables)
+        if (is.logical(variable.labels) && variable.labels) {
+            variable.labels <- labels(data, which = variables)
         } else {
-            if (length(variables) != length(labels))
-                stop(sQuote("variables"), " and ", sQuote("labels"),
+            if (length(variables) != length(variable.labels))
+                stop(sQuote("variables"), " and ", sQuote("variable.labels"),
                      " must have the same length")
         }
     }
@@ -386,7 +399,7 @@ summarize_factor <- function(data, variables = names(data), labels = NULL, group
     var2 <- unlist(lapply(1:length(variables),
                           function(i) rep(variables[i], each = n.levels[i])))
     var_labels <- unlist(lapply(1:length(variables),
-                                function(i) rep(labels[i], each = n.levels[i])))
+                                function(i) rep(variable.labels[i], each = n.levels[i])))
 
     ## get all levels
     lvls <- unlist(lapply(variables, function(x) levels(data[, x])))
@@ -497,7 +510,7 @@ prettify.summarize.factor <- function(x,
 }
 
 xtable.summary <- function(x, caption = NULL, label = NULL, align = NULL,
-                                digits = NULL, display = NULL, ...) {
+                           digits = NULL, display = NULL, ...) {
 
     ## options that must be set
     align <- ifelse(is.null(align), get_option(x, "align"), align)
@@ -558,6 +571,8 @@ toLatex.table <- function(object,
                           sep = get_option(object, "sep"),
                           sanitize = get_option(object, "sanitize"),
                           header = get_option(object, "header")) {
+
+    warning("This function is deprecated and will be removed eventually")
 
     table <- match.arg(table)
     tab <- object

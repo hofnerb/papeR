@@ -10,7 +10,7 @@
 }
 \usage{
 
-latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
+latex.table.cont(data, variables = names(data), variable.labels = NULL, group = NULL,
                  test = TRUE, colnames = NULL, digits = 2,
                  digits.pval = 3, smallest.pval = 0.001,
                  table = c("tabular", "longtable"),
@@ -18,22 +18,7 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
                  center = TRUE, sep = !is.null(group), sanitize = TRUE,
                  count = TRUE, mean_sd = TRUE, quantiles = TRUE,
                  incl_outliers = TRUE, drop = TRUE,
-                 show.NAs = any(is.na(data[, variables])))
-
-\method{print}{table.cont}(x,
-      colnames = get_option(x, "colnames"),
-      table = get_option(x, "table"),
-      align = get_option(x, "align"),
-      caption = get_option(x, "caption"),
-      label = get_option(x, "label"),
-      floating = get_option(x, "floating"),
-      center = get_option(x, "center"),
-      sep = get_option(x, "sep"),
-      sanitize = get_option(x, "sanitize"),
-      count = get_option(x, "count"),
-      mean_sd = get_option(x, "mean_sd"),
-      quantiles = get_option(x, "quantiles"),
-      ...)
+                 show.NAs = any(is.na(data[, variables])), ...)
 
 }
 
@@ -46,9 +31,9 @@ latex.table.cont(data, variables = names(data), labels = NULL, group = NULL,
     included in the table. Per default, all non-factor variables of
     \code{data} are used.
   }
-  \item{labels}{
-    labels for the variables. If \code{labels = NULL} (default)
-    \code{variables} is used as label. If \code{labels = TRUE},
+  \item{variable.labels}{
+    labels for the variables. If \code{variable.labels = NULL} (default)
+    \code{variables} is used as label. If \code{variable.labels = TRUE},
     \code{labels(data, which = variables)} is used as
     labels.
   }
