@@ -106,7 +106,7 @@ summarize_numeric <- function(data, variables = names(data),
         stop("None of the variables is numeric or all variables are missing. Nothing to compute.")
     ## if factors are dropped:
     if (any(!num))
-        warning("Factors are dropped from the summary")
+        message("Factors are dropped from the summary")
 
     ## subset variables to non-factors only
     variables <- variables[num]
@@ -311,7 +311,7 @@ summarize_factor <- function(data, variables = names(data),
         stop("None of the variables is a factor or all variables are missing. Nothing to compute.")
     ## if non-factors are dropped:
     if (any(!fac))
-        warning("Non-factors are dropped from the summary")
+        message("Non-factors are dropped from the summary")
 
     ## subset variables to non-factors only
     variables <- variables[fac]
