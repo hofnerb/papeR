@@ -22,7 +22,7 @@ URL: http://github.com/hofnerb/papeR
 Collate:
     'helpers.R'
     'labels.R'
-    'latex_table.R'
+    'summarize.R'
     'plot.R'
     'prettify.R'
     'toLatex.R'
