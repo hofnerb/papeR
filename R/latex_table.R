@@ -3,18 +3,27 @@
 
 ## define summarize
 summarize <- summarise <- function(data, type = c("numeric", "factor"),
-                                   variables = names(data),
-                                   variable.labels = NULL, group = NULL,
-                                   test = TRUE, ...) {
+    variables = names(data), variable.labels = NULL, group = NULL, test = TRUE,
+    colnames = NULL, digits = NULL, digits.pval = 3, smallest.pval = 0.001,
+    sep = NULL, sanitize = TRUE, drop = TRUE,
+    show.NAs = any(is.na(data[, variables])), ...) {
+
     type <- match.arg(type)
-    if (type == "numeric")
-        return(summarize_numeric(data = data, variables = variables,
-                                 variable.labels = variable.labels,
-                                 group = group, test = test, ...))
-    if (type == "factor")
-        return(summarize_factor(data = data, variables = variables,
-                                variable.labels = variable.labels,
-                                group = group, test = test, ...))
+
+    ## get call
+    cll <- match.call()
+    ## modify call
+    cll[[1]] <- as.name(paste0("summarize_", type))
+    cll$type <- NULL
+
+    if (is.null(digits)) {
+        cll$digits <- NULL
+    }
+    if (is.null(sep)) {
+        cll$sep <- NULL
+    }
+    ## and evaluate the modified call
+    eval(cll)
 }
 
 ################################################################################
@@ -54,9 +63,10 @@ summarize_numeric <- function(data, variables = names(data),
                               variable.labels = NULL, group = NULL, test = TRUE,
                               colnames = NULL, digits = 2, digits.pval = 3,
                               smallest.pval = 0.001, sep = !is.null(group),
-                              sanitize = TRUE, count = TRUE, mean_sd = TRUE,
-                              quantiles = TRUE, incl_outliers = TRUE, drop = TRUE,
-                              show.NAs = any(is.na(data[, variables])), ...) {
+                              sanitize = TRUE, drop = TRUE,
+                              show.NAs = any(is.na(data[, variables])),
+                              count = TRUE, mean_sd = TRUE,
+                              quantiles = TRUE, incl_outliers = TRUE, ...) {
 
     if (is.null(variable.labels)) {
         variable.labels <- variables
@@ -283,9 +293,9 @@ prettify.summarize.numeric <- function(x,
 summarize_factor <- function(data, variables = names(data),
                              variable.labels = NULL, group = NULL, test = TRUE,
                              colnames = NULL, digits = 3, digits.pval = 3,
-                             smallest.pval = 0.001, percent = TRUE,
-                             cumulative = FALSE, sep = TRUE, sanitize = TRUE,
+                             smallest.pval = 0.001, sep = TRUE, sanitize = TRUE,
                              drop = TRUE, show.NAs = any(is.na(data[, variables])),
+                             percent = TRUE, cumulative = FALSE,
                              na.lab = "<Missing>", ...) {
 
     ## get factors
