@@ -1,23 +1,35 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
-\section{Changes in papeR version 0.6-0 (2015-03-11)}{
+\section{Changes in papeR version 0.6-0 (2015-06-03)}{
     \subsection{User-visible changes}{
       \itemize{
-	\item ...
+	\item \code{latex.table.fac}:
+	\itemize{
+	  \item Allow more than two groups.
+	  \item Added p-values.
+	  \item Added option to display fractions or percentages
+	  (\code{percent = TRUE}). The latter is the default.
+	  \item Changed default to \code{digits = 3}.
+	  \item Generally improved display of grouped statistics.
     }
   }
   \subsection{Miscellaneous}{
     \itemize{
-      \item ...
       \item Added \file{CITATION} file.
+      \item Updated \file{DESCRIPTION} to reflect CRAN policies.
       \item Changed URL in \file{DESCRIPTION} to
-      \url{http://github.com/hofnerb/papeR}.
+      \url{http://github.com/hofnerb/papeR}. 
     }
   }
   \subsection{Bug-fixes}{
     \itemize{
-      \item ...
+      \item Do not replace registered S3 methods from base/recommended
+      packages (#5).     
+      \item Fixed handling of \code{levels()}.
+      \item Fixed bug with factor levels.
+      \item \code{latex.table.fac} and  \code{latex.table.cont}:
+      fixed handling of missing values in \code{group}.
     }
   }
 }
