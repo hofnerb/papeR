@@ -19,6 +19,7 @@ export(as.labeled.data.frame,
        print.table.fac,
        prettify,
        prettifyPValue,
+       toLatex,
        toLatex.character,
        "labels<-",
        get_options)
@@ -46,6 +47,7 @@ S3method(mySapply, default)
 S3method(mySapply, data.frame)
 S3method(print, table.cont)
 S3method(print, table.fac)
+S3method(toLatex, default)
 S3method(toLatex, character)
 S3method(toLatex, sessionInfo)
 S3method(toLatex, LatexBibtex)

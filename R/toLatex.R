@@ -1,5 +1,13 @@
 ## functions for coercion to LaTeX "objects"
 
+## overwrite standard generic
+toLatex <- function(object, ...)
+    UseMethod("toLatex")
+
+## per default fall back to standard generic
+toLatex.default <- function(object, ...)
+    utils::toLatex(object, ...)
+
 ## modified version based on sanitize subroutine defined in
 ## R package xtable (Version  1.7-1) inside function print.xtable
 ##

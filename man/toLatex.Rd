@@ -1,4 +1,5 @@
 \name{toLatex}
+\alias{toLatex}
 \alias{toLatex.character}
 \alias{toLatex.sessionInfo}
 
