@@ -2,8 +2,8 @@ Package: papeR
 Title: A Toolbox for Writing knitr, Sweave or Other LaTeX-Based Papers and Reports
 Version: 0.6-0
 Date: 2015-06-03
-Author: Benjamin Hofner
-Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
+Authors@R: c(person("Benjamin", "Hofner", role = c("aut", "cre"), 
+                    email = "benjamin.hofner@fau.de"))
 Description: A toolbox for writing knitr, Sweave or other LaTeX-based reports
 	     and to prettify the output of various estimated models.
 Depends:
@@ -17,6 +17,7 @@ Imports:
     gmodels
 License: GPL-2
 URL: http://github.com/hofnerb/papeR
+Copyright: See inst/COPYRIGHTS.
 Collate:
     'helpers.R'
     'labels.R'

@@ -12,14 +12,16 @@
 	  (\code{percent = TRUE}). The latter is the default.
 	  \item Changed default to \code{digits = 3}.
 	  \item Generally improved display of grouped statistics.
-    }
+	}
+     }
   }
   \subsection{Miscellaneous}{
     \itemize{
-      \item Added \file{CITATION} file.
+      \item Added \file{inst/CITATION} file.
+      \item Added \file{inst/COPYRIGHTS} file.
       \item Updated \file{DESCRIPTION} to reflect CRAN policies.
       \item Changed URL in \file{DESCRIPTION} to
-      \url{http://github.com/hofnerb/papeR}. 
+      \url{http://github.com/hofnerb/papeR}.
     }
   }
   \subsection{Bug-fixes}{
