@@ -14,7 +14,7 @@
     Package: \tab papeR\cr
     Type: \tab Package\cr
     Version: \tab 0.6-0\cr
-    Date: \tab 2015-03-11\cr
+    Date: \tab 2015-06-05\cr
     License: \tab GPL-2\cr
   }
 }

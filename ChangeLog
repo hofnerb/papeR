@@ -1,5 +1,208 @@
-commit 9ad88957257dcc3d4941bfec3984c4457b0c3c1e
+commit d0ad5a4e8166dc42387d3b14dd3cb89672cf9599
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (Try to) make CRAN happy
+
+commit 885d6d8648b74192b993c0d2529443aeba7105e7
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Final changes for release 0.6-0; Added inst/CONTRIBUTIONS and inst/COPYRIGHTS
+
+commit de391018cc43b3f0d932ec6958c20dfe7c3d0616
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added inst/COPYRIGHTS
+
+commit 433f05ded9af58893c581e5698a0210a91904e5e
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    started preparation of release candidate 0.6-0
+
+commit 12f22f1c3514e092f906a0f0696266bb63746a5f
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Make title field to be in title case
+
+commit c978941dc7641a6976907f21e6d48fca1afaa1d3
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Do not replace registered S3 methods from base/recommended packages (fixes #5)
+
+commit 88b43e92059d4de8c7d9979c34d2fb0b60a58633
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated .Rbuildignore
+
+commit d9d10b4dc5813fc65b93fa931d536d0e27c75d36
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (latex.table.xxx) fixed handling of missing values in group
+
+commit d8f1bafbe8aaa7a136b5aaf8c7962c00d09d99b6
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (latex.table.xxx) fixed handling of strings as argument to test
+
+commit 5d29106e45cd2b9403b93cccdb9c3feef0e72be5
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (latex.table.fac) fisher test now ignores missing values
+
+commit 149c5e9a779f135b151fabd61b5222cb90fd542d
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit 4499a4aefdc1c9daf97fb79824b75e68d25d85b2
+Author: unknown <Benjamin@imbe81.uni-erlangen.de>
+
+    documented new arguments test, percentage, cumulative, ...
+
+commit 9b56159ecd0a0dce25432f1a6599f170d44a014d
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    updated DESCRIPTION and NEWS.Rd
+
+commit cf3a3d5892caad29094bff7335912ae8e44e3eec
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added CITATION file
+
+commit 38881a182e6c839410be63714140897f6755500c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    started to prepare a new release
+
+commit de9dc6b7540c55fbd56a9441aab12d9eeb4c90eb
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit 18417dd761391f72231bd1827e4fb0f79b2c9bb0
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    changed default of latex.table.fac to digits = 3
+
+commit 8ea96a0713228f8281a7aca53036a7454f710a1f
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    changed default of latex.table.fac to percent = TRUE
+
+commit 925a02f4ada37229c9cdf4089c178280b5354f1c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added tests to latex.table.cont for grouped data
+
+commit 2457753785cd8d85b2efaf88a10990ddc82192dd
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed formating of p-value and percentage in latex.table.fac
+
+commit e25a7fd72391a06bed0e149cdd53452c1e147598
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added option to display fractions or percentages
+
+commit be7ffde7ef25ccd8adafef5693e2908e26320a0a
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed formating of p-value in latex.table.fac
+
+commit 43aa2078360a26a56347a29e0fad686ba0105afb
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed bug with factor levels
+
+commit 871659ae629b4ae37d54291d12732d2679349c87
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    improved output of p-values
+
+commit 475b7da7600f4f1fdeda00f2da87046f01c6a4fe
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed computation of p-values and improved output
+
+commit 935e3088ead66ecc42cb9b6dd168fd45f50b3142
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added p-values to grouped versions of latex.table.fac
+
+commit 5118e0d794d1df8dda5ae1da7c406e49cfa50009
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    latex.table.fac() now supports more than 2 groups
+
+commit 76e49c80e1c68e465d0db8c828284b0e0ccbfe62
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    updated release SOPs
+
+commit 77f403a9bcacd982896f9d66a466ca43e1c167a2
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed handling of levels()
+
+commit 1bba2510ed1900483eebd97e4b025a133d0ad1d0
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    new version of latex.table.fac started that allows a better display of grouped statistics
+
+commit 330432882981db0d341177d3828872102f6f6d17
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated DESCRIPTION
+     - "Title:" now in title case
+     - "Description:" extended
+
+commit 431f7f014068aba66261fb57b94d5184b0a49600
+Merge: 2244c8f 1a1bc07
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Merge branch 'master' of github.com:hofnerb/papeR
+
+commit 1a1bc079ce798959c6022057618a2d261b0860cf
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update .travis.yml
+
+commit 8ee73aaec9853b91778efc99f230e3b15f789fb5
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update .travis.yml
+
+commit 2244c8f765345c4d7bd9349dcfb69a6f658efead
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed .Rbuildignore
+
+commit 3c49c02ac226e6c0e99854468a254c26ead4e696
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit cc6bd90b901456d4f13ef8415195810078bf90c0
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Create README.md
+
+commit e0ae53ca0a467a977c8f58c30bb27966575c6cbc
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    enable continuous integration via craigcitro/r-travis
+
+commit 6b9c09238e76edd4d839a03ed53cbfeca63e25cf
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    removed pkg subdirectory
+
+commit c2fe83c873bcf1aea92f1b803f39dcfb686057a9
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
+
+    - small changes in SOP
+
+commit d54f93573cf990b3f20f38d99f4332940cf3cfd5
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     Release papeR 0.5-0:
     - moved nlme, lme4 and survial from "Depends" to "Enhances"
@@ -8,75 +211,75 @@ Author: Benjamin Hofner <benjamin.hofner@fau.de>
     - some small fixes in prettify.Rd
     - updated ChangeLog
 
-commit 1ab6a8b1d97ebbdd149666d7a371728fe82d1a7c
-Author: Benjamin Hofner <benjamin.hofner@fau.de>
+commit 03662cbc99079ef8fcf0013d2766a0e7d7f8b803
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - additions to NEWS.Rd
     - minor changes in manual
 
-commit 6c03a3d02689f14f56227f0f52110a3b5482a717
-Author: Benjamin Hofner <benjamin.hofner@fau.de>
+commit b913f034a59ffe4d949eee61bbed42f0c314e7ed
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - change plot(data, ...) to plot(x, ...) to make generic happy
 
-commit 5d47a952df7229fb35218cfdcd943f7366afa614
-Author: Benjamin Hofner <benjamin.hofner@fau.de>
+commit aa375fea214135c68b2c73c7f960ebe2f0977d01
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - started preparing a new release version papeR 0.5-0
 
-commit b2591f861040b3b7d0111708358458147d0d0d4e
-Author: Benjamin Hofner <benjamin.hofner@fau.de>
+commit d439505cbecd4d2396a016775d69d824d1cce815
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - Changed plain text \file{NEWS} to \file{inst/NEWS.Rd}
     - Updated SOPs
 
-commit 2be302673464f4348b18df8439bf04b83d4c0a0b
-Author: Benjamin Hofner <benjamin.hofner@fau.de>
+commit ce0a1b1a1bf88df6aa14654b789680ed1979f742
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - fixed bug in toLatex.sessionInfo(, citations = FALSE)
       (spotted by Brian S. Diggs <brian.s.diggs __at__ gmail.com>)
 
-commit 6e539575e82122f92364a4a056c381420b4284da
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit ffa356eee337ab31eb2e525902216aab9c6f287d
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - strongly improved plot function
 
-commit 33ccd65b1d76b1825fcbecfcf085a844d616fdd7
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 901bf564e692d0f05e306b4977a5d83e5b15ec74
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - add plot method to NAMESPACE
     - export some of the labeled.data.frame functions
 
-commit 2db46aa38a378df0ba7c181ac895dc84f75cdc06
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit f1c7a492d4a4591bce5c1f542346f8a85b06ce85
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     release papeR 0.4-0
     - added .Rbuildignore
     - minor changes in tests and examples
     - updated release SOPs
 
-commit 9724356eca78356fc95af96eb04a0c87f148cac7
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 1af4b5a89a189d08d6e439c57a26ab6eaa7ca8d0
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added helper script for package preparation
 
-commit 62c20def27ea641cbdfb57feed6666fb82cd985f
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 6a04fad16fa8cdd6d983adc96e08ee2dc043ea36
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - make lme4 >= 1.0 happy
     - minor bugfixes
     - changes in NAMESPACE and imports
     - added .Rout.save files
 
-commit 1ed6b32c13f218aed209c2b4ac1f66561f163379
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit e093f8256f9c3dfb046353e00903ee8c9a825e30
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - included better handling of environments in prettify functions
       and checks if the data has changed
     - added SOPs for releasing package
 
-commit f2dc013dc7c7d7c5209efc5e73ce3c974e66bc66
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit a349b838fddd82d0f5e9c5b0bc8c048bf511d686
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - better guessing and handling of environments for model refitting
     - experimental version of environments for coxph and lmer models
@@ -86,15 +289,15 @@ Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
       In this case, labels should also be user-specified!
     - added first tests
 
-commit fec391a80b4c1268ea82200620b013c5f14cf873
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 4caa7861f534bfba1560d030841eb237bc5bc1fe
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - updated news file with missing items (for version 0.3)
     - included (experimental) version of prettify.summary.merMod
       to make lme4 (>= 1.0.0) happy
 
-commit 6692a024829bdc30d690bcd76e67d7c50d9f55de
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 402d1bc27ab96928164cae4b3e57b42461746fee
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - improvement/bugfix in rbind.labeled.data.frame()
     - bugfix in is.labeled.data.frame()
@@ -102,43 +305,43 @@ Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
     - numerous improvements in manuals
     - added missing items to NAMESPACE
 
-commit 063fbb8534c2e0edda047057d981b6e2829fb12e
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 6339b2a5d55313c7a6307b78d9780f7e361a518c
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     release 0.3 to CRAN
 
-commit aae17d69e487d5f608215f262fca2b25b7738510
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 24f75549f25f7efc1e05e848caab15582bf5da0d
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - added plot function for labeled.data.frame objects that
       allows for univariate plots and grouped, bivariate plots
 
-commit b07341e270c6c3903965d2c48f7b8b6da514daa4
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 17da582ea072c7d911bcafbf32bc560e65dd7829
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - added NEWS and ChangeLog
     - started preparation of release candidate
     - increased version to 0.3
 
-commit ab7409c4dfdde5b2b296e9d5c964d39629662787
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 5f6108cad442e538d016eae4cfa77960acab16c5
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     minor changes
     peparations for release candidate
 
-commit 2ff233d5d3a00a0e41ab5ac64a4a4bced27c515b
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 94ebd36150c11d4458db291965262035720b8d3a
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - fixed bug in prettify.summary.coxph (labels were not correctly guessed)
     - changed default to x[..., drop = TRUE] for labeled.data.frame
 
-commit 59837493b9bd2d6a9e30ec7858f48387eb3fe13c
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit e67cf294ac8698cd5e609dde69c224f0e08928e4
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added missing file
 
-commit 602cdd3499a7f731800e0644c8f41ba6ed646dc8
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 6cc517a23edf768aaf001a802cf862c50b44777a
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - removed summary_fixef
       (better results can be achieved using prettify() on summaries from random effects models)
@@ -147,8 +350,8 @@ Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
     - added documentation for new functions and for extraction and subset functions
       for 'labeled.data.frame's
 
-commit d925f0f7ab394b8391f4528f5f3eed2d054f841b
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit f64d93679667a4119a884af521e3e1569f43c502
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     - defined new class "labeled.data.frame" with special
       subset, cbind and rbind function (to keep labels when changing data set)
@@ -157,145 +360,145 @@ Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
     - new toLatex function for sessionInfo()
       [with nicer results than the default function: e.g. citations included]
 
-commit b1491b15989b39e8889013c3c9dbe746790a5cff
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 282a01454f0b557356f7476399d2110dea87f84b
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added prettify methods for lme and mer summaries
     lots of improvements in prettify
 
-commit 717043839c5b517937ba87c3ab0bf3024fe5d459
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit a5bce19382f3afa4ef06fd4a06286905b1ab87e3
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     bugfix in labels(..., abbreviate = TRUE)
     added prettify.anova for Anova and anova results
     refactored code in prettify
     latex.tables.XXX now with argument labels = TRUE for easy labeling
 
-commit 4a7f66a077dc5552f2620da9c80b04afb6c4444b
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 1fa8a93a083a906e895d4f49055683a10e221a90
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     add manual for toLatex.character
 
-commit 13c615cd4f07a7a1bfee8a29daa2da0394bb8bf7
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 313ecb30b9e9999cafeaa29eb3fb9bc208729039
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     make checks happy
     include significance stars
     improved manuals
 
-commit 8c2d9145fb43b919a543e09bf88f202fc8889270
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 364b21019f35b403c45440f26719362792b8c1a5
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     improved prettify
     bugfix in latex.table.fac
     increased version to 0.2
 
-commit 419e98125d6f2bba53b9884479c39ba3e2be685f
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 2c2565010c70c75f4e164783d52410b09afcecbd
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     new prettify function for summary.glm
     improved prettify function for summary.lm
 
-commit 92fe3710d46d3c66db618ec566adbdcec23956e0
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 8809d262cf9e2ff6906c391e43fb62d91308326c
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added toLatex function to sanitize R output for usage within latex
     added automatic sanitization to latex.table functions
 
-commit 99cded04857b9295c4895aef32e96a5e6132d180
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit a45c29dc1f8a7771a383a3dfcc6ac28964ffe53e
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added prettify method for summary.lm objects
 
-commit 01689b0a5667f03350d8106dbb4cb74589502b1b
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 40ba1a1d332ae95096777f81657f70d3f5660346
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     improved label handling when data set is alterd (e.g. variables dropped, added or renamed)
 
-commit 0c6ca4b9ce6a50ec5eeeaf1adfe58b841cbd40ca
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit d0dc4dbd596c58b77c512840e18a42e62954367e
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     first implementation of grouped statistics in latex.table.XXX
 
-commit b9e216426e3c827445a46bdb2764aa98666fe39b
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit f6781f764cded072d8c91709ba8380713b2b76f1
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added level argument to summary.fixef
     fixed example
 
-commit 1f1a0f9aff9349f970b0aaad43bc2abd3007eb14
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 78dba76781e5aae30d09d742f17195be98d98ae7
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     changes in labels():
     - don't set labels to NA
     - export labels.data.frame
     - report which labels are not matching (if any)
 
-commit ed5045db0fa9ec307af5a59cb2323360edf9553d
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 502d52afafe33edcd7d62812e18116ebefd00bed
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added confidence intervals to summary_fixef functions
 
-commit 69cd468beb625cde0b99d00abc4ef25d91f09e18
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 8c4ea546f8046850eb1d9551967b67bd1886a029
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added missing manual for get_options
     added functions to extract confidence intervals for mixed models
 
-commit c40f1631a69fb475c609504e5a1f434f82f091fb
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 54ced2b7a54fbd95cb6b62db9f33ad1d6cbccb34
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     refactored code in latex.table.xxx functions
     new arguments caption, label and center in latex.table.xxx function
 
-commit d2968dacb045ab6e960163b882e2b4d30dad3ecb
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit c2c6e41e94a2fb85e57dc25995adb676ebe6d271
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added labels to latex.table functions
     try to fix lme4 error ("summary not exported")
 
-commit 2df3f7830c08a8eda1e3b79bc1e2d88a5403a77e
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 5b8fa7bd90ae07e427ee6f71255892dc114d5337
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     improvements in latex.table functions:
     - new print functions
     - other internal changes
     bug in summary.fixef now really fixed
 
-commit 854b61ef2afcfe00ea7ec78e0aef9e67d33af39f
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 5f722640ac5093173767243584acfb4e2abfa1ea
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     restructure code
 
-commit 38e95be3e0efc9eba0e81ac49d888433ba97253b
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit ae6221f80ec6b5348db3ad97564851c1e6cfa7ae
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     fixed problems with latex.table.cont (with only one variable)
 
-commit 494d38917427d38c2190e811755ce0f4d9a59c9f
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 156c71280ed146438b49471543106bc32817b61a
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added new arguments to latex.table functions
     added examples for latex.table and summary.fixef
     bugfix in summary.fixef: used to terminate when no p-value present
 
-commit c378929485dce98ebead2b1272a3eaa0164052b0
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit b61dc1740110093c879a013f22da0657403bc7bc
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     summary.fixef: small improvements in display of p-values
 
-commit d4da872fbc164ec6932fd98f374753dab2c619c1
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 8c21c72396531cd3f760183ba7deea6823665d77
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     removed default files from project
 
-commit d1188474d45da454e0e4e666810be01603271810
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 32c860bd86df6febabf24cfc47aba91f41aaa005
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     added prettify function to improve summary tables
     improved summary.fixef functions
 
-commit 090c3c9ca90ae9d040cd8dff64417d8b9d1bec69
-Author: hofner <hofner@edb9625f-4e0d-4859-8d74-9fd3b1da38cb>
+commit 97acc169ec32f66077df2325bc57e0d791caa0e8
+Author: Benjamin Hofner <hofnerb@users.noreply.github.com>
 
     initialization
