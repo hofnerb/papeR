@@ -1,7 +1,7 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
-\section{Changes in papeR version 0.6-0 (2015-06-03)}{
+\section{Changes in papeR version 0.6-0 (2015-06-05)}{
     \subsection{User-visible changes}{
       \itemize{
 	\item \code{latex.table.fac}:
@@ -19,6 +19,7 @@
     \itemize{
       \item Added \file{inst/CITATION} file.
       \item Added \file{inst/COPYRIGHTS} file.
+      \item Added \file{inst/CONTRIBUTIONS} file.
       \item Updated \file{DESCRIPTION} to reflect CRAN policies.
       \item Changed URL in \file{DESCRIPTION} to
       \url{http://github.com/hofnerb/papeR}.
