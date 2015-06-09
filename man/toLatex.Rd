@@ -96,12 +96,13 @@ toBibtex(info)
 ############################################################
 ## usual usage scenario
 
-## Do not run automatically as it needs write access to the current
-## working directory. This code (without removing the file) could
-## for example be included in a Latex chunk of your Sweave or knitr
+## Do not run the following code automatically as it needs
+## write access to the current working directory.
+## This code (without removing the file) could for example
+## be included in a LaTeX chunk of your Sweave or knitr
 ## report.
 
-\donttest{getwd()     ## location where write access is needed
+\dontrun{getwd()     ## location where write access is needed
 toLatex(sessionInfo(), file = "packages.bib")
 file.remove("packages.bib")
 }
