@@ -1,6 +1,23 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 0.6-1 (2015-06-09)}{
+  \subsection{Miscellaneous}{
+    \itemize{
+      \item Fixed \file{man/toLatex.Rd}:
+      Changed \code{\\donttest} to \code{\\dontrun}
+      \item \file{DESCRIPTION} now uses single quotes for package and
+      software names.
+    }
+  }
+  \subsection{Bug-fixes}{
+    \itemize{
+      \item Fixed \file{inst/CITATION}: Now it is possible to extract
+      citation without the need to install the package.
+    }
+  }  
+}
+
 \section{Changes in papeR version 0.6-0 (2015-06-05)}{
     \subsection{User-visible changes}{
       \itemize{

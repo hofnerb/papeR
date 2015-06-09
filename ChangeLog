@@ -1,4 +1,14 @@
-commit d0ad5a4e8166dc42387d3b14dd3cb89672cf9599
+commit 36222325f44dc34723436d44301dc7706b4bcca4
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Release version 0.6-1
+
+commit 53af00eed67120fe8c2250110002d46df8a5adbd
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    make CRAN happy: change \donttest to \dontrun
+
+commit ca83acec233d162eefbd166522789e8e6e4add57
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     (Try to) make CRAN happy
