@@ -6,15 +6,17 @@ Author: Benjamin Hofner, with contributions by many others (see inst/CONTRIBUTIO
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
 Description: A toolbox for writing 'knitr', 'Sweave' or other 'LaTeX'-based
 	     reports and to prettify the output of various estimated models.
-Depends:
-    utils,
+Depends:    
     car
 Enhances:
     nlme,
     lme4,
     survival
 Imports:
-    gmodels
+    utils,
+    gmodels,
+    graphics,
+    stats
 License: GPL-2
 URL: http://github.com/hofnerb/papeR
 Copyright: See inst/COPYRIGHTS.
