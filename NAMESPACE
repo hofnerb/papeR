@@ -9,9 +9,10 @@ export(as.labeled.data.frame,
        is.labeled.data.frame,
        as.labelled.data.frame,
        is.labelled.data.frame,
-       plot.labeled.data.frame,
+       convert.labels,
+       plot.data.frame,
        get_options,
-       labels.labeled.data.frame,
+       labels.default,
        labels.data.frame,
        latex.table.cont,
        latex.table.fac,
@@ -30,8 +31,7 @@ S3method(confint, mer)
 S3method(as.labeled.data.frame, data.frame)
 S3method(labels, default)
 S3method(labels, data.frame)
-S3method(labels, labeled.data.frame)
-S3method(plot, labeled.data.frame)
+S3method(plot, data.frame)
 S3method(prettify, summary.lm)
 S3method(prettify, summary.glm)
 S3method(prettify, summary.coxph)

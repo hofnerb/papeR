@@ -1,7 +1,7 @@
-plot.labeled.data.frame <- function(x, variables = names(x),
-                                    labels = TRUE, by = NULL,
-                                    with = NULL, regression.line = TRUE,
-                                    line.col = "red", ...) {
+plot.data.frame <- function(x, variables = names(x),
+                            labels = TRUE, by = NULL,
+                            with = NULL, regression.line = TRUE,
+                            line.col = "red", ...) {
 
     if (is.numeric(variables)) {
         variables <- names(x)[variables]
