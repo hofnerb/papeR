@@ -1,18 +1,17 @@
 importFrom("car", "Anova")
 importFrom("utils", "citation", "sessionInfo", "toLatex", "toBibtex")
-importFrom("gmodels", ci)
+importFrom("gmodels", "ci")
 importFrom("graphics", "abline", "barplot", "boxplot", "plot")
-importFrom("stats", "as.formula", "coef", "coefficients", "complete.cases", "fivenum", "lm", "qnorm", "qt", "sd", "symnum", "vcov")
+importFrom("stats", "as.formula", "coef", "coefficients", "complete.cases",
+           "fivenum", "lm", "qnorm", "qt", "sd", "symnum", "vcov")
 
 export(as.labeled.data.frame,
        is.labeled.data.frame,
        as.labelled.data.frame,
        is.labelled.data.frame,
        plot.labeled.data.frame,
-       cbind.labeled.data.frame,
-       rbind.labeled.data.frame,
-       subset.labeled.data.frame,
        get_options,
+       labels.labeled.data.frame,
        labels.data.frame,
        latex.table.cont,
        latex.table.fac,
@@ -31,10 +30,7 @@ S3method(confint, mer)
 S3method(as.labeled.data.frame, data.frame)
 S3method(labels, default)
 S3method(labels, data.frame)
-S3method("[", labeled.data.frame)
-S3method(subset, labeled.data.frame)
-S3method(cbind, labeled.data.frame)
-S3method(rbind, labeled.data.frame)
+S3method(labels, labeled.data.frame)
 S3method(plot, labeled.data.frame)
 S3method(prettify, summary.lm)
 S3method(prettify, summary.glm)

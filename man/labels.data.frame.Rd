@@ -1,4 +1,5 @@
 \name{labels}
+\alias{labels}
 
 \alias{labels.default}
 \alias{labels.data.frame}
