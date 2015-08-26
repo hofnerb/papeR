@@ -1,3 +1,14 @@
+## plot function for data frames
+
+## overwrite standard generic
+plot <- function(x, y, ...)
+    UseMethod("plot")
+
+## per default fall back to standard generic
+plot.default <- function(x, y, ...)
+    UseMethod("graphics::plot")
+
+## now specify modified plot function for data frames
 plot.data.frame <- function(x, variables = names(x),
                             labels = TRUE, by = NULL,
                             with = NULL, regression.line = TRUE,
