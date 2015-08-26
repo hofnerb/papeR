@@ -1,6 +1,6 @@
 \name{labels}
-\alias{labels}
 
+\alias{labels}
 \alias{labels.default}
 \alias{labels.data.frame}
 \alias{labels<-}
@@ -9,6 +9,8 @@
 \alias{as.labelled.data.frame}
 \alias{is.labeled.data.frame}
 \alias{is.labelled.data.frame}
+
+\alias{plot}
 \alias{plot.data.frame}
 
 \title{
@@ -31,28 +33,18 @@ is.labeled.data.frame(object)
 ## set as.labeled.data.frame
 as.labeled.data.frame(object, ...)
 
-## special functions for labeled.data.frame objects that keep the labels
-\method{[}{labeled.data.frame}(x, ..., drop = TRUE)
-\method{subset}{labeled.data.frame}(x, ...)
-\method{cbind}{labeled.data.frame}(..., deparse.level = 1)
-\method{rbind}{labeled.data.frame}(..., deparse.level = 1)
-
-## special plotting function for labeled.data.frame objects
-\method{plot}{labeled.data.frame}(x, variables = names(x),
+## special plotting function for data.frame objects
+\method{plot}{data.frame}(x, variables = names(x),
      labels = TRUE, by = NULL, with = NULL,
      regression.line = TRUE, line.col = "red", ...)
 }
 
 \arguments{
   \item{object}{
-    a \code{data.frame} or \code{labeled.data.frame}. The former is
-    usually a result from \code{\link{read.spss}} in package
-    \pkg{foreign}, the latter results from adding labels in R or from a
-    call to \code{as.labeled.data.frame}.
+    a \code{data.frame}.
   }
   \item{data}{
-    a \code{data.frame} or a \code{labeled.data.frame}, where labels
-    should be added or altered.
+    a \code{data.frame}.
   }
   \item{which}{
     either a number indicating the label to extract or a character
@@ -83,15 +75,7 @@ as.labeled.data.frame(object, ...)
     parameters.
   }
   \item{x}{
-    a \code{labeled.data.frame}.
-  }
-  \item{drop}{
-    logical (default: TRUE). If \code{TRUE} the result is coerced to
-    the lowest possible dimension (i.e. a vector in case of a single
-    column) and labels might be dropped in this case.
-  }
-  \item{deparse.level}{
-    see \code{\link{cbind}}.
+    a \code{data.frame}.
   }
   \item{variables}{
     character vector or numeric vector defining (continuous) variables
@@ -230,14 +214,17 @@ labels(data, abbreviate = TRUE, minlength = 10)
 tmp <- data2[, c(1, 4, 3, 2)]
 labels(tmp)
 ## labels are kept and order is updated
-## (but only if data.set has class "labeled.data.frame")
 
 ## subsetting to single variables:
-labels(tmp[, 2])  ## tmp drops to vector
-labels(tmp[, 2, drop = FALSE]) ## prevent dropping labels
+labels(tmp[, 2])  ## not working as tmp[, 2] drops to vector
+## note that the label still exists but cannot be extracted
+## using labels.default()
+str(tmp[, 2])
 
-## one can also cbind labeled.data.set objects:
-labels(cbind(data, tmp[, 2, drop = TRUE]))
+labels(tmp[, 2, drop = FALSE]) ## prevent dropping
+
+## one can also cbind labeled data.frame objects:
+labels(cbind(data, tmp[, 2]))
 ## or better:
 labels(cbind(data, tmp[, 2, drop = FALSE]))
 ## or rbind labeled.data.set objects:

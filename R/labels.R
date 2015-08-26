@@ -1,9 +1,16 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
+## overwrite standard generic
+labels <- function(object, ...)
+    UseMethod("labels")
+
+## per default fall back to standard generic
+labels.default <- function(object, ...)
+    UseMethod("base::labels")
+
 ################################################################################
 # Extract labels from data sets
-
 labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
 
     ## if no labels were properly set use alternative methods to specify labels:
@@ -40,13 +47,6 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
         names(RET) <- nms
     }
     return(RET)
-}
-
-labels.default <- function(object, ...) {
-    if (is.null(attr(object, "variable.label")))
-        return(NULL)
-
-    return(attr(object, "variable.label"))
 }
 
 ################################################################################
