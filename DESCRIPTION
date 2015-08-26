@@ -1,12 +1,12 @@
 Package: papeR
 Title: A Toolbox for Writing 'knitr', 'Sweave' or Other 'LaTeX'-Based Papers and Reports
-Version: 0.6-1
-Date: 2015-06-09
+Version: 1.0-0
+Date: 2015-08-25
 Author: Benjamin Hofner, with contributions by many others (see inst/CONTRIBUTIONS)
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
 Description: A toolbox for writing 'knitr', 'Sweave' or other 'LaTeX'-based
 	     reports and to prettify the output of various estimated models.
-Depends:    
+Depends:
     car
 Enhances:
     nlme,
