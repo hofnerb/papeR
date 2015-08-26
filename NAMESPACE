@@ -1,7 +1,7 @@
 importFrom("car", "Anova")
 importFrom("utils", "citation", "sessionInfo", "toLatex", "toBibtex")
 importFrom("gmodels", "ci")
-importFrom("graphics", "abline", "barplot", "boxplot", "plot")
+importFrom("graphics", "abline", "barplot", "boxplot", "plot", "plot.default")
 importFrom("stats", "as.formula", "coef", "coefficients", "complete.cases",
            "fivenum", "lm", "qnorm", "qt", "sd", "symnum", "vcov")
 
