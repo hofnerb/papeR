@@ -2,6 +2,7 @@ papeR
 =====
 
 [![Build Status](https://travis-ci.org/hofnerb/papeR.svg?branch=master)](https://travis-ci.org/hofnerb/papeR)
+[![CRAN Status Badge](http://www.r-pkg.org/badges/version/papeR)](http://cran.r-project.org/package=papeR)
 
 `papeR`  provides a toolbox for writing Sweave or other LaTeX-based papers and reports and to prettify the output of various estimated models.
 
