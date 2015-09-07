@@ -11,7 +11,7 @@
 \alias{is.labelled.data.frame}
 
 \alias{plot}
-\alias{plot.data.frame}
+\alias{plot.ldf}
 
 \title{
   Extract labels from and set labels for data frames
@@ -33,8 +33,8 @@ is.labeled.data.frame(object)
 ## set as.labeled.data.frame
 as.labeled.data.frame(object, ...)
 
-## special plotting function for data.frame objects
-\method{plot}{data.frame}(x, variables = names(x),
+## special plotting function for 'ldf' objects
+\method{plot}{ldf}(x, variables = names(x),
      labels = TRUE, by = NULL, with = NULL,
      regression.line = TRUE, line.col = "red", ...)
 }
@@ -75,7 +75,7 @@ as.labeled.data.frame(object, ...)
     parameters.
   }
   \item{x}{
-    a \code{data.frame}.
+    a labeled \code{data.frame} with class \code{'ldf'}.
   }
   \item{variables}{
     character vector or numeric vector defining (continuous) variables

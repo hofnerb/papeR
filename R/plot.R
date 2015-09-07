@@ -1,18 +1,10 @@
-## plot function for data frames
-
-## overwrite standard generic
-plot <- function(x, y, ...)
-    UseMethod("plot")
-
-## per default fall back to standard generic
-plot.default <- function(x, y, ...)
-    graphics::plot(x, y, ...)
+## plot function for (labeled) data frames
 
 ## now specify modified plot function for data frames
-plot.data.frame <- function(x, variables = names(x),
-                            labels = TRUE, by = NULL,
-                            with = NULL, regression.line = TRUE,
-                            line.col = "red", ...) {
+plot.ldf <- function(x, variables = names(x),
+                     labels = TRUE, by = NULL,
+                     with = NULL, regression.line = TRUE,
+                     line.col = "red", ...) {
 
     if (is.numeric(variables)) {
         variables <- names(x)[variables]

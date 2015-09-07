@@ -1,7 +1,7 @@
 importFrom("car", "Anova")
 importFrom("utils", "citation", "sessionInfo", "toLatex", "toBibtex")
 importFrom("gmodels", "ci")
-importFrom("graphics", "abline", "barplot", "boxplot", "plot", "plot.default")
+importFrom("graphics", "abline", "barplot", "boxplot")
 importFrom("stats", "as.formula", "coef", "coefficients", "complete.cases",
            "fivenum", "lm", "qnorm", "qt", "sd", "symnum", "vcov")
 
@@ -15,8 +15,7 @@ export(as.labeled.data.frame,
        labels.data.frame,
        latex.table.cont,
        latex.table.fac,
-       plot,
-       plot.data.frame,
+       plot.ldf,
        print.table.cont,
        print.table.fac,
        prettify,
@@ -32,8 +31,7 @@ S3method(confint, mer)
 S3method(as.labeled.data.frame, data.frame)
 S3method(labels, default)
 S3method(labels, data.frame)
-S3method(plot, default)
-S3method(plot, data.frame)
+S3method(plot, ldf)
 S3method(prettify, summary.lm)
 S3method(prettify, summary.glm)
 S3method(prettify, summary.coxph)

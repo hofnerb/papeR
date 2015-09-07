@@ -69,6 +69,7 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
     if (!is.null(attr(data, "variable.labels")))
         attr(data, "variable.labels") <- NULL
 
+    class(data) <- c("ldf", class(data))
     return(data)
 }
 
