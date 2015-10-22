@@ -14,7 +14,7 @@ labels.default <- function(object, ...)
 labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
 
     ## if no labels were properly set use alternative methods to specify labels:
-    if (!is.labeled.data.frame(object)) {
+    if (!is.ldf(object)) {
         ## if no labels specified temporarily set names as labels
         if (is.null(attr(object, "variable.labels"))) {
             labels(object) <- colnames(object)
@@ -102,18 +102,18 @@ CLEAN_LABELS <- function(data) {
 
 
 ## define coercion function
-as.labeled.data.frame <- as.labelled.data.frame <- function(object, ...)
-    UseMethod("as.labeled.data.frame")
+as.ldf <- function(object, ...)
+    UseMethod("as.ldf")
 
-as.labeled.data.frame.data.frame <- function(object, ...) {
+as.ldf.data.frame <- function(object, ...) {
     labels(object) <- labels(object)
     object
 }
 
 convert.labels <- function(object)
-    as.labeled.data.frame.data.frame(object)
+    as.ldf.data.frame(object)
 
-is.labeled.data.frame <- is.labelled.data.frame <- function(object)
+is.ldf <- function(object)
     !all(sapply(lapply(object, get_labels), is.null))
 
 check_equality <- function(x, y) {

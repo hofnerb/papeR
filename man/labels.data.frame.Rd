@@ -5,11 +5,8 @@
 \alias{labels.data.frame}
 \alias{labels<-}
 
-\alias{as.labeled.data.frame}
-\alias{as.labelled.data.frame}
-\alias{is.labeled.data.frame}
-\alias{is.labelled.data.frame}
-
+\alias{as.ldf}
+\alias{is.ldf}
 \alias{convert.labels}
 
 \alias{plot}
@@ -30,16 +27,14 @@
 ## assign labels
 labels(data, which = NULL) <- value
 
-## check if data.frame is a special labeled.data.frame
-is.labeled.data.frame(object)
+## check if data.frame is a special labeled data.frame ('ldf')
+is.ldf(object)
 
-## convert object to labeled data.frame
+## convert object to labeled data.frame ('ldf')
 convert.labels(object)
+as.ldf(object, ...)
 
-## set as.labeled.data.frame
-as.labeled.data.frame(object, ...)
-
-## special plotting function for 'ldf' objects
+## special plotting function for labeled data.frames ('ldf')
 \method{plot}{ldf}(x, variables = names(x),
      labels = TRUE, by = NULL, with = NULL,
      regression.line = TRUE, line.col = "red", ...)
@@ -169,16 +164,16 @@ as.labeled.data.frame(object, ...)
 
 data <- data.frame(a = 1:10, b = 10:1, c = rep(1:2, 5))
 labels(data)  ## only the variable names
-is.labeled.data.frame(data) ## not yet
+is.ldf(data) ## not yet
 
 ## now set labels
 labels(data) <- c("my_a", "my_b", "my_c")
 ## one gets a named character vector of labels
 labels(data)
-## data is now a labeled.data.frame:
-is.labeled.data.frame(data)
+## data is now a ldf:
+is.ldf(data)
 
-## Altervatively one could use as.labeled.data.frame(data);
+## Altervatively one could use as.ldf(data) or convert.labels(data);
 ## This would keep the default labels but set the class
 ## correctly.
 

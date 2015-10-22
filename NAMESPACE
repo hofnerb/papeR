@@ -6,10 +6,8 @@ importFrom("stats", "as.formula", "coef", "coefficients", "complete.cases",
            "fivenum", "lm", "qnorm", "qt", "sd", "symnum", "vcov")
 import(xtable)
 
-export(as.labeled.data.frame,
-       is.labeled.data.frame,
-       as.labelled.data.frame,
-       is.labelled.data.frame,
+export(as.ldf,
+       is.ldf,
        convert.labels,
        get_option,
        labels,
@@ -28,7 +26,7 @@ export(as.labeled.data.frame,
 S3method(Anova, lme)
 S3method(confint, lme)
 S3method(confint, mer)
-S3method(as.labeled.data.frame, data.frame)
+S3method(as.ldf, data.frame)
 S3method(labels, default)
 S3method(labels, data.frame)
 S3method(plot, ldf)
