@@ -97,8 +97,6 @@ summarize_numeric(data,
   }
 
 }
-\details{
-}
 \value{
   A special \code{data.frame} with additional class \code{summary}
   containing the computed statistics is returned from function
