@@ -12,16 +12,18 @@ Depends:
 Enhances:
     nlme,
     lme4,
-    survival,
-    knitr
+    survival
 Imports:
     utils,
     gmodels,
     graphics,
     stats
+Suggests:
+    knitr
 License: GPL-2
 URL: http://github.com/hofnerb/papeR
 Copyright: See inst/COPYRIGHTS.
+VignetteBuilder: knitr
 Collate:
     'helpers.R'
     'labels.R'

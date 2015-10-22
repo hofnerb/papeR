@@ -1,0 +1,208 @@
+---
+title: "Using papeR"
+author: "Benjamin Hofner"
+date: "Tuesday, March 17, 2015"
+output:
+  html_document:
+    keep_md: yes
+---
+
+<!--
+  %\VignetteEngine{knitr::knitr}
+  %\VignetteIndexEntry{Using papeR}
+-->
+
+
+```{r initialization, include=FALSE}
+library("knitr")
+options(knitr.table.format = 'markdown')
+opts_chunk$set(message = FALSE, warning = FALSE, fig.path = "papeR_manual/fig-")
+set.seed(1234)
+```
+
+
+# A short tutorial for package **papeR**
+
+This is a short tutorial that covers some of the features of package **papeR**.
+
+### Installation
+
+To install the latest development version, one can use
+**devtools** to install packages from [GitHub](http://github.com/hofnerb/papeR).
+
+```{r install_devtools, eval=FALSE}
+install.packages("devtools")
+```
+
+Now we can load **devtools** to install **papeR**:
+
+```{r install_papeR, eval=FALSE}
+library("devtools")
+install_github("hofnerb/papeR")
+```
+(note that this chunk is not evaluated automatically).
+
+### Loading the package
+
+Now we can load the package:
+
+```{r load_pkg}
+library("papeR")
+```
+
+### Labeled data frames
+
+To be able to use all features of the package, we first need to
+create a labeled data frame. If we create a new data frame or
+import a data frame, we can extract and set variable labels
+
+```{r}
+data_orig <- data.frame(a = 1:10,
+                        b = 10:1,
+                        c = factor(sample(c(1:2), 10, replace = TRUE)))
+data <- data_orig
+labels(data)
+labels(data) <- c("Variable a", "Variable b", "Variable c")
+is.ldf(data)
+labels(data)
+```
+
+Alternatively, we can simply coerce the data frame:
+
+```{r}
+data2 <- as.ldf(data_orig)
+labels(data2)
+```
+In this case, the original labels are kept. Per default,
+we use the variable names as labels. If the data set originates
+from an SPSS data set and is imported imported via the function
+`read.spss()` from package **foreign**, we use the variable
+labels from SPSS.
+
+However, again we need to formally convert the data to a
+`ldf` by using the function
+`as.ldf()`.
+
+#### Methods for labeled data frames
+
+For data frames of class `ldf`, there exist
+special plotting functions:
+
+```{r plot_labeled_dataframe}
+par(mfrow = c(2, 2))
+plot(data)
+```
+
+As one can see, the plot type is automatically determined
+based on the data type and the axis label is defiened by
+the `labels()`.
+
+To obtain group comparisons, we can use grouped plots:
+
+```{r grouped_plot}
+par(mfrow = c(1, 2))
+plot(data, by = "c")
+```
+
+We can as well plot everything against a metrical variable:
+
+```{r with_x}
+par(mfrow = c(1, 2))
+plot(data, with = "b")
+```
+
+### Summary tables
+
+One can use the command `summarize()` to automatically produce summary
+tables for either numeric variables or factors.
+
+```{r}
+data(Orthodont, package = "nlme")
+summarize(Orthodont, type = "numeric")
+summarize(Orthodont, type = "factor", variables = "Sex")
+```
+
+Again, one can specify `group` to obtain grouped statistcis. In this
+case, one also can get `test`s for group differences:
+
+```{r}
+summarize(Orthodont, type = "numeric", group = "Sex", test = FALSE)
+```
+
+#### Converting summaries to PDF
+
+Any of these summary tables can be easily converted to LaTeX code using the
+package **xtable**. Thus we can use
+
+```{r, results = 'hide'}
+xtable(summarize(Orthodont, type = "numeric"))
+xtable(summarize(Orthodont, type = "factor", variables = "Sex"))
+xtable(summarize(Orthodont, type = "numeric", group = "Sex", test = FALSE))
+```
+
+in a `Sweave` chunk with option `results = tex` or in a **knitr** chunk with option
+`results = 'asis'` to get the following PDF output (**OUTDATED. USE NEW CODE TO UPDATE**)
+
+![OUTDATED LaTeX Output](graphics/tables.png)
+
+#### Converting summaries to Markdown
+
+To obtain markdown output we can use `kable()` on the summary objects:
+
+```{r, results = 'asis'}
+kable(summarize(Orthodont, type = "numeric"))
+kable(summarize(Orthodont, type = "factor", variables = "Sex"))
+kable(summarize(Orthodont, type = "numeric", group = "Sex", test = FALSE))
+```
+
+
+> **A non-latex version is currently under construction.**
+
+
+### Prettify output
+
+To prettify the output of a linear model, one can use the function
+`prettify()`. This function adds confidence intervals, properly
+prints p-values, adds significance stars to the output (if desired)
+and additionally adds pretty formating for factors.
+
+```{r}
+linmod <- lm(distance ~ age + Sex, data = Orthodont)
+## Extract pretty summary
+(pretty_lm <- prettify(summary(linmod)))
+```
+
+The resulting table can now be formated for printing using packages like
+**xtable** for LaTeX which can be used in `.Rnw` files with the option
+`results='asis'`
+
+```{r, results='hide'}
+library("xtable")
+xtable(pretty_lm)
+```
+
+In markdown files (`.Rmd`) one can instead use the function `kable()` with the
+chunk option `results='asis'`. The result looks as follows:
+
+```{r, results='asis'}
+kable(pretty_lm)
+```
+
+
+#### Supported objects
+
+The function `prettify` is *currently* implemented for objects of the following classes:
+
+* `lm` (linear models)
+* `glm` (generalized linear models)
+* `coxph` (Cox proportional hazards models)
+* `lme` (linear mixed models; implemented in package **nlme**)
+* `mer` (linear mixed models; implemented in package **lme4**, vers < 1.0)
+* `merMod` (linear mixed models; implemented in package **lme4**, vers. >= 1.0)
+* `anova` (anova objects)
+
+## Outlook
+
+This package is currently under active development. Feature requests, bug reports, or
+patches that either add new features or fix bugs are always welcome.
+Please use the [GitHub](http://github.com/hofnerb/papeR) page.
