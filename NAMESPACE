@@ -4,13 +4,14 @@ importFrom("gmodels", "ci")
 importFrom("graphics", "abline", "barplot", "boxplot")
 importFrom("stats", "as.formula", "coef", "coefficients", "complete.cases",
            "fivenum", "lm", "qnorm", "qt", "sd", "symnum", "vcov")
+import(xtable)
 
 export(as.labeled.data.frame,
        is.labeled.data.frame,
        as.labelled.data.frame,
        is.labelled.data.frame,
        convert.labels,
-       get_options,
+       get_option,
        labels,
        labels.data.frame,
        latex.table.cont,
@@ -20,10 +21,11 @@ export(as.labeled.data.frame,
        print.table.fac,
        prettify,
        prettifyPValue,
+       summarize, summarise,
+       summarize_numeric, summarize_factor,
        toLatex,
        toLatex.character,
-       "labels<-",
-       get_options)
+       "labels<-")
 
 S3method(Anova, lme)
 S3method(confint, lme)
@@ -42,8 +44,8 @@ S3method(prettify, anova)
 S3method(prettify, data.frame)
 S3method(mySapply, default)
 S3method(mySapply, data.frame)
-S3method(print, table.cont)
-S3method(print, table.fac)
+S3method(xtable, summary)
+S3method(print, xtable.summary)
 S3method(toLatex, default)
 S3method(toLatex, character)
 S3method(toLatex, sessionInfo)

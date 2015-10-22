@@ -68,7 +68,8 @@ plot.ldf <- function(x, variables = names(x),
             boxplot(x[, i], main = variables[i], ylab = labels[i], ...)
         }
         for (i in which.fac) {
-            barplot(table(x[, i]), main = variables[i], ylab = labels[i], ...)
+            barplot(table(x[, i]),
+                    main = variables[i], ylab = labels[i], ...)
         }
     } else {
         grp_label <- ifelse(!is.null(grp_label), grp_label, by)

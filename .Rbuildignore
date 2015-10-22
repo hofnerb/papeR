@@ -6,4 +6,5 @@ tests/.*\.Rout\.save$
 ^\.travis\.yml$
 ^appveyor\.yml$
 .*\.tar\.gz
-.Rproj
+^.*\.Rproj$
+^\.Rproj\.user$

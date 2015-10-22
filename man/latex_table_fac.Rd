@@ -9,87 +9,14 @@
   tables with a nice layout.
 }
 \usage{
-      
-latex.table.fac(data, variables = names(data),
-                labels = NULL, group = NULL, test = TRUE, 
-                colnames = NULL, digits = 3, digits.pval = 3, smallest.pval = 0.001,
-                table = c("tabular", "longtable"),
-                percent = TRUE, cumulative = FALSE,  
-                align = NULL, caption = NULL, label = NULL, floating = FALSE,
-                center = TRUE, sep = TRUE, sanitize = TRUE, drop = TRUE,
-                show.NAs = any(is.na(data[, variables])), na.lab = "<Missing>")
-
-\method{print}{table.fac}(x,
-      colnames = get_options(x, "colnames"),
-      table = get_options(x, "table"),
-      align = get_options(x, "align"),
-      caption = get_options(x, "caption"),
-      label = get_options(x, "label"),
-      floating = get_options(x, "floating"),
-      center = get_options(x, "center"),
-      sep = get_options(x, "sep"),
-      sanitize = get_options(x, "sanitize"),
-      ...)
-
+latex.table.fac(..., caption = NULL, label = NULL,
+    table = c("tabular", "longtable"), align = NULL,
+    floating = FALSE, center = TRUE)
 }
 
 \arguments{
-  \item{data}{
-    data set to be used
-  }
-  \item{variables}{
-    character vector defining (factor) variables that should be included
-    in the table. Per default, all factor variables of \code{data} are
-    used.
-  }
-  \item{labels}{
-    labels for the variables. If \code{labels = NULL} (default)
-    \code{variables} is used as label. If \code{labels = TRUE},
-    \code{labels(data, which = variables)} is used as
-    labels.
-  }
-  \item{group}{
-    character specifying a grouping factor. Per default no grouping is
-    applied.
-  }
-  \item{test}{
-    logical or character string. If a \code{group} is given, this argument
-    determines whether a test for differences is computed. Per default, a 
-    t-test is used. To compute another test specify the test name as character
-    string. A vector with the same length as the number of \code{variables} can be 
-    used to have different tests for different variables.
-  }
-  \item{colnames}{
-    a vector of character strings of appropriate length.
-    The vector supplies alternative column names for
-    the resulting LaTeX table. If \code{NULL} default names are used.
-  }
-  \item{digits}{
-    number of digits to round to (only used for fractions).
-  }
-  \item{digits.pval}{
-    number of significant digits used for p-values.
-  }
-  \item{smallest.pval}{
-    determines the smallest p-value to be printed
-    exactly. Smaller values are given as \dQuote{< smallest.pval}.
-    This argument is passed to the \code{eps} argument of
-    \code{\link{format.pval}}. See there for details.
-  }
-  \item{table}{
-    character string. LaTeX table format, currently either
-    \code{"tabular"} (default) or \code{"longtable"}.
-  }
-  \item{percent}{
-    logical. Should the fractions be given as percent values? Otherwise,
-    fractions are given as decimal numbers.
-  }
-  \item{cumulative}{
-    logical. Should cumulative fractions be displayed?
-  }
-  \item{align}{
-    character string. LaTeX alignment of table rows, per default
-    \code{"llr...r"}, where \code{"r"} is repeated \code{ncol - 2} times.
+  \item{...}{
+    arguments for \code{\link{summarize}}. See there for details.
   }
   \item{caption}{
     (optional) character string. Caption of LaTeX table. Note that
@@ -99,46 +26,28 @@ latex.table.fac(data, variables = names(data),
     (optional) character string. Label of LaTeX table specified as
     \code{\\label{"label"}}.
   }
+  \item{table}{
+    character string. LaTeX table format, currently either
+    \code{"tabular"} (default) or \code{"longtable"}.
+  }
+  \item{align}{
+    character string. LaTeX alignment of table rows, per default
+    \code{"lllr...r"}, where \code{"r"} is repeated \code{ncol - 2} times.
+  }
   \item{floating}{
-    logical (default: FALSE). Determines wether the table is a floating
+    logical (default: \code{FALSE}). Determines whether the table is a floating
     object (i.e. use a \code{table} environment or not). Note that a
     \code{longtable} cannot be a floating object but captions can be
     used.
   }
   \item{center}{
-    logical (default: TRUE). Determines if table should be centered.
-  }
-  \item{sep}{
-    logical (default: TRUE). Determines wether separators (lines) should
-    be added after each factor variable.
-  }
-  \item{sanitize}{
-    logical (default: TRUE) or a sanitizing function used to clean the
-    input in order to be useable in LaTeX environments. Per default
-    \code{\link{toLatex.character}} is used.
-  }
-  \item{drop}{
-    logical (default: TRUE). Determines wether factor variables,
-    which contain only missing values are dropped from the table.
-  }
-  \item{show.NAs}{
-    logical. Determines if NAs are displayed as a separate category for
-    each factor variable with missings. If \code{TRUE}, an additional
-    statistic which includes the missings is displayed (see Examples).
-    Per default, \code{show.NAs} is \code{TRUE} if there are any
-    missings in the variables to be displayed (and \code{FALSE} if not).
-  }
-  \item{na.lab}{
-    label for missing values (default: \code{"<Missing>"}).
-  }
-  \item{x}{
-    An object of class \code{table.fac}. See Value for details.
-  }
-  \item{...}{
-    additional arguments for printing. Currently not used.
+    logical (default: \code{TRUE}). Determines if table should be centered.
   }
 }
 \details{
+  This function is deprecated and only available for backward
+  comaptibility. Use \code{\link{summarize}} for more flexibility.
+
   The output requires \code{\\usepackage{booktabs}} in the LaTeX file.
 
   Captions can be added to both, \code{longtable}s and \code{tabular}s.
@@ -147,13 +56,6 @@ latex.table.fac(data, variables = names(data),
   required.
 }
 \value{
-  A special \code{data.frame} with additional class \code{table.fac}
-  containing the computed statistics is returned from function
-  \code{latex.table.cont}. Addtional attributes required for the print
-  function are contained (see \code{attr(x, "latex.table.options")}).
-  These are extracted in the print function using the function
-  \code{\link{get_options}}.
-
   The output is printed with LaTeX style syntax highlighting to be used
   e.g. in Sweave chunks with \code{results=tex}.
 }
@@ -161,7 +63,7 @@ latex.table.fac(data, variables = names(data),
   Benjamin Hofner
 }
 \seealso{
-  \code{\link{latex.table.cont}} and \code{\link{get_options}}
+  \code{\link{latex.table.cont}} and \code{\link{get_option}}
 }
 \examples{
 ## Example requires package nlme to be installed and loaded
