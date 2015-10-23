@@ -182,12 +182,12 @@ check_which <- function(which, data, what) {
 
     if (is.numeric(which) && (any(which > ncol(data)) ||
                               any(which < 1) ||
-                              !all(is.integer(which))))
-        stop("One cannot", what, "labels for none-existing variables",
+                              !all(which %% 1 == 0)))
+        stop("One cannot ", what, " labels for none-existing variables",
              call. = FALSE)
 
     if (is.character(which) && !all(which %in% colnames(data))) {
-        txt <- paste("One  cannot", what,"labels for none-existing variables\n",
+        txt <- paste("One  cannot ", what, " labels for none-existing variables\n",
                      "  Variables not found in data set:\n\t",
                      paste(which[!(which %in% colnames(data))],
                            collapse = "\n\t"))
