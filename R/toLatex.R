@@ -19,6 +19,7 @@ toLatex.default <- function(object, ...)
 ## Licence of R package xtable: GPL-2 | GPL-3
 toLatex.character <- function(object, ...) {
     result <- object
+    result <- gsub("$\\sum$", "SUM", result, fixed = TRUE)
     result <- gsub("\\\\", "SANITIZE.BACKSLASH", result)
     result <- gsub("$", "\\$", result, fixed = TRUE)
     result <- gsub(">=", "$\\geq$", result, fixed = TRUE)
@@ -40,6 +41,7 @@ toLatex.character <- function(object, ...) {
     result <- gsub("\u00B3", "$^3$", result, fixed = TRUE)
     result <- gsub("SANITIZE.BACKSLASH", "$\\backslash$",
                    result, fixed = TRUE)
+    result <- gsub("SUM", "$\\sum$", result, fixed = TRUE)
     return(result)
 }
 

@@ -493,8 +493,8 @@ prettify.summarize.factor <- function(x,
     } else {
         colNames <- names(tab)
         if (get_option(x, "percent")) {
-            colNames[grepl("Fraction", colNames)] <- "\\%"
-            colNames[grepl("CumSum", colNames)] <- "$\\sum$ \\%"
+            colNames[grepl("Fraction", colNames)] <- "%"
+            colNames[grepl("CumSum", colNames)] <- "$\\sum$ %"
         } else {
             colNames[grepl("CumSum", colNames)] <- "$\\sum$"
         }
@@ -547,6 +547,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                                  add.to.row = getOption("xtable.add.to.row", NULL),
                                  include.rownames = getOption("xtable.include.rownames", FALSE),
                                  booktabs = getOption("xtable.booktabs", TRUE),
+                                 sanitize.text.function = get_option(x, "sanitize"),
                                  ...) {
 
     ## extract rules and headers from object
@@ -554,6 +555,15 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
     tmp <- ifelse(is.null(get_option(x, "header")),
                   "",  get_option(x, "header"))
     header <- ifelse(is.null(header), tmp, header)
+    
+    ## sanitize object?
+    if (is.logical(sanitize.text.function)) {
+        if (!sanitize.text.function) {
+            sanitize.text.function <- function(x) x
+        } else {
+            sanitize.text.function <- toLatex
+        }
+    }
 
     if (is.null(add.to.row)) {
         if (get_option(x, "sep") == TRUE) {
@@ -573,6 +583,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                  include.rownames = include.rownames,
                  booktabs = booktabs,
                  add.to.row = add.to.row,
+                 sanitize.text.function = sanitize.text.function,
                  ...)
 }
 
