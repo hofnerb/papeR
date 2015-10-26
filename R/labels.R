@@ -30,7 +30,7 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
     which <- check_which(which, object, "extract")
 
     ## now extract labels
-    RET <- sapply(object[which], get_labels)
+    RET <- sapply(as.data.frame(object)[which], get_labels)
     ## fix non-existing labels
     if (is.list(RET) && any(idx_null <- sapply(RET, is.null))) {
         nms <- colnames(object)
