@@ -176,8 +176,8 @@ summarize_numeric <- function(data, variables = names(data),
                                 eps = smallest.pval)
             ## make sure not to drop trailing zeros
             pval2 <- suppressWarnings(as.numeric(pval))
-            pval[is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
-                                          pval2[is.na(pval2)])
+            pval[!is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
+                                           pval2[!is.na(pval2)])
             sums$blank_p <- ""
             sums$p.value[!duplicated(sums$var)] <- pval
         }
