@@ -1,6 +1,37 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-0 (2015-10-22)}{
+  \subsection{User-visible changes}{
+    \itemize{
+      \item \code{summarize} produces summary tables that can be further
+      processed with \code{xtable} or \code{kable} to produce LaTeX or
+      Markdown tables, respectively (closes
+      \href{https://github.com/hofnerb/papeR/issues/2}{#2} and
+      \href{https://github.com/hofnerb/papeR/issues/3}{#3}).
+      \item \code{latex.table.cont} and \code{latex.table.fac} are now
+      deprecated. Use \code{summarize} instead.
+      \item \code{labels()} are now stored as attribute of the variable
+      instead of as attribute of the data set (closes
+      \href{https://github.com/hofnerb/papeR/issues/1}{#1}).
+    }
+  }
+  \subsection{Miscellaneous}{
+    \itemize{
+      \item Completely refactored code base.
+      \item Added vignette (closes
+      \href{https://github.com/hofnerb/papeR/issues/7}{#7}).
+    }
+  }
+  \subsection{Bug-fixes}{
+    \itemize{
+      \item  Adhere to CRAN policies regarding import of base packages
+      (closes \href{https://github.com/hofnerb/papeR/issues/8}{#8}).
+    }
+  }
+}
+
+
 \section{Changes in papeR version 0.6-1 (2015-06-09)}{
   \subsection{Miscellaneous}{
     \itemize{
@@ -15,7 +46,7 @@
       \item Fixed \file{inst/CITATION}: Now it is possible to extract
       citation without the need to install the package.
     }
-  }  
+  }
 }
 
 \section{Changes in papeR version 0.6-0 (2015-06-05)}{
@@ -45,7 +76,7 @@
   \subsection{Bug-fixes}{
     \itemize{
       \item Do not replace registered S3 methods from base/recommended
-      packages (#5).     
+      packages (#5).
       \item Fixed handling of \code{levels()}.
       \item Fixed bug with factor levels.
       \item \code{latex.table.fac} and  \code{latex.table.cont}:
