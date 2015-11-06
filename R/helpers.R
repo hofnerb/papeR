@@ -154,7 +154,7 @@ format.perc <- function(probs, digits) {
 
 
 ## Function that makes NAs to a new level with given label
-NAtoLvl <- function(x, na.lab){
+NAtoLvl <- function(x, na.lab) {
     if (any(is.na(x))) {
         lvls <- levels(x)
         x <- as.character(x)
@@ -187,7 +187,7 @@ check_which <- function(which, data, what) {
              call. = FALSE)
 
     if (is.character(which) && !all(which %in% colnames(data))) {
-        txt <- paste("One  cannot ", what, " labels for none-existing variables\n",
+        txt <- paste0("One cannot ", what, " labels for none-existing variables\n",
                      "  Variables not found in data set:\n\t",
                      paste(which[!(which %in% colnames(data))],
                            collapse = "\n\t"))
