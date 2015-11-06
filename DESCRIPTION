@@ -19,7 +19,8 @@ Imports:
     graphics,
     stats
 Suggests:
-    knitr
+    knitr,
+    testthat
 License: GPL-2
 URL: http://github.com/hofnerb/papeR
 Copyright: See inst/COPYRIGHTS.
