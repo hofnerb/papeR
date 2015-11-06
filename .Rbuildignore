@@ -8,3 +8,5 @@ tests/.*\.Rout\.save$
 .*\.tar\.gz
 ^.*\.Rproj$
 ^\.Rproj\.user$
+\.Rhistory
+vignettes/using_papeR_example_tables.Rnw
