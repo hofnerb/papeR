@@ -67,10 +67,18 @@
     the standard default of \code{\link[xtable]{print.xtable}}
     is \code{"bottom"}.
   }
+  \item{hline.after}{
+    vector indicating the rows after which a horizontal line is printed.
+    Here, the default is to not draw hlines (i.e. \code{hline.after =
+    NULL}) and horizontal lines are added via \code{add.to.row}
+    (see there for details). Note that the standard default of
+    \code{\link[xtable]{print.xtable}} is \code{c(-1,0,nrow(x))}.
+  }
   \item{add.to.row}{
     list of row numbers (\code{pos}) and text (\code{command}) to be
     added to the specified rows. Per default, top and bottom rules are
-    added to the table. If \code{sep = TRUE} in \code{\link{summarize}}
+    added to the table and a rule specified in \code{rules} is added
+    below the heading. If \code{sep = TRUE} in \code{\link{summarize}}
     additional separators (as specified in \code{rules}) are added after
     each variable.
   }
@@ -109,7 +117,7 @@
   \code{FALSE} for all calls to \code{print.xtable}.
 }
 \value{
-
+  After printing, a table with LaTeX markup is returned.
 }
 \author{
   Benjamin Hofner
