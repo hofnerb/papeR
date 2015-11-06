@@ -43,8 +43,8 @@ summarize(data, type = c("numeric", "factor"),
   \item{test}{
     logical or character string. If a \code{group} is given, this argument
     determines whether a test for group differences is computed. For
-    details see \code{link{summarize_numeric}} and
-    \code{link{summarize_factor}}.
+    details see \code{\link{summarize_numeric}} and
+    \code{\link{summarize_factor}}.
   }
   \item{colnames}{
     a vector of character strings of appropriate length.
@@ -85,8 +85,8 @@ summarize(data, type = c("numeric", "factor"),
     \code{\link{summarize_numeric}} and \code{\link{summarize_factor}}.
   }
   \item{...}{
-    additional arguments for \code{link{summarize_numeric}} and
-    \code{link{summarize_factor}}. See there for details.
+    additional arguments for \code{\link{summarize_numeric}} and
+    \code{\link{summarize_factor}}. See there for details.
   }
 
 }
@@ -103,7 +103,7 @@ summarize(data, type = c("numeric", "factor"),
 }
 \seealso{
   For details see
-  \code{link{summarize_numeric}} and \code{link{summarize_factor}}.
+  \code{\link{summarize_numeric}} and \code{\link{summarize_factor}}.
 
   Conversion to LaTeX tables can be done using
   \code{\link{xtable.summary}} and \code{\link{print.xtable.summary}}.
