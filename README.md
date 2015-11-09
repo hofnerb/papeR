@@ -5,7 +5,7 @@ papeR
 [![Build Status](https://ci.appveyor.com/api/projects/status/t58j1j2hygy6evst/branch/master?svg=true)](https://ci.appveyor.com/project/hofnerb/paper/branch/master)
 [![CRAN Status Badge](http://www.r-pkg.org/badges/version/papeR)](http://cran.r-project.org/package=papeR)
 
-`papeR`  provides a toolbox for writing Sweave or other LaTeX-based papers and reports and to prettify the output of various estimated models.
+`papeR`  provides a toolbox for writing knitr, Sweave or other LaTeX- or markdown-based papers and reports and to prettify the output of various estimated models.
 
 ## Installation:
 
