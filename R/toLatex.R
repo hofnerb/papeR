@@ -33,8 +33,9 @@ toLatex.character <- function(object, ...) {
     result <- gsub("&", "\\&", result, fixed = TRUE)
     result <- gsub("_", "\\_", result, fixed = TRUE)
     result <- gsub("#", "\\#", result, fixed = TRUE)
-    result <- gsub("\\^([[:digit:]]+)", "$^{\\1}$", result)
+    ## a^NOT_A_NUMBER
     result <- gsub("\\^([^[:digit:]])", "\\\\verb|^|\\1", result)
+    result <- gsub("\\^([[:digit:]]+)", "$^{\\1}$", result)
     result <- gsub("~", "\\~{}", result, fixed = TRUE)
     ## grep for ^2 and ^3
     result <- gsub("\u00B2", "$^2$", result, fixed = TRUE)
@@ -56,8 +57,8 @@ toLatex.character <- function(object, ...) {
 ## with major changes and modifications by Benjamin Hofner
 toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
                                 base.pkgs = FALSE, other.pkgs = TRUE,
-                                namespace.pks = FALSE, citations = TRUE,
-                                citecommand = "\\citep", file = "Rpackages.bib",
+                                namespace.pkgs = FALSE, citations = TRUE,
+                                citecommand = "\\citep", file = NULL,
                                 append = FALSE, ...) {
     if (!is.null(pkgs)) {
         object <- sessionInfo(package = pkgs)
@@ -103,7 +104,7 @@ toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
         z <- c(z, "  \\item Used packages: ", "  \\begin{itemize}",
                formatPkgs(names(opkgver), opkgver, key), "  \\end{itemize}")
     }
-    if (namespace.pks && length(nspkgver)) {
+    if (namespace.pkgs && length(nspkgver)) {
         nspkgver <- nspkgver[sort(names(nspkgver))]
         if (citations) {
             bibs <- write.bib(names(nspkgver), file = file, append = TRUE,
@@ -122,7 +123,7 @@ toLatex.sessionInfo <- function(object, pkgs = NULL, locale = FALSE,
                 "' ...")
         message("Use \\bibliography{", file, "} to include citations.\n\n")
     }
-    if (is.null(file)) {
+    if (citations && is.null(file)) {
         attr(z, "BibTeX") <- all_bibs
         class(z) <- c("LatexBibtex", "Latex")
         return(z)
@@ -176,12 +177,12 @@ write.bib <- function(entry = "base", file = NULL,
     bibs <- if (inherits(entry, "bibentry")) {
         entry
     } else {
-        if (is.character(entry)) {
-            if (length(entry) == 0) {
+        if (length(entry) == 0) {
                 if (verbose)
                     message("Empty package list: nothing to be done.")
-                return(invisible())
-            }
+                return(invisible(""))
+        }
+        if (is.character(entry)) {
             ## save names of packages
             pkgs <- entry
             bibs <- sapply(pkgs, function(x) try(citation(x)), simplify = FALSE)

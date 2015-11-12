@@ -12,8 +12,8 @@
 
 \method{toLatex}{sessionInfo}(object, pkgs = NULL, locale = FALSE,
         base.pkgs = FALSE, other.pkgs = TRUE,
-        namespace.pks = FALSE, citations = TRUE,
-        citecommand = "\\\\citep", file = "Rpackages.bib",
+        namespace.pkgs = FALSE, citations = TRUE,
+        citecommand = "\\\\citep", file = NULL,
         append = FALSE, ...)
 }
 
@@ -38,7 +38,7 @@
     packages. If \code{pkgs} is specified, information on these
     packages is given instead of all attached packages.
   }
-  \item{namespace.pks}{
+  \item{namespace.pkgs}{
     logical (default = FALSE). Show information on packages whose
     namespaces are currently loaded but not attached.
   }
@@ -84,7 +84,7 @@ toLatex(txt)
 ############################################################
 ## session info for automatic inclusion in reports
 
-info <- toLatex(sessionInfo(), file = NULL)
+info <- toLatex(sessionInfo())
 info
 
 ## extract first part (the Latex part)
