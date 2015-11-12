@@ -185,7 +185,7 @@ write.bib <- function(entry = "base", file = NULL,
         if (is.character(entry)) {
             ## save names of packages
             pkgs <- entry
-            bibs <- sapply(pkgs, function(x) try(citation(x)), simplify = FALSE)
+            bibs <- sapply(pkgs, function(x) citation(x), simplify = FALSE)
             n.installed <- length(bibs)
             ok <- sapply(bibs, inherits, "bibentry")
             pkgs <- pkgs[ok]
