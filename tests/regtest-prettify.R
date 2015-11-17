@@ -6,46 +6,6 @@ require("papeR")
 set.seed(1234)
 
 ################################################################################
-## Test computation of CIs when data is part of the call
-## (i.e. not only a link is passed but really the data)
-model_fit <- function(my_data, model_class) {
-    do.call(model_class, list(y ~ x, data = my_data))
-}
-
-for (model_class in c("lm", "glm")) {  #, "coxph", "lme", "lmer")) {
-    cat(model_class, "\n")
-    x <- rnorm(100)
-    y <- rnorm(100, mean = 2 * x)
-    data <- data.frame(y = y, x = x)
-
-    ## fit model with data argument
-    mod <- do.call(model_class, list(y ~ x, data = data))
-    psm1 <- prettify(summary(mod))
-    rm(data)
-    psm1a <- prettify(summary(mod))
-
-    ## fit model without data argument
-    mod2 <- do.call(model_class, list(y ~ x))
-    psm2 <- prettify(summary(mod2))
-
-    ## fit model in different environment
-    mod3 <- model_fit(data.frame(y = y, x = x), model_class)
-    psm3 <- prettify(summary(mod3))
-
-    ## change data and compute summary
-    x <- rnorm(100)
-    y <- rnorm(100, mean = 2 * x)
-    data <- data.frame(y = y, x = x)
-
-    psm4 <- prettify(summary(mod))
-
-    stopifnot(all(all.equal(psm1, psm1a),
-                  all.equal(psm1, psm2),
-                  all.equal(psm1, psm3),
-                  all.equal(psm1, psm4)))
-}
-
-################################################################################
 ## Test computation of CIs when data is *not* part of the call
 rm(list = ls())
 model_fit2 <- function(my_data, model_class) {
