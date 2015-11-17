@@ -7,10 +7,10 @@ data <- data.frame(a = 1:10, b = 10:1, c = rep(1:2, 5))
 ## labels.default
 ############################################################
 
-# test_that("labels.default is dispatched correctly", {
-#     expect_equal(labels(matrix(1:10)),
-#                  list(as.character(1:10), as.character(1)))
-# })
+test_that("labels.default is dispatched correctly", {
+    expect_equal(labels(matrix(1:10)),
+                 list(as.character(1:10), as.character(1)))
+})
 
 ############################################################
 ## labels / labels.data.frame
@@ -101,26 +101,13 @@ test_that("label cleaning works", {
 test_that("conversion of labels works (1)", {
     spss.data <- convert.labels(spss.data)
     expect_true(is.ldf(spss.data))
-    # expect_error(labels(spss.data$x))
+    expect_equivalent(labels(spss.data$x), labels(spss.data, "x"))
     expect_equal(labels(spss.data, "x"), lbls[1])
 })
 
 test_that("conversion of labels works (2)", {
     spss.data <- as.ldf(spss.data)
     expect_true(is.ldf(spss.data))
-    # expect_error(labels(spss.data$x))
+    expect_equivalent(labels(spss.data$x), labels(spss.data, "x"))
     expect_equal(labels(spss.data, "x"), lbls[1])
 })
-
-############################################################
-## check_equality (needed?)
-############################################################
-
-
-## ## subsetting to single variables:
-## # labels(tmp[, 2])  ## not working as tmp[, 2] drops to vector
-## ## note that the label still exists but cannot be extracted
-## ## using labels.default()
-## str(tmp[, 2])
-##
-## labels(tmp[, 2, drop = FALSE]) ## prevent dropping

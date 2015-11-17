@@ -1,14 +1,6 @@
 ################################################################################
 ##  Author: Benjamin Hofner, benjamin.hofner@fau.de
 
-## overwrite standard generic
-labels <- function(object, ...)
-    UseMethod("labels")
-
-## per default fall back to standard generic
-labels.default <- function(object, ...)
-    UseMethod("base::labels")
-
 ################################################################################
 # Extract labels from data sets
 labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
@@ -50,6 +42,19 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
 }
 
 ################################################################################
+# Extract labels from labeled variables
+labels.lv <- function(object, abbreviate = FALSE, ...) {
+    RET <- get_labels(object)
+    ## should labels be abbreviated?
+    if (abbreviate) {
+        nms <- names(RET)
+        RET <- abbreviate(RET, ...)
+        names(RET) <- nms
+    }
+    RET
+}
+
+################################################################################
 # Sets labels
 "labels<-" <- function(data, which = NULL, value){
 
@@ -62,8 +67,10 @@ labels.data.frame <- function(object, which = NULL, abbreviate = FALSE, ...) {
             names(value) <- which
     }
 
-    for (i in which)
+    for (i in which) {
         attr(data[[i]], "variable.label") <- value[[i]]
+        class(data[[i]]) <- c("lv", class(data[[i]]))
+    }
 
     ## remove attribute of data set if it exists
     if (!is.null(attr(data, "variable.labels")))
