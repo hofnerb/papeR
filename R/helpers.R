@@ -121,7 +121,7 @@ refit_model <- function(cl, ENV = globalenv(), summary, .call = "prettify") {
     }
     mod <- eval(cl, envir = ENV)
     ## needed to really call summary from lme4 (< 1.0)
-    if (class(mod) == "mer") {
+    if (inherits(mod, "mer")) {
         # ae <- all.equal(lme4::summary(mod), summary)
         ae <- all.equal(summary(mod), summary)
     } else {
