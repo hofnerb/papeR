@@ -68,3 +68,12 @@ test_that("CIs can be hand specified", {
         expect_equal(ps[,3:4], res)
     }
 })
+
+test_that("OR are included", {
+    x <- rnorm(100)
+    y <- rbinom(100, 1, make.link("logit")$linkinv(x * 2))
+    data <- data.frame(x, y)
+    mod <- glm(y ~ x, data = data, family = binomial)
+    ps <- prettify(summary(mod))
+    expect_true("Odds Ratio" %in% names(ps))
+})
