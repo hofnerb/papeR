@@ -64,6 +64,9 @@ test_that("labels for subsets of the data can be set", {
     expect_equal(labels(data), c(a = "x", b = "y", c = "c", z = "z"))
     labels(data, which = "z") <- "new_label"
     expect_equal(labels(data, "z"), c(z = "new_label"))
+    ## subsets with [] operator
+    labels(data)[1] <- "A"
+    expect_equal(labels(data, "a"), c(a = "A"))
 })
 
 test_that("labels for subsets of a labeled data frame can be set", {
