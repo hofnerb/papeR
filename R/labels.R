@@ -115,23 +115,3 @@ convert.labels <- function(object)
 
 is.ldf <- function(object)
     !all(sapply(lapply(object, get_labels), is.null))
-
-check_equality <- function(x, y) {
-    ## exactly equal
-    if (all(x == y)) {
-        return(TRUE)
-    }
-    ## unequal length
-    if (length(x) != length(y)) {
-        return(FALSE)
-    }
-    ## equal but different order
-    anywhere <- rep(NA, length(x))
-    for (i in 1:length(x))
-        anywhere[i] <- x[i] %in% y
-    if (all(anywhere)) {
-        return(TRUE)
-    } else {
-        return(FALSE)
-    }
-}
