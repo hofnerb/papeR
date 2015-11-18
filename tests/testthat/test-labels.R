@@ -102,6 +102,8 @@ test_that("conversion of labels works (1)", {
     spss.data <- convert.labels(spss.data)
     expect_true(is.ldf(spss.data))
     expect_equivalent(labels(spss.data$x), labels(spss.data, "x"))
+    expect_equivalent(labels(spss.data$x, abbreviate = TRUE, minlength = 5),
+                      labels(spss.data, "x", abbreviate = TRUE, minlength = 5))
     expect_equal(labels(spss.data, "x"), lbls[1])
 })
 
@@ -109,5 +111,7 @@ test_that("conversion of labels works (2)", {
     spss.data <- as.ldf(spss.data)
     expect_true(is.ldf(spss.data))
     expect_equivalent(labels(spss.data$x), labels(spss.data, "x"))
+    expect_equivalent(labels(spss.data$x, abbreviate = TRUE, minlength = 5),
+                      labels(spss.data, "x", abbreviate = TRUE, minlength = 5))
     expect_equal(labels(spss.data, "x"), lbls[1])
 })
