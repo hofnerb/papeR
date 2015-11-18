@@ -1,5 +1,5 @@
 library("papeR")
-context("label functions")
+context("prettify functions")
 
 set.seed(1234)
 
@@ -14,7 +14,6 @@ test_that("computation of CIs when data is part of the call", {
     }
 
     for (model_class in c("lm", "glm")) {
-        cat(model_class, "\n")
         x <- rnorm(100)
         y <- rnorm(100, mean = 2 * x)
         data <- data.frame(y = y, x = x)
@@ -134,10 +133,8 @@ test_that("lm interface works", {
     expect_equivalent(res[[1]], res[[3]])
     expect_equivalent(res[[1]], res[[4]])
     ## differences in CIs as different data is used
-    expect_match(all.equal(res[[1]], res[[5]], check.attributes = FALSE)[1],
-                 "CI (lower) .* difference: .*")
-    expect_match(all.equal(res[[1]], res[[5]], check.attributes = FALSE)[2],
-                 "CI (upper) .* difference: .*")
+    expect_match(all.equal(res[[1]], res[[5]], check.attributes = FALSE)[1], "lower")
+    expect_match(all.equal(res[[1]], res[[5]], check.attributes = FALSE)[2], "upper")
     ## CI dropped. Other values equal
     expect_equivalent(res[[1]][, -(3:4)], res[[2]])
 })
@@ -208,7 +205,6 @@ test_that("CIs can be hand specified", {
     }
 
     for (model_class in c("lm", "glm")) {
-        cat(model_class, "\n")
         x <- rnorm(100)
         y <- rnorm(100, mean = 2 * x)
         data <- data.frame(y = y, x = x)
