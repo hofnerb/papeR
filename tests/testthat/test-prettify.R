@@ -236,7 +236,7 @@ fit_model <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
     return(list(data = data, model = mod))
 }
 
-if (require("nlme") && require("survival") && require("lme4") && packageDescription("lme4")$Version >= 1) {
+if (require("nlme") && require("lme4") && packageDescription("lme4")$Version >= 1) {
     test_that("CIs can be hand specified", {
         for (model_class in c("lm", "glm", "lme", "lmer")) {
             ## fit model
@@ -247,16 +247,67 @@ if (require("nlme") && require("survival") && require("lme4") && packageDescript
             ps <- prettify(summary(mod), confint = CI)
             expect_equivalent(as.matrix(ps[,3:4]), CI, info = model_class)
         }
+    })
+}
 
-        RES <- fit_model("coxph")
-        mod <- RES$mod
-        data <- RES$data
-        CI <- matrix(c(1, 2), ncol = 2)
-        ps <- prettify(summary(mod), confint = CI)
-        expect_equivalent(as.matrix(ps[,4:5]), exp(CI), info = "coxph")
+################################################################################
+## Test anova
+################################################################################
+
+if (require("nlme") && require("survival") && require("lme4") && packageDescription("lme4")$Version >= 1) {
+    test_that("prettify.anova works", {
+        for (model_class in c("lm", "glm", "lme", "lmer", "coxph")) {
+            ## fit model
+            RES <- fit_model(model_class)
+            mod <- RES$mod
+            data <- RES$data
+            if (model_class == "lm") {
+                ps_anova <- prettify(anova(mod))
+                nc <- ncol(ps_anova)
+                expect_match(ps_anova[, nc - 1], "<0.001")
+                expect_match(as.character(ps_anova[, nc]), "\\*\\*\\*")
+            }
+            if (require("car")) {
+                ps_anova <- prettify(Anova(mod))
+                nc <- ncol(ps_anova)
+                if (model_class %in% c("lm", "glm", "lmer")) {
+                    expect_match(ps_anova[, nc - 1],
+                                 "<0.001", info = model_class)
+                    expect_match(as.character(ps_anova[, nc]),
+                                 "\\*\\*\\*", info = model_class)
+                }
+                if (model_class == "lme") {
+                    expect_match(ps_anova[2, nc - 1],
+                                 "<0.001", info = model_class)
+                    expect_match(as.character(ps_anova[2, nc]),
+                                 "\\*\\*\\*", info = model_class)
+                }
+            }
+        }
     })
 }
 
 ################################################################################
 ## Test HR
 ################################################################################
+
+if (require("survival")) {
+    test_that("survival works", {
+        RES <- fit_model("coxph")
+        mod <- RES$mod
+        data <- RES$data
+        CI <- matrix(c(1, 2), ncol = 2)
+
+        ps1 <- prettify(summary(mod), HR = TRUE)
+        ps2 <- prettify(summary(mod), HR = FALSE)
+        ps3 <- prettify(summary(mod), confint = CI, HR = TRUE)
+        ps4 <- prettify(summary(mod), confint = CI, HR = FALSE)
+
+        expect_equivalent(ps1[,2], coef(mod))
+        expect_equivalent(ps1[,3], exp(coef(mod)))
+        expect_equivalent(ps2[,2], coef(mod))
+        expect_equivalent(ps1[,4:5], exp(ps2[, 3:4]))
+        expect_equivalent(as.matrix(ps3[,4:5]), exp(CI))
+        expect_equivalent(as.matrix(ps4[,3:4]), CI)
+    })
+}
