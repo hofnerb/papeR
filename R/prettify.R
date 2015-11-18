@@ -292,6 +292,7 @@ prettify.summary.merMod <- function(object,
              scientific = scientific, signif.stars = signif.stars, ...)
 }
 
+## nocov start (exclude this function from test coverage)
 ## function for lme4 version < 1.0 only
 prettify.summary.mer <- function(object,
                      labels = NULL, sep = ": ", extra.column = FALSE,
@@ -341,6 +342,7 @@ prettify.summary.mer <- function(object,
              smallest.pval = smallest.pval, digits = digits,
              scientific = scientific, signif.stars = signif.stars, ...)
 }
+## nocov end
 
 prettify.anova <- function(object, labels = NULL,
                            smallest.pval = 0.001, digits = NULL, scientific = FALSE,

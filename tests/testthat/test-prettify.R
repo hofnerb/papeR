@@ -236,7 +236,7 @@ fit_model <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
     return(list(data = data, model = mod))
 }
 
-if (require("nlme") && require("survival") && require("lme4")) {
+if (require("nlme") && require("survival") && require("lme4") && packageDescription("lme4")$Version >= 1) {
     test_that("CIs can be hand specified", {
         for (model_class in c("lm", "glm", "lme", "lmer")) {
             ## fit model
