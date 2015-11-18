@@ -193,32 +193,6 @@ if (require("lme4")) {
     })
 }
 
-
-
-################################################################################
-## Test specification of CIs
-################################################################################
-
-test_that("CIs can be hand specified", {
-    model_fit <- function(my_data, model_class) {
-        do.call(model_class, list(y ~ x, data = my_data))
-    }
-
-    for (model_class in c("lm", "glm")) {
-        x <- rnorm(100)
-        y <- rnorm(100, mean = 2 * x)
-        data <- data.frame(y = y, x = x)
-
-        ## fit model
-        mod <- do.call(model_class, list(y ~ x, data = data))
-        ps <- prettify(summary(mod), confint = matrix(c(1, 2, 3, 4), ncol = 2))
-
-        res <- data.frame(1:2, 3:4)
-        colnames(res) <- c("CI (lower)", "CI (upper)")
-        expect_equal(ps[,3:4], res)
-    }
-})
-
 ################################################################################
 ## Test OR
 ################################################################################
@@ -231,3 +205,58 @@ test_that("OR are included", {
     ps <- prettify(summary(mod))
     expect_true("Odds Ratio" %in% names(ps))
 })
+
+################################################################################
+## Test specification of CIs
+################################################################################
+
+fit_model <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
+    x <- rnorm(100)
+    y <- rnorm(100, mean = 2 * x)
+    data <- data.frame(y = y, x = x)
+
+    if (model_class %in% c("lme", "lmer")) {
+        group <- sample(1:2, 100, replace = TRUE)
+        data$group <- group
+    }
+
+    if (model_class %in% "coxph") {
+        event <- as.logical(sample(0:1, 100, replace = TRUE))
+        data$event <- event
+        data$y <- exp(y)
+    }
+
+    ## fit model with data argument
+    mod <- switch(model_class,
+                  lm = lm(y ~ x, data = data),
+                  glm = glm(y ~ x, data = data),
+                  coxph = coxph(Surv(y, event) ~ x, data = data),
+                  lme = lme(y ~ x, random = ~ 1 | group, data = data),
+                  lmer = lmer(y ~ x + (1 | group), data = data))
+    return(list(data = data, model = mod))
+}
+
+if (require("nlme") && require("survival") && require("lme4")) {
+    test_that("CIs can be hand specified", {
+        for (model_class in c("lm", "glm", "lme", "lmer")) {
+            ## fit model
+            RES <- fit_model(model_class)
+            mod <- RES$mod
+            data <- RES$data
+            CI <- matrix(c(1, 2, 3, 4), ncol = 2)
+            ps <- prettify(summary(mod), confint = CI)
+            expect_equivalent(as.matrix(ps[,3:4]), CI, info = model_class)
+        }
+
+        RES <- fit_model("coxph")
+        mod <- RES$mod
+        data <- RES$data
+        CI <- matrix(c(1, 2), ncol = 2)
+        ps <- prettify(summary(mod), confint = CI)
+        expect_equivalent(as.matrix(ps[,4:5]), exp(CI), info = "coxph")
+    })
+}
+
+################################################################################
+## Test HR
+################################################################################

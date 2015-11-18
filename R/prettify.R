@@ -128,16 +128,19 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
     if (!HR)
         res$"exp(coef)" <- NULL
 
+    if (is.null(labels) || (is.logical(confint) && confint)) {
+        mod <- refit_model(cl = object$call, ENV = env,
+                           summary = object, .call = .call)
+    }
+    if (is.null(labels) && is.logical(mod))
+        stop("Model can't be refitted and no labels are specified. ",
+             "Please specify labels.")
+
+
     ## compute confidence interval or extract it from confint
-    if (is.logical(confint) || is.null(labels)) {
-        if (is.null(labels) || confint)
-            mod <- refit_model(cl = object$call, ENV = env,
-                               summary = object, .call = .call)
+    if (is.logical(confint)) {
         if (is.logical(mod)) {
             confint <- mod
-            if (is.null(labels))
-                stop("Model can't be refitted and no labels are specified. ",
-                     "Please specify labels.")
         } else {
             CI <- confint(mod, level = level)
         }
@@ -243,16 +246,18 @@ prettify.summary.merMod <- function(object,
     .call <- match.call()
     res <- as.data.frame(coefficients(object))
 
+    if (is.null(labels) || (is.logical(confint) && confint)) {
+        mod <- refit_model(cl = object$call, ENV = env,
+                           summary = object, .call = .call)
+    }
+    if (is.null(labels) && is.logical(mod))
+        stop("Model can't be refitted and no labels are specified. ",
+             "Please specify labels.")
+
     ## compute confidence interval or extract it from confint
-    if (is.logical(confint) || is.null(labels)) {
-        if (is.null(labels) ||confint)
-            mod <- refit_model(cl = object$call, ENV = env,
-                               summary = object, .call = .call)
+    if (is.logical(confint)) {
         if (is.logical(mod)) {
             confint <- mod
-            if (is.null(labels))
-                stop("Model can't be refitted and no labels are specified. ",
-                     "Please specify labels.")
         } else {
             CI <- confint(mod, level = level, method = method, nsim = B,
                           ...)[rownames(res), ]
