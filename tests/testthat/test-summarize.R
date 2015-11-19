@@ -49,35 +49,42 @@ test_that("variable labels work", {
         data <- Orthodont
         labels(data) <- c("Distance (mm)", "Age (yr)", "ID", "Sex")
         which <- if (type  == "numeric") { !factor } else { factor }
+
+        ## summary with data set labels
         summary <- summarize(data, type = type, variable.labels = TRUE)
-        expect_equivalent(summary[summary[,1] != "",1],
+        expect_equivalent(summary[summary[, 1] != "", 1],
+                          labels(data)[which],
+                          info = type)
+
+        ## summary with user specified labels
+        usr_labels <- summarize(data, type = type,
+                                variable.labels = c("a", "b", "c", "d"))
+        expect_equivalent(usr_labels[usr_labels[, 1] != "", 1],
+                          c("a", "b", "c", "d")[which],
+                          info = type)
+
+        ## grouped summary with data set labels
+        which[4] <- FALSE
+        grouped <- summarize(data, type = type, group = "Sex",
+                             variable.labels = TRUE)
+        expect_equivalent(grouped[grouped[, 1] != "", 1],
                           labels(data)[which],
                           info = type)
     }
 })
 
-## ADD TEST FOR USER SPECIFIED LABELS
-
-
 test_that("grouped summaries work", {
-    for (type in c("numeric", "factor")) {
-        expect_that(summarize(Orthodont, type = type, group = "Sex"),
-                    not(throws_error()), info = type)
-
-        #which <- if (type  == "numeric") { !factor } else { factor }
-        #expect_that(summarize(Orthodont, type = type, variable.labels = TRUE,
-        #                      group = "Sex"), not(throws_error()), info = type)
-        #expect_equivalent(summary[summary[,1] != "",1],
-        #                  labels(data)[which],
-        #                  info = type)
-   }
+    ## grouped summaries for numerics
+    numeric <- summarize(Orthodont, type = "numeric", group = "Sex")
+    expect_equivalent(numeric[, 2], rep(levels(Orthodont$Sex), 2))
+    expect_equivalent(numeric$p.value[c(1,3)], c("<0.001", "1.000"))
+    ## grouped summaries for factors
+    factor <- summarize(Orthodont, type = "factor", group = "Sex")
+    expect_equivalent(factor[, 2], levels(Orthodont$Subject))
+    expect_equivalent(ncol(factor), 10)
+    expect_equivalent(factor$p.value[1], "< 0.001")
 })
 
 ## FIX GROUP_LABELS
 
 }
-
-
-## summarize(Orthodont, type = "numeric", group = "Sex")
-## debugonce(summarize_factor)
-## summarize(Orthodont, type = "factor", group = "Sex")
