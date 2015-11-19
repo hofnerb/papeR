@@ -11,7 +11,7 @@
 \usage{
 summarize_factor(data,
     variables = names(data), variable.labels = NULL,
-    group = NULL, test = TRUE, colnames = NULL,
+    group = NULL, test = !is.null(group), colnames = NULL,
     digits = 3, digits.pval = 3, smallest.pval = 0.001,
     sep = TRUE, sanitize = TRUE, drop = TRUE,
     show.NAs = any(is.na(data[, variables])),

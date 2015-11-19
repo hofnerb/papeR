@@ -11,7 +11,7 @@
 \usage{
 summarize_numeric(data,
     variables = names(data), variable.labels = NULL,
-    group = NULL, test = TRUE, colnames = NULL,
+    group = NULL, test = !is.null(group), colnames = NULL,
     digits = 2, digits.pval = 3, smallest.pval = 0.001,
     sep = !is.null(group), sanitize = TRUE,
     drop = TRUE, show.NAs = any(is.na(data[, variables])),

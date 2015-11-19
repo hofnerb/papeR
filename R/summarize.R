@@ -3,9 +3,9 @@
 
 ## define summarize
 summarize <- summarise <- function(data, type = c("numeric", "factor"),
-    variables = names(data), variable.labels = NULL, group = NULL, test = TRUE,
-    colnames = NULL, digits = NULL, digits.pval = 3, smallest.pval = 0.001,
-    sep = NULL, sanitize = TRUE, drop = TRUE,
+    variables = names(data), variable.labels = NULL, group = NULL,
+    test = !is.null(group), colnames = NULL, digits = NULL, digits.pval = 3,
+    smallest.pval = 0.001, sep = NULL, sanitize = TRUE, drop = TRUE,
     show.NAs = any(is.na(data[, variables])), ...) {
 
     type <- match.arg(type)
@@ -34,6 +34,7 @@ latex.table.cont <- function(...,
                              floating = FALSE, center = TRUE) {
 
     tab <- summarize_numeric(...)
+    table <- match.arg(table)
     print(xtable(tab, caption = caption, label = label, align = align),
           floating = floating, latex.environments = ifelse(center, "center", c()),
           tabular.environment = table)
@@ -47,6 +48,7 @@ latex.table.fac <- function(...,
                             floating = FALSE, center = TRUE) {
 
     tab <- summarize_factor(...)
+    table <- match.arg(table)
     print(xtable(tab, caption = caption, label = label, align = align),
           floating = floating, latex.environments = ifelse(center, "center", c()),
           tabular.environment = table)
@@ -60,8 +62,9 @@ latex.table.fac <- function(...,
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 summarize_numeric <- function(data, variables = names(data),
-                              variable.labels = NULL, group = NULL, test = TRUE,
-                              colnames = NULL, digits = 2, digits.pval = 3,
+                              variable.labels = NULL, group = NULL,
+                              test = !is.null(group), colnames = NULL,
+                              digits = 2, digits.pval = 3,
                               smallest.pval = 0.001, sep = !is.null(group),
                               sanitize = TRUE, drop = TRUE,
                               show.NAs = any(is.na(data[, variables])),
@@ -135,7 +138,7 @@ summarize_numeric <- function(data, variables = names(data),
 
     myData <- data
     ## compute statistics
-    for (i in 1:nrow(sums)){
+    for (i in 1:nrow(sums)) {
         if (!is.null(group)) {
             myData <- data[group_var == sums$group[i], ]
         }
@@ -296,7 +299,8 @@ prettify.summarize.numeric <- function(x,
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
 summarize_factor <- function(data, variables = names(data),
-                             variable.labels = NULL, group = NULL, test = TRUE,
+                             variable.labels = NULL, group = NULL,
+                             test = !is.null(group),
                              colnames = NULL, digits = 3, digits.pval = 3,
                              smallest.pval = 0.001, sep = TRUE, sanitize = TRUE,
                              drop = TRUE, show.NAs = any(is.na(data[, variables])),
@@ -317,6 +321,18 @@ summarize_factor <- function(data, variables = names(data),
     ## if non-factors are dropped:
     if (any(!fac))
         message("Non-factors are dropped from the summary")
+
+    if (is.null(variable.labels)) {
+        variable.labels <- variables
+    } else {
+        if (is.logical(variable.labels) && variable.labels) {
+            variable.labels <- labels(data, which = variables)
+        } else {
+            if (length(variables) != length(variable.labels))
+                stop(sQuote("variables"), " and ", sQuote("variable.labels"),
+                     " must have the same length")
+        }
+    }
 
     ## subset variables to non-factors only
     variables <- variables[fac]
@@ -356,8 +372,11 @@ summarize_factor <- function(data, variables = names(data),
             cl[["data"]] <- dat
             ## test is not needed in single tables
             cl[["test"]] <- FALSE
+            ## set variables
+            cl[["variables"]] <- variables
+            cl[["prettify"]] <- FALSE
             if (!is.null(variable.labels))
-                cl[["variable.labels"]] <- paste(variable.labels, level, sep = "_")
+                cl[["variable.labels"]] <- variable.labels
             ## re-evaluate modified call
             eval(cl)
         }
@@ -365,7 +384,7 @@ summarize_factor <- function(data, variables = names(data),
                       data = data, grp_var = group_var)
 
         res[-1] <- lapply(res[-1], function(x) x[, -c(1:2)])
-        tab <- do.call("cbind", res)
+        stats <- do.call("cbind", res)
 
         if (!is.character(test) && test)
             test <- "fisher.test"
@@ -373,10 +392,10 @@ summarize_factor <- function(data, variables = names(data),
         if (all(is.character(test))) {
             if (length(test) == 1)
                 test <- rep(test, length(variables))
-            testdat <- as.matrix(tab[, grep("N", colnames(tab))])
+            testdat <- as.matrix(stats[, grep("N", colnames(stats))])
             pval <- rep(NA, length(variables))
             for (i in 1:length(variables)) {
-                test_tab <- testdat[tab$variable == unique(tab$variable)[i] & tab$Level != na.lab, ]
+                test_tab <- testdat[stats$variable == unique(stats$variable)[i] & stats$Level != na.lab, ]
                 pval[i] <- eval(call(test[i], test_tab))$p.value
             }
             ## make sure rounding is to digits.pval digits
@@ -384,33 +403,24 @@ summarize_factor <- function(data, variables = names(data),
                                 eps = smallest.pval)
             ## make sure not to drop trailing zeros
             pval2 <- suppressWarnings(as.numeric(pval))
-            pval[is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
-                                          pval2[is.na(pval2)])
-            tab$blank_p <- ""
-            tab$p.value[!duplicated(tab$variable)] <- pval
+            pval[!is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
+                                           pval2[!is.na(pval2)])
+            stats$blank_p <- ""
+            stats$p.value[!duplicated(stats$variable)] <- pval
         }
 
-        attr(tab, "latex.table.options") <- attr(res[[1]], "latex.table.options")
-        attr(tab, "group_labels") <- paste(group, levels(group_var), sep = ": ")
-        class(tab) <- c("summarize.factor", "data.frame")
-        return(tab)
+        stats <- set_options(stats, sep = get_option(res[[1]], "sep"),
+                             sanitize = get_option(res[[1]], "sanitize"),
+                             colnames = get_option(res[[1]], "colnames"),
+                             percent = get_option(res[[1]], "percent"),
+                             group_labels = paste(group, levels(group_var), sep = ": "),
+                             class = "summarize.factor")
+        return(prettify(stats))
     }
 
     ## test not sensible
     if (test || is.character(test))
         warning(sQuote("test"), " is ignored if no ", sQuote("group"), " is given")
-
-    if (is.null(variable.labels)) {
-        variable.labels <- variables
-    } else {
-        if (is.logical(variable.labels) && variable.labels) {
-            variable.labels <- labels(data, which = variables)
-        } else {
-            if (length(variables) != length(variable.labels))
-                stop(sQuote("variables"), " and ", sQuote("variable.labels"),
-                     " must have the same length")
-        }
-    }
 
     ## repeate variables to match no. of levels:
     n.levels <- mySapply(data[, variables], function(x) length(levels(x)))
@@ -454,6 +464,11 @@ summarize_factor <- function(data, variables = names(data),
     }
     stats <- set_options(stats, sep = sep, sanitize = sanitize, colnames = colnames,
                          percent = percent, class = "summarize.factor")
+
+    dots <- list(...)
+    if (length(dots) > 0 && "prettify" %in% names(dots) && !isTRUE(dots$prettify))
+        return(stats)
+
     prettify(stats)
 }
 
@@ -555,7 +570,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
     tmp <- ifelse(is.null(get_option(x, "header")),
                   "",  get_option(x, "header"))
     header <- ifelse(is.null(header), tmp, header)
-    
+
     ## sanitize object?
     if (is.logical(sanitize.text.function)) {
         if (!sanitize.text.function) {
