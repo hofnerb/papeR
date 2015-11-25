@@ -11,7 +11,7 @@
 }
 \usage{
 summarize(data, type = c("numeric", "factor"),
-    variables = names(data), variable.labels = NULL,
+    variables = names(data), variable.labels = labels, labels = NULL,
     group = NULL, test = !is.null(group), colnames = NULL,
     digits = NULL, digits.pval = 3, smallest.pval = 0.001,
     sep = NULL, sanitize = TRUE, drop = TRUE,
@@ -31,10 +31,11 @@ summarize(data, type = c("numeric", "factor"),
     table. Per default, all numeric or factor variables of \code{data}
     are used, depending on \code{type}.
   }
-  \item{variable.labels}{
+  \item{variable.labels, labels}{
     labels for the variables. If \code{variable.labels = NULL} (default)
     \code{variables} is used as label. If \code{variable.labels = TRUE},
-    \code{labels(data, which = variables)} is used as labels.
+    \code{labels(data, which = variables)} is used as labels. Instead of
+    \code{variable.labels} one can also use \code{labels}.
   }
   \item{group}{
     character specifying a grouping factor. Per default no grouping is

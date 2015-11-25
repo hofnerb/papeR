@@ -10,7 +10,7 @@
 }
 \usage{
 summarize_numeric(data,
-    variables = names(data), variable.labels = NULL,
+    variables = names(data), variable.labels = labels, labels = NULL,
     group = NULL, test = !is.null(group), colnames = NULL,
     digits = 2, digits.pval = 3, smallest.pval = 0.001,
     sep = !is.null(group), sanitize = TRUE,
@@ -28,7 +28,7 @@ summarize_numeric(data,
     variables that should be included in the table.
     For details see \code{\link{summarize}}.
   }
-  \item{variable.labels}{
+  \item{variable.labels, labels}{
     labels for the variables.
     For details see \code{\link{summarize}}.
   }

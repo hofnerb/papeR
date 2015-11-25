@@ -3,7 +3,7 @@
 
 ## define summarize
 summarize <- summarise <- function(data, type = c("numeric", "factor"),
-    variables = names(data), variable.labels = NULL, group = NULL,
+    variables = names(data), variable.labels = labels, labels = NULL, group = NULL,
     test = !is.null(group), colnames = NULL, digits = NULL, digits.pval = 3,
     smallest.pval = 0.001, sep = NULL, sanitize = TRUE, drop = TRUE,
     show.NAs = any(is.na(data[, variables])), ...) {
@@ -62,7 +62,7 @@ latex.table.fac <- function(...,
 ################################################################################
 # LaTeX Tables with Descriptves for Continuous Variables
 summarize_numeric <- function(data, variables = names(data),
-                              variable.labels = NULL, group = NULL,
+                              variable.labels = labels, labels = NULL, group = NULL,
                               test = !is.null(group), colnames = NULL,
                               digits = 2, digits.pval = 3,
                               smallest.pval = 0.001, sep = !is.null(group),
@@ -299,7 +299,7 @@ prettify.summarize.numeric <- function(x,
 ################################################################################
 # LaTeX Tables with Descriptves for Factor Variables
 summarize_factor <- function(data, variables = names(data),
-                             variable.labels = NULL, group = NULL,
+                             variable.labels = labels, labels = NULL, group = NULL,
                              test = !is.null(group),
                              colnames = NULL, digits = 3, digits.pval = 3,
                              smallest.pval = 0.001, sep = TRUE, sanitize = TRUE,
@@ -571,6 +571,12 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                   "",  get_option(x, "header"))
     header <- ifelse(is.null(header), tmp, header)
 
+    ## add endhead for longtables
+    endhead <- ""
+    if ("tabular.environment" %in% names(list(...)) &&
+        list(...)$tabular.environment == "longtable")
+        endhead <- "\\endhead\n"
+
     ## sanitize object?
     if (is.logical(sanitize.text.function)) {
         if (!sanitize.text.function) {
@@ -586,10 +592,12 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
         } else {
             pos.rules <- 0
         }
+        ## add endhead to first rule
+        midrules <- rep(rules, length(pos.rules))
+        midrules[1] <- paste(midrules[1], endhead)
         add.to.row <- list(pos = as.list(c(-1, -1, pos.rules, nrow(x))),
                            command = c("\\toprule\n", header,
-                                       rep(rules, length(pos.rules)),
-                                       "\\bottomrule\n"))
+                                       midrules, "\\bottomrule\n"))
     }
 
     print.xtable(x,
