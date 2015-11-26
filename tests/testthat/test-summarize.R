@@ -87,4 +87,32 @@ test_that("grouped summaries work", {
 
 ## FIX GROUP_LABELS
 
+test_that("print.summary works", {
+    expect_output(print(summarize(Orthodont, type = "numeric")),
+                  paste0("     N    Mean   SD    Min Q1 Median Q3  Max\n",
+                         "1 distance 108   24.02 2.93   16.5 22  23.75 26 31.5\n",
+                         "2      age 108   11.00 2.25    8.0  9  11.00 13 14.0"))
+    expect_output(print(summarize(Orthodont, group = "Sex", type = "numeric")),
+                  paste0("              Sex    N    Mean   SD    Min Q1 Median    Q3  Max   p.value\n",
+                         "1 distance   Male   64   24.97 2.90   17.0 23  24.75 26.50 31.5    <0.001\n",
+                         "2          Female   44   22.65 2.40   16.5 21  22.75 24.25 28.0          \n",
+                         "3      age   Male   64   11.00 2.25    8.0  9  11.00 13.00 14.0     1.000\n",
+                         "4          Female   44   11.00 2.26    8.0  9  11.00 13.00 14.0          "))
+    expect_output(print(summarize(Orthodont, type = "factor")),
+                  paste0("            Level    N    %\n",
+                         "1  Subject    M16    4  3.7\n",
+                         "2             M05    4  3.7\n",
+                         "3             M02    4  3.7\n",
+                         ".*",
+                         "28     Sex   Male   64 59.3\n",
+                         "29         Female   44 40.7"))
+    expect_output(print(summarize(Orthodont, group = "Sex", type = "factor")),
+                  paste0("                   Sex: Male       Sex: Female              \n",
+                         "           Level           N   %             N   %   p.value\n",
+                         "1  Subject   M16           4 6.2             0 0.0   < 0.001\n",
+                         "2            M05           4 6.2             0 0.0          \n",
+                         ".*"))
+
+})
+
 }

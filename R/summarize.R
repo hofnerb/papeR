@@ -181,7 +181,9 @@ summarize_numeric <- function(data, variables = names(data),
             pval2 <- suppressWarnings(as.numeric(pval))
             pval[!is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
                                            pval2[!is.na(pval2)])
+            pval[is.na(pval)] <- ""
             sums$blank_p <- ""
+            sums$p.value <- ""
             sums$p.value[!duplicated(sums$var)] <- pval
         }
     }
@@ -406,6 +408,7 @@ summarize_factor <- function(data, variables = names(data),
             pval[!is.na(pval2)] <- sprintf(paste0("%0.", digits.pval, "f"),
                                            pval2[!is.na(pval2)])
             stats$blank_p <- ""
+            stats$p.value <- ""
             stats$p.value[!duplicated(stats$variable)] <- pval
         }
 
@@ -517,8 +520,8 @@ prettify.summarize.factor <- function(x,
 
         header <- ""
         ## if more than one blank add group label
-        if (!is.null(attr(tab, "group_labels"))) {
-            lab <- attr(tab, "group_labels")
+        if (!is.null(get_option(x, "group_labels"))) {
+            lab <- get_option(x, "group_labels")
             ## if p.values exist last multicolumn
             ## should not include this column
             if (colNames[length(colNames)] == "p.value")
@@ -540,7 +543,8 @@ prettify.summarize.factor <- function(x,
     set_options(tab, colnames = colNames,
                 rules = rules, align = align,
                 sep = sep, sanitize = sanitize,
-                header = header, class = "summary")
+                header = header, group_labels = get_option(x, "group_labels"),
+                class = "summary")
 }
 
 xtable.summary <- function(x, caption = NULL, label = NULL, align = NULL,
@@ -608,6 +612,22 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                  add.to.row = add.to.row,
                  sanitize.text.function = sanitize.text.function,
                  ...)
+}
+
+
+## Add print methods for summarize functions
+print.summary <- function(x, ...) {
+    if (!is.null(get_option(x, "group_labels"))) {
+        cn <- colnames(x)
+        lab <- get_option(x, "group_labels")
+        x <- rbind(cn, data.frame(x))
+        colnames(x) <- rep(" ", ncol(x))
+        colnames(x)[cn == "N"] <- lab
+        rownames(x) <- c(" ", 1:(nrow(x)-1))
+    } else {
+        rownames(x) <- NULL
+    }
+    NextMethod("print")
 }
 
 ## can we use xtable to produce this output?
