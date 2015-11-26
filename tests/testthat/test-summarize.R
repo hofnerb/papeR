@@ -115,4 +115,57 @@ test_that("print.summary works", {
 
 })
 
+test_that("caption works", {
+    ## via call arguments
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test"),
+                        floating = TRUE),
+                  ".*\\caption\\{Test\\}.*")
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test",
+                               label= "tab:Test"),
+                        floating = TRUE),
+                  ".*\\caption\\{Test\\}.*\\label\\{tab:Test\\}")
+
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test"),
+                        tabular.environment = "longtable", floating = TRUE),
+                  ".*\\caption\\{Test\\}.*")
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test",
+                               label= "tab:Test"),
+                        tabular.environment = "longtable", floating = TRUE),
+                  ".*\\caption\\{Test\\}.*\\label\\{tab:Test\\}")
+
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test"),
+                        tabular.environment = "longtable"),
+                  ".*\\caption\\{Test\\}.*")
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test",
+                               label= "tab:Test"),
+                        tabular.environment = "longtable"),
+                  ".*\\caption\\{Test\\}.*\\label\\{tab:Test\\}")
+
+    ## requires capt-of
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test")),
+                  paste0(".*begin\\{minipage\\}\\{.*linewidth\\}\n",
+                         ".*captionof\\{table\\}\\{Test\\}\n",
+                         ".*",
+                         "end\\{minipage\\}"))
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test",
+                               label= "tab:Test")),
+                  paste0(".*begin\\{minipage\\}\\{.*linewidth\\}\n",
+                         ".*captionof\\{table\\}\\{Test\\}\n",
+                         ".*label\\{tab:Test\\}\n",
+                         ".*",
+                         "end\\{minipage\\}"))
+    ## additionally test if this also works via options
+})
+
+test_that("endhead is included if necessary", {
+    ## via call arguments
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric")),
+                        tabular.environment = "longtable"),
+                  ".*cmidrule\\{7-11\\}\n.*endhead\ndistance.*")
+    ## via options
+    options(xtable.tabular.environment = "longtable")
+    expect_output(print(xtable(summarize(Orthodont, type = "numeric"))),
+                  ".*cmidrule\\{7-11\\}\n.*endhead\ndistance.*")
+})
+
 }

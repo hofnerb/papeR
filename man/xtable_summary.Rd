@@ -21,6 +21,8 @@
       include.rownames = getOption("xtable.include.rownames", FALSE),
       booktabs = getOption("xtable.booktabs", TRUE),
       sanitize.text.function = get_option(x, "sanitize"),
+      tabular.environment = getOption("xtable.tabular.environment", "tabular"),
+      floating = getOption("xtable.floating", FALSE),
       ...)
 
 }
@@ -100,6 +102,18 @@
     the output format. Per default the function \code{\link{toLatex}} is
     used to sanitize the text. For more options see
     \code{\link[xtable]{print.xtable}}.
+  }
+  \item{tabular.environment}{
+    character string. Per default \code{"tabular"} is used. For long
+    tables that span over more than one page, one can use
+    \code{"longtable"}. For more options see
+    \code{\link[xtable]{print.xtable}}.
+  }
+  \item{floating}{
+    logical. Determine if the table is printed in a floating
+    environment. Note that the standard default of
+    \code{\link[xtable]{print.xtable}} is \code{TRUE}. See there for
+    details.
   }
   \item{...}{
     additional arguments passed to \code{\link[xtable]{xtable}} or

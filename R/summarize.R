@@ -567,6 +567,8 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                                  include.rownames = getOption("xtable.include.rownames", FALSE),
                                  booktabs = getOption("xtable.booktabs", TRUE),
                                  sanitize.text.function = get_option(x, "sanitize"),
+                                 tabular.environment = getOption("xtable.tabular.environment", "tabular"),
+                                 floating = getOption("xtable.floating", FALSE),
                                  ...) {
 
     ## extract rules and headers from object
@@ -577,9 +579,24 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
 
     ## add endhead for longtables
     endhead <- ""
-    if ("tabular.environment" %in% names(list(...)) &&
-        list(...)$tabular.environment == "longtable")
+    if (tabular.environment == "longtable")
         endhead <- "\\endhead\n"
+
+    if (booktabs)
+        cat("%% Output requires \\usepackage{booktabs}.\n")
+    if (tabular.environment == "longtable")
+        cat("%% Output requires \\usepackage{longtable}.\n")
+
+    ## If caption is given and we don't use a floating environment,
+    ## we need to make use of the LaTeX package capt-of
+    if (!is.null(caption(x)) && !floating &&
+         tabular.environment != "longtable") {
+        cat("%% Output requires \\usepackage{capt-of}.\n")
+        cat("\\begin{minipage}{\\linewidth}\n",
+            "  \\captionof{table}{", caption(x), "}\n",
+            ifelse(!is.null(label(x)),
+                   paste0("  \\label{", label(x), "}\n"), ""), sep = "")
+    }
 
     ## sanitize object?
     if (is.logical(sanitize.text.function)) {
@@ -611,7 +628,13 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                  booktabs = booktabs,
                  add.to.row = add.to.row,
                  sanitize.text.function = sanitize.text.function,
+                 tabular.environment = tabular.environment,
+                 floating = floating,
                  ...)
+
+    if (!is.null(caption(x)) && !floating &&
+         tabular.environment != "longtable")
+        cat("\\end{minipage}\n")
 }
 
 
