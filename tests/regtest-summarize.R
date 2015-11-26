@@ -18,8 +18,6 @@ if (require("nlme")) {
     summarize(Orthodont, quantiles = FALSE, type = "numeric")
     summarize(Orthodont, quantiles = FALSE, count = FALSE, type = "numeric")
     (tmp <- summarize(Orthodont, mean_sd = FALSE, type = "numeric"))
-    ##  print summary as LaTeX object
-    papeR:::toLatex.table(tmp)
 
     ## Get summary for categorical variables
     (tab2 <- summarize(Orthodont, type = "fac"))
@@ -41,13 +39,9 @@ if (require("nlme")) {
     if (require("xtable")) {
         ans <- xtable(tab1)
         print(ans)
-        papeR:::toLatex.table(tab1)
-
         ## grouped
         xtable(summarize(Orthodont, group = "Sex"))
-
         print(xtable(tab2))
-        papeR:::toLatex.table(tab2)
     }
 }
 
