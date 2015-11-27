@@ -20,7 +20,7 @@ Imports:
     stats
 Suggests:
     knitr,
-    testthat,
+    testthat (>= 0.10.0),
     foreign
 License: GPL-2
 URL: http://github.com/hofnerb/papeR
