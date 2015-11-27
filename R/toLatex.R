@@ -6,7 +6,7 @@ toLatex <- function(object, ...)
 
 ## per default fall back to standard generic
 toLatex.default <- function(object, ...)
-    utils::toLatex(object, ...)
+    utils::toLatex(object, ...) # nocov
 
 ## modified version based on sanitize subroutine defined in
 ## R package xtable (Version  1.7-1) inside function print.xtable

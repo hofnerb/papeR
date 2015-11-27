@@ -61,7 +61,7 @@ confint.lme <- function (object, parm, level = 0.95, ...) {
     ci
 }
 
-
+## nocov start
 ## function for lme4 version < 1.0 only
 confint.mer <- function (object, parm, level = 0.95,
                          simulate = c("ifneeded", TRUE, FALSE),
@@ -103,6 +103,7 @@ confint.mer <- function (object, parm, level = 0.95,
     ci[] <- cf[parm] + ses %o% fac
     ci
 }
+## nocov end
 
 
 refit_model <- function(cl, ENV = globalenv(), summary, .call = "prettify") {
