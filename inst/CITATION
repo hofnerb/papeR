@@ -1,18 +1,18 @@
 citHeader("To cite package 'papeR' in publications use:")
 
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
-vers <- paste("R package version", meta$Version)
+vers <- meta$Version
 
 citEntry(
   entry="Manual",
-  title = "papeR: A Toolbox for Writing knitr, Sweave or Other LaTeX-based Papers and Reports",
+  title = "{papeR}: A Toolbox for Writing Pretty Papers and Reports",
   author = personList(as.person("Benjamin Hofner")),
   year = year,
   note = paste("{R} package version", vers),
   url = "http://CRAN.R-project.org/package=papeR",
   textVersion =
   paste("B. Hofner (", year,
-	"). papeR: A Toolbox for Writing knitr, Sweave or Other LaTeX-based Papers and Reports, ",
+	"). papeR: A Toolbox for Writing Pretty Papers and Reports, ",
 	paste("R package version", vers),
         ", http://CRAN.R-project.org/package=papeR", ".",
 	sep="")
