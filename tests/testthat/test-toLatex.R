@@ -38,7 +38,7 @@ test_that("toLatex.sessionInfo is correctly used", {
     expect_equal(class(a), "Latex")
     expect_true(any(grepl("\\citep", a)))
 
-    ## expect no message when file is NULL
+    ## expect NO message when file is NULL
     expect_message(b <- toLatex(sessionInfo()), NA)
     expect_equal(class(b), c("LatexBibtex", "Latex"))
     expect_false(is.null(attr(b, "BibTeX")))
@@ -73,13 +73,27 @@ test_that("toLatex.sessionInfo is correctly used", {
 ## print.LatexBibtex
 ############################################################
 
-############################################################
-## toLatex.LatexBibtex
-############################################################
+test_that("print.latex.bibtex works as expected", {
+    expect_output(print(toLatex(sessionInfo(), file = NULL)),
+                  paste0(".*begin\\{itemize\\}",
+                         ".*item papeR.*",
+                         ".*end\\{itemize\\}.*",
+                         "Hofner B.*papeR.*A Toolbox for Writing Pretty"))
+})
 
 ############################################################
-## toBibtex.LatexBibtex
+## toLatex.LatexBibtex / toBibtex.LatexBibtex
 ############################################################
+
+test_that("toLatex.LatexBibtex and toBibtex.LatexBibtex works", {
+    latex <- toLatex(toLatex(sessionInfo()))
+    bibtex <- toBibtex(toLatex(sessionInfo()))
+    expect_match(latex[1], "\\\\begin\\{itemize\\}.*")
+    expect_match(latex[length(latex)], "\\\\end\\{itemize\\}.*")
+    expect_is(latex, "Latex")
+    expect_match(bibtex[1], "@Manual.*")
+    expect_is(bibtex, "Bibtex")
+})
 
 ############################################################
 ## write.bib
