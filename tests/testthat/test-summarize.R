@@ -4,6 +4,7 @@ context("summarize functions")
 if (require("nlme")) {
     ## Use dataset Orthodont
     data(Orthodont, package = "nlme")
+    Ortho_small <<- Orthodont[Orthodont$Subject %in% c("M01", "M02", "F01", "F02"), ]
 
 ############################################################
 ## test old functions latex.table.fac / latex.table.cont
@@ -46,7 +47,7 @@ test_that("latex.table.fac works", {
 test_that("variable labels work", {
     factor <- sapply(Orthodont, is.factor)
     for (type in c("numeric", "factor")) {
-        data <- Orthodont
+        data <- Ortho_small
         labels(data) <- c("Distance (mm)", "Age (yr)", "ID", "Sex")
         which <- if (type  == "numeric") { !factor } else { factor }
 
@@ -79,13 +80,11 @@ test_that("grouped summaries work", {
     expect_equivalent(numeric[, 2], rep(levels(Orthodont$Sex), 2))
     expect_equivalent(numeric$p.value[c(1,3)], c("<0.001", "1.000"))
     ## grouped summaries for factors
-    factor <- summarize(Orthodont, type = "factor", group = "Sex")
-    expect_equivalent(factor[, 2], levels(Orthodont$Subject))
+    factor <- summarize(Ortho_small, type = "factor", group = "Sex")
+    expect_equivalent(factor[, 2], levels(Ortho_small$Subject))
     expect_equivalent(ncol(factor), 10)
     expect_equivalent(factor$p.value[1], "< 0.001")
 })
-
-## FIX GROUP_LABELS
 
 test_that("print.summary works", {
     expect_output(print(summarize(Orthodont, type = "numeric")),
@@ -106,12 +105,13 @@ test_that("print.summary works", {
                          ".*",
                          "28     Sex   Male   64 59.3\n",
                          "29         Female   44 40.7"))
-    expect_output(print(summarize(Orthodont, group = "Sex", type = "factor")),
-                  paste0("                   Sex: Male       Sex: Female              \n",
-                         "           Level           N   %             N   %   p.value\n",
-                         "1  Subject   M16           4 6.2             0 0.0   < 0.001\n",
-                         "2            M05           4 6.2             0 0.0          \n",
-                         ".*"))
+    expect_output(print(summarize(Ortho_small, group = "Sex", type = "factor")),
+                  paste0("                  Sex: Male        Sex: Female               \n",
+                         "          Level           N    %             N    %   p.value\n",
+                         "1 Subject   M02           4 50.0             0  0.0   < 0.001\n",
+                         "2           M01           4 50.0             0  0.0          \n",
+                         "3           F01           0  0.0             4 50.0          \n",
+                         "4           F02           0  0.0             4 50.0          "))
 
 })
 
@@ -166,6 +166,17 @@ test_that("endhead is included if necessary", {
     options(xtable.tabular.environment = "longtable")
     expect_output(print(xtable(summarize(Orthodont, type = "numeric"))),
                   ".*cmidrule\\{7-11\\}\n.*endhead\ndistance.*")
+})
+
+test_that("xtable works for summarize_factor with groups", {
+    grouped <- summarize(Ortho_small, type = "factor", group = "Sex")
+    expect_output(print(xtable(grouped)),
+                  paste(".* & & &\\\\multicolumn\\{2\\}\\{c\\}\\{Sex: Male\\} &",
+                        "& \\\\multicolumn\\{2\\}\\{c\\}\\{Sex: Female\\} &  &.*"))
+    grouped <- summarize(Ortho_small, type = "factor", group = "Sex", test = FALSE)
+    expect_output(print(xtable(grouped)),
+                  paste(".* & & &\\\\multicolumn\\{2\\}\\{c\\}\\{Sex: Male\\} &",
+                        "& \\\\multicolumn\\{2\\}\\{c\\}\\{Sex: Female\\}.*"))
 })
 
 }
