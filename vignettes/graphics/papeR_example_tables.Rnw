@@ -1,0 +1,26 @@
+\documentclass{article}
+\usepackage{booktabs}
+
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Using papeR - Example Tables}
+
+<<include = FALSE>>=
+library("papeR")
+opts_chunk$set(message = FALSE, warning = FALSE, echo = FALSE, results = 'asis')
+data(Orthodont, package = "nlme")
+@
+
+
+\begin{document}
+<<>>=
+print(xtable(summarize(Orthodont, type = "numeric")))
+@
+
+<<>>=
+xtable(summarize(Orthodont, type = "factor", variables = "Sex"))
+@
+
+<<>>=
+xtable(summarize(Orthodont, type = "numeric", group = "Sex"))
+@
+\end{document}

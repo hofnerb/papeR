@@ -11,4 +11,5 @@ SOP_release.txt
 copy_Rout_to_Routsave.R
 tests/.*\.Rout\.save$
 tests/testthat/bib.bib
-vignettes/using_papeR_example_tables.Rnw
+vignettes/auto
+vignettes/graphics/papeR.*

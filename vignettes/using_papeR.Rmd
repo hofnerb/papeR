@@ -1,7 +1,7 @@
 ---
-title: "Using papeR"
+title: "Using papeR with Markdown"
 author: "Benjamin Hofner"
-date: "Tuesday, March 17, 2015"
+date: ""
 output:
   html_document:
     keep_md: yes
@@ -9,7 +9,7 @@ output:
 
 <!--
   %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Using papeR}
+  %\VignetteIndexEntry{Using papeR with Markdown}
 -->
 
 
@@ -27,30 +27,30 @@ set.seed(1234)
 This is a short tutorial that covers some of the main features of the R package **papeR**.
 
 The main goal of the package is to ease statistical reporting and thus to ease
-reproducible research. By relying on powerful tools such as the `Sweave` command kit,
-or the packages **knitr** and **xtable**, the package can be easily integrated in
-existing workflows. 
+reproducible research. By relying on powerful tools such as the `Sweave`, or the
+packages **knitr** and **xtable**, the package can be easily integrated in
+existing workflows.
 
 - First of all, the package provides an infrastructure to handle variable labels which
-are used in all other functions (`labels()`). 
+are used in all other functions (`labels()`).
 
 - The package allows to create (complex) summary tables of the data sets (`summarize()`) and
 to easily plot the data (`plot()` for labeled `data.frame`s).
 
-- Finally, the package allows to enhance summary tables of statistical models by 
-(possibly) adding confidence intervals, significance stars, odds ratios, etc. and 
+- Finally, the package allows to enhance summary tables of statistical models by
+(possibly) adding confidence intervals, significance stars, odds ratios, etc. and
 by separating variable names and factor levels (`prettify()`).
 
 ## Getting started
 
-Before we start, we need to install the package. The package can be easily obtained 
+Before we start, we need to install the package. The package can be easily obtained
 from [CRAN](http://CRAN.R-project.org/package=papeR), e.g. via the command
 ```{r install_CRAN, eval = FALSE}
 install.packages("papeR")
 ```
 
-To install the latest development version, one can use **devtools** to install 
-packages from [GitHub](http://github.com/hofnerb/papeR). Therefore we need to 
+To install the latest development version, one can use **devtools** to install
+packages from [GitHub](http://github.com/hofnerb/papeR). Therefore we need to
 install and load **devtools** before we can install **papeR**:
 
 ```{r install_github, eval=FALSE}
@@ -69,22 +69,22 @@ library("papeR")
 
 ### Labeled data frames
 
-To be able to use *all* features of the package, we first need to create a labeled 
-data frame. We need labeled data frames to use the special `plot()` function (see below). 
-All other functions do not strictly require labeled data frames but can exploit 
+To be able to use *all* features of the package, we first need to create a labeled
+data frame. We need labeled data frames to use the special `plot()` function (see below).
+All other functions do not strictly require labeled data frames but can exploit
 the labels.
 
 Labels in **papeR** are stored as attributes of the variables, i.e., each variable
 in a labeld data frame has an attribute `"variable.label"`, and the data set gets an
-additional class `'ldf'`. Other packages store variable labels differently. E.g. 
-the function `read.spss()` from the package **foreign** stores variable labels as 
-a single attribute of the data set. The package **papeR** is also capable of using 
+additional class `'ldf'`. Other packages store variable labels differently. E.g.
+the function `read.spss()` from the package **foreign** stores variable labels as
+a single attribute of the data set. The package **papeR** is also capable of using
 these labels. For details see the section "Conversion to labeled data frames".
 
 #### Setting and extracting labels
 
-If we create a new `data.frame` we can extract and set variable labels using the 
-function `labels()`. We use the `Orthodont` data package **nlme** throughout this 
+If we create a new `data.frame` we can extract and set variable labels using the
+function `labels()`. We use the `Orthodont` data package **nlme** throughout this
 tutorial. First load the data
 ```{r}
 data(Orthodont, package = "nlme")
@@ -102,7 +102,7 @@ In this case, we simply get the variable names as no labels were set so far
 labels(Orthodont)
 ```
 This is a convenient feature, as we thus can relly on the fact that we will always
-have *some* variable labels. 
+have *some* variable labels.
 
 To explicitly set labels, which are usually more descriptive than the variable names,
 we can simply assign a vector of labels. We use some of the information which is
@@ -142,12 +142,12 @@ Instead of manually setting labels, we can simply convert a data frame to a
 labeled data frame, either with the function `as.ldf()` or with `convert.labels()`.
 Actually, both calls reference the same function (for an object of class `data.frame`).
 
-While `as.ldf()` can be seen as the classical counterpart of `is.ldf()`, the 
+While `as.ldf()` can be seen as the classical counterpart of `is.ldf()`, the
 function name `convert.labels()` is inspired by the fact that these functions either
 convert the variable names to labels or convert other variable labels to **papeR**-type
-variable labels. Hence, these functions can, for example, be used to convert labels 
+variable labels. Hence, these functions can, for example, be used to convert labels
 from data sets which are  imported via the function `read.spss()` to **papeR**-type
-variable labels. 
+variable labels.
 
 If no variable labels are specified, the original variable names are used.
 ```{r}
@@ -181,7 +181,7 @@ par(mfrow = c(1, 3))
 plot(Orthodont, with = "distance")
 ```
 
-To plot only a subset of the data, say all but `Subject`, against `distance` and 
+To plot only a subset of the data, say all but `Subject`, against `distance` and
 suppress the regression line we can use
 ```{r univariate_no_regressionline}
 par(mfrow = c(1, 2))
@@ -194,9 +194,9 @@ which are to be plotted.
 
 ### Summary tables
 
-One can use the command `summarize()` to automatically produce summary tables for 
-either numerical variables (i.e., variables where `is.numeric()` is `TRUE`) or 
-categorical variables (where `is.factor()` is `TRUE`). We now extract a summary 
+One can use the command `summarize()` to automatically produce summary tables for
+either numerical variables (i.e., variables where `is.numeric()` is `TRUE`) or
+categorical variables (where `is.factor()` is `TRUE`). We now extract a summary
 table for numerical variables of the `Orthodont` data set:
 ```{r}
 data(Orthodont, package = "nlme")
@@ -204,7 +204,7 @@ summarize(Orthodont, type = "numeric")
 ```
 
 Similarly, we can extract summaries for all factor variables. As one of the factors
-is the `Subject` which has `r nlevels(Orthodont$Subject)` levels, each with 
+is the `Subject` which has `r nlevels(Orthodont$Subject)` levels, each with
 `r unique(table(Orthodont$Subject))` observations, we exclude this from the summary
 table and only have a look at `Sex`
 ```{r}
@@ -223,15 +223,14 @@ summarize(Orthodont, type = "numeric", group = "Sex")
 
 ### Converting summaries to PDF
 
-So far, we only got standard R output. Yet, any of these summary tables can be 
-easily converted to LaTeX code using the package **xtable**. In **papeR** two 
-special functions `xtable.summary()` and `print.xtable.summary()` are defined 
-for easy and pretty conversion. Note that we additionally set `cumulative = TRUE` 
-to show cumulative frequencies for `Sex`. In `Sweave` we can use 
+So far, we only got standard R output. Yet, any of these summary tables can be
+easily converted to LaTeX code using the package **xtable**. In **papeR** two
+special functions `xtable.summary()` and `print.xtable.summary()` are defined
+for easy and pretty conversion. In `Sweave` we can use
 ```r
 <<echo = FALSE, results = tex>>=
 xtable(summarize(Orthodont, type = "numeric"))
-xtable(summarize(Orthodont, type = "factor", variables = "Sex", cumulative = TRUE))
+xtable(summarize(Orthodont, type = "factor", variables = "Sex"))
 xtable(summarize(Orthodont, type = "numeric", group = "Sex"))
 @
 ```
@@ -239,16 +238,19 @@ and in **knitr** we can use
 ```r
 <<echo = FALSE, results = 'asis'>>=
 xtable(summarize(Orthodont, type = "numeric"))
-xtable(summarize(Orthodont, type = "factor", variables = "Sex", cumulative = TRUE))
+xtable(summarize(Orthodont, type = "factor", variables = "Sex"))
 xtable(summarize(Orthodont, type = "numeric", group = "Sex"))
 @
 ```
 to get the following PDF output
 
-![OUTDATED LaTeX Output](graphics/tables.png)
+![LaTeX Output](graphics/tables.png)
 
 Note that per default, `booktabs` is set to `TRUE` in `print.xtable.summary`, and
-thus `\usepackage{booktabs}` is needed in the header of the LaTeX report.
+thus `\usepackage{booktabs}` is needed in the header of the LaTeX report. For details
+on LaTeX summary tables see the dedicated vignette, which can be obtained, e.g., via
+`vignette("papeR\_with\_latex", package = "papeR")`. See also there for more details
+on summary tables in general.
 
 ### Converting summaries to Markdown
 
@@ -317,9 +319,9 @@ The function `prettify` is *currently* implemented for objects of the following 
 ## Summary and Outlook
 
 The package is intended to ease reporting of standard data analysis tasks such as
-descriptive statistics, simple test results, plots and to prettify the output of 
+descriptive statistics, simple test results, plots and to prettify the output of
 various statistical models.
 
 **papeR** is under active development. Feature requests, bug reports, or
-patches, which either add new features or fix bugs, are always welcome. Please use 
+patches, which either add new features or fix bugs, are always welcome. Please use
 the [GitHub](http://github.com/hofnerb/papeR) page.
