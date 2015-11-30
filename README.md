@@ -7,7 +7,7 @@ papeR
 [![CRAN Status Badge](http://www.r-pkg.org/badges/version/papeR)](http://cran.r-project.org/package=papeR)
 [![](http://cranlogs.r-pkg.org/badges/papeR)](http://cran.rstudio.com/web/packages/papeR/index.html)
 
-`papeR`  provides a toolbox for writing knitr, Sweave or other LaTeX- or markdown-based papers and reports and to prettify the output of various estimated models.
+**papeR** provides a toolbox for writing knitr, Sweave or other LaTeX- or markdown-based papers and reports and to prettify the output of various estimated models.
 
 ## Installation:
 
@@ -32,4 +32,4 @@ papeR
 
 ## Using papeR
 
-A tutorial on how to use **papeR** can be found [here](https://github.com/hofnerb/RR_Course/blob/master/Using_papeR.md).
+Tutorials on how to use **papeR** can be found on CRAN.
