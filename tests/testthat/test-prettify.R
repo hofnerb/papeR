@@ -319,3 +319,59 @@ if (require("survival")) {
         expect_equivalent(as.matrix(ps4[,3:4]), CI)
     })
 }
+
+
+################################################################################
+## Extra column for value labels
+################################################################################
+
+fit_anova <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
+    x <- as.factor(sample(c("Gr. A", "Gr. B", "Gr. C"), 100, replace = TRUE))
+    y <- rnorm(100, mean = 2 * (x == "Gr. B") - 1 * (x == "Gr. C"))
+    data <- data.frame(y = y, x = x)
+
+    if (model_class %in% c("lme", "lmer")) {
+        group <- sample(1:2, 100, replace = TRUE)
+        data$group <- group
+    }
+
+    if (model_class %in% "coxph") {
+        event <- as.logical(sample(0:1, 100, replace = TRUE))
+        data$event <- event
+        data$y <- exp(y)
+    }
+
+    ## fit model with data argument
+    mod <- switch(model_class,
+                  lm = lm(y ~ x, data = data),
+                  glm = glm(y ~ x, data = data),
+                  coxph = coxph(Surv(y, event) ~ x, data = data),
+                  lme = lme(y ~ x, random = ~ 1 | group, data = data),
+                  lmer = lmer(y ~ x + (1 | group), data = data))
+    return(list(data = data, model = mod))
+}
+
+
+if (require("nlme") && require("survival") && require("lme4") && packageDescription("lme4")$Version >= 1) {
+    test_that("prettify.anova works", {
+        for (model_class in c("lm", "glm", "lme", "lmer", "coxph")) {
+            ## fit model
+            RES <- fit_anova(model_class)
+            mod <<- RES$mod
+            data <- RES$data
+
+            sum1 <- prettify(summary(mod), confint = FALSE)
+            sum2 <- prettify(summary(mod), confint = FALSE, extra.column = TRUE)
+            expect_equal(colnames(sum2)[2], "Factor Level", info = model_class)
+            if (model_class == "coxph") {
+                expect_equal(sum1[1, 1], "x: Gr. B", info = model_class)
+                expect_equal(sum2[1, 2], "Gr. B", info = model_class)
+                expect_true(all(sum2[,1] == c("x", "")))
+            } else {
+                expect_equal(sum1[2, 1], "x: Gr. B", info = model_class)
+                expect_equal(sum2[2, 2], "Gr. B", info = model_class)
+                expect_true(all(sum2[2:3,1] == c("x", "")))
+            }
+        }
+    })
+}
