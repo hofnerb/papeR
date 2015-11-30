@@ -42,10 +42,10 @@ data(Orthodont, package = "nlme")
 \section{Introduction}
 
 This is a short description of some of the \LaTeX related features of
-\texttt{papeR}. For a comprehensive overview of the features of \texttt{papeR}
-see also the vignette on using \texttt{papeR} to produce Markdown output (e.g.
-via \texttt{vignette("using\_papeR", package = "papeR")}). See also there
-for installation instructions.
+\texttt{papeR}. For installation instructions and a comprehensive overview of
+the features of \texttt{papeR} see also the vignette on using \texttt{papeR} to
+(mainly) produce Markdown output (e.g. via
+\texttt{vignette("papeR\_introduction", package = "papeR")}).
 
 In short, we load the package, load an example data set, and set variable labels:
 <<>>=
