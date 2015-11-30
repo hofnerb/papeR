@@ -1,4 +1,395 @@
-commit 36222325f44dc34723436d44301dc7706b4bcca4
+commit 77f5b562e1f9fa12c49d1d7b02374fd3ea8e85a6
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Prepare release version 1.0-0
+
+commit e3ce58be24758f2d433adfc590744584b2884b86
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated README.md
+
+commit 7a1f3fa1c42fb8cf6d360c9ba6c778c8a47c8128
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    newline not after longtables
+
+commit f60698729c3d99a7864afd4615b05351bd5e9402
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    forgot to import plot
+
+commit ca3e835d1b5ea0e1c4d1cef918e908db3099db48
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Add a newline after tables without floating environment
+
+commit 14a8fd1b0b13faa8e26a8ccf577916f9bffcc467
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Renamed vignette
+
+commit 7ef265c5aceb5b697ca6606c0c627aedd13f10aa
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated markdown vignette
+
+commit e6a7f9a7c3e574362160db4cc9dde32b42df57d6
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Moved and improved Latex-based vignette
+
+commit ddf8bb909a9abf1f3fc5be6fa01345ce1befb8fa
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated .Rbuildignore to reflect recent changes
+
+commit a97ae154c280ad29725d8449a159d74a70f7f6ee
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fix prettify.summary:
+    make sure that confint is only computed if needed
+    make sure extra.column works
+
+commit 40faa60f6c7bf3a6ae63e426d488732d1efae4d7
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed prettified labeled anova
+
+commit d1848260dfaa4b40b5a6508d0647f38104ab809d
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Speed up tests and added test for grouped summaries
+
+commit fef4c6fc456c37943ae9ea35186d37f50b641146
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added tests for methods for class 'LatexBibtex'
+
+commit 25c501337d3076786573af77f21959fe3cd6e54b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Exclude functions from coverage
+
+commit ab2b4aec2aff468dd55c55ef2bb23c7f8684f501
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated CITATION
+
+commit bea3faf6f68011ffbe5aef169d0e5d8be472be3f
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Export print.LatexBibtex
+
+commit 94599a19bd8a2161609b4718813017195313241b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Require testthat >= 0.10.0
+
+commit eca360e155731891bf1b9ad773fc081f2c7e81a5
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Add captions where missing (fixes #22)
+    Add comments regarding LaTeX packages (fixes #23)
+
+commit 21eacbaef0f17c0784eecd2ea8d89c2235abab02
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Removed deprecated function toLatex.table
+
+commit 65ec50f9b852ad78771dcda0bb16a122d66b25bd
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed console output of summarize(); Added group labels (fixes #19, #21)
+
+commit 158e8a3262ea2af003709454fea5caaaeb3124ad
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    summarize:
+    - added argument "labels"
+    - use \endhead if longtables are printed (fixes #20)
+
+commit 493484012a42e63f51da70cd5f2711d9572ef31a
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    updated tests for summary tables
+
+commit eb76c4c2656f035bf9550bc439fbe241d3a5238d
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Bugfixes and improvements in summarize:
+    - Make tests condtional on group
+    - Fix latex.table.xxx
+    - A lot of fixes for grouped tables of factor variables
+
+commit cbe3a9c77dd7b2d3c0eb38edf6d8aeca772bfca8
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added tests for prettify.anova and more test for prettify.summary.coxph
+
+commit 6effb09500751b9aaa16433feb0a1df0707cd6dc
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    exclude prettify.summary.mer from test coverage
+
+commit 0ca4fb8325b44ec65727bb1c448586c3a17add58
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Bufixes in prettify functions for coxph and lmer
+
+commit f5e2ca7569625654de4ad50b044926cdba1111da
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    minor fix in tests
+
+commit aa2b2205c666506ebb5fb38324fb3a7aafaeeb59
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Test labels.lv(, abbreviate)
+
+commit e87e5e42f26acc9bcb5b4dc3f1f14ea97bb90893
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Prettify now tested using testthat
+
+commit b28ef34fac02dc79e2cc108b1d6f6507b1a5b477
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Test prettify with OR
+
+commit ed877c024133206660bdada2aa238ee64aa68ba4
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added class lv to all variables in a labeled data.frame
+
+commit 862cbc7516223d5c3274c4321b6552ab8c31cefe
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Moved parts of regtest-prettify.R to test-prettify.R
+
+commit fc2124054e110e55fb8ff586ed2353c1fc37730c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added tests for labels(data)[i] <-
+
+commit 9b524a40fb746cb7ebd80323dbff859a3c24a7cd
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    class(mod) == "mer" replaced by inherits(mod, "mer")
+
+commit d4d9947b215e8b4725c1de9d95d328a6c88f53a8
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    removed deprecated function
+
+commit 7ad6627e70c8c6249bd64fce93bedbbff905f74a
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added first tests for labels
+
+commit 3768ea38c0aada899a0c614cd28f90527da34054
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added SPSS example data
+
+commit 9b57de48de3a80ccf767e1811e864aefcf93d4c8
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    updated tests for toLatex
+
+commit a26d932b7c1a79ed8011d97c864be82d980c12b8
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added tests for plot
+
+commit 5a0f207a69e4759de675c7b84ff8a3516bf284f9
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    updated toLatex function, manual and added tests
+
+commit f196045c5176d183f0e95424c25b7dc1148a8fd7
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit 15b9cf5fb11cc69ca1e5d18178877e09a7cf4eed
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit ab74ceb52dc2617e248e9f8b63f5a32a31e34a6f
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update .travis.yml
+
+commit d75d56823151ae55a192875947548ef139d7e319
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit 5235fcc88f0989266092fe13f3d53a8fa0dbe74d
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added first tests for helper functions
+
+commit 70936caf113a64e6c2e163605ada9287c149c8fd
+Merge: f757e17 9b25af5
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Merge branch 'testthat'
+
+commit f757e17ac55df97ea30d0da90f0c494c2cd4e5ff
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added pseudo vignette for tables
+
+commit 1a339045abe436d5ee71f240f6e1fa3175a8513f
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added missing argument to docu of xtable.summary
+
+commit 7d8ea12f7e6998fd0a3f18667e09f685c180dd6a
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Added manual for xtable.summary and print.xtable.summary
+
+commit f665ff502ffd9342a7b31c70ff3cab1198d73d0c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed manual of summarize
+
+commit 22ec319a867fbaf5d2473c1af22607f5494a954c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated inst/NEWS.Rd
+
+commit 1daf528e1831fa87ca0aeb81ac1a2ad2954b0550
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated description
+
+commit b2efcf55d973c978779ee8d65b24bfbdffaf4709
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated vignette
+
+commit 1c0821b94c7715b5f2125d61829511aafb0fc3f0
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fix tests for grouped summary tables; close #14
+
+commit 1eb73aa8909931ea0a97d1a7d079f06072a1019d
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fix labels; close #16
+
+commit 00bc6741966818dadfc688acdbc8623235e9c54c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    summarize: fix handling of latex escapes; close #17
+
+commit 822ee3e576a6eec5ae455cd880c208419d4ae877
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed check_which to handle integer valued indices correctly
+
+commit 4e332b1d045c350cc32b96dd4b59056bf0b830d3
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added first version of vignette; close #7
+
+commit be3b743ceeb804bddada5c123d3eb4b61ffb5ba4
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    rename .labeled.data.frame to .ldf (closes #13)
+
+commit 3ce05968e2abdfd6f6b1f03022316c46c094137a
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added documentation of convert.labels
+
+commit 155a5fe0ceaa7e417d4ae43780ab501f019f4d6c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    clean up after merge
+
+commit 8b510d32ed2d489a9bd9ac7b7e1db5e20b7c8bc0
+Merge: 842eee8 89fb34e
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Merge branch 'new_summary_tables'
+
+commit 9b25af597eea77d2f12781e7ed406a795bf19b19
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Start using testthat
+
+commit 842eee8c833d219b350f8b364fe7863cb44d8f00
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed typo
+
+commit 323e832ab217ebd475ae27d1fd8767cff0c61109
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Add AppVeyor badge
+
+commit 038d38dc582b609ab50ec0d4cf57968ce187bf49
+Merge: ba642d7 112b2bd
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Merge branch 'master' of github.com:hofnerb/papeR
+
+commit ba642d75d74aecada4869f96b7cab2198ac1a1df
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    CI: Use AppVeyor to build/check on Windows
+
+commit 596cf6954e01c1ef87e6c75ef7d4b4e0a1641637
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Re-introduce labeled data frames (as class ldf). Plot now dispatches on ldf
+
+commit 112b2bd7c7cc2c1837033a37962fdce01cabee92
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update README.md
+
+commit e4a9962bd0577d1f6cca8694d4b25a2f7d65d661
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Make plot working
+
+commit 9c5eccd23840fcc83edca28d2ab3f4541ba96f5b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update DESCRIPTION
+
+commit 83b7ad8d002b922a34b21e157a471ac9151615d9
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Try to overwrite standard generic graphics::plot
+
+commit 22d546a64a29d704c6792f7b7f227c61c4c0bec1
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Overwrite standard generic base::labels
+
+commit 6525e82585221e8c16db70b12d8168addc21b9df
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    labels are now attached to variables; removed special class 'labeled.data.frame' (fix #9)
+
+commit 28d2cc4fdb9c92bb2f43edaac7d9ddb4689ffacf
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    First version of labeled data.frame where labels are attached to data columns
+
+commit ad0d70f86fa27efb51606c03002a7c8c99b49c47
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Adhere to CRAN policies regarding import of base packages (closes #8)
+
+commit 8055593ccfb7a318568217b1b94fb7a7d6b3a52f
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     Release version 0.6-1
@@ -43,6 +434,77 @@ Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     Updated .Rbuildignore
 
+commit 89fb34edad894523edf2a889c9fbfdb6d6087a10
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed collate
+
+commit 4cf095e79a9cbe9a4028bb47c0faba9811ac50d5
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    renamed R/latex_table.R to R/summatize.R to reflect changes in code
+
+commit b3abb85e8e5d1a887813e57598cff39c7e78fd54
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added new tests for summary tables
+
+commit 8db58d8d0512e017ea86ed9556169e4e315e4d10
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (summarize) changed warning that non-factor/factor variables are dropped to message
+
+commit 27326e0c3a498419fcc0a71f1af5833c249dcc79
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    summarize now with improved code base
+    added documentation for summarize, summarize_factor and summarize_numeric
+    updated documentation for latex_table_xxx
+
+commit a72accbf59dbb57afdf53f33feb82bc137da51b5
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    continue clean-up and documentation
+
+commit 839a1ed1004e471daf3cf58194a600bfbeb0dc82
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    started to reflect changes in manual
+
+commit fd4d00069c8a18a3ca56e00c071bc817c9b3ae5b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    renamed table to summarize
+
+commit 826c01f8e2ce57583f602de76651b844add7900b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (latex_table.R) fixed xtable method
+
+commit 83b43ca06210fcc2544d13939f69a663c43926a1
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    (latex_table.R) started experimental version of xtable method
+
+commit b040cc5a5f51d7b7b5f196b2e52dca60979e9b69
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    tables are now fixed (closes #3)
+
+commit 1ca23df374354cb152393082eba13f725e0b0190
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    added .gitignore
+
+commit a4b3e1d39a205a4be0e54495ee5875474de9b749
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    new interface for summary tables now essentially working
+    - print.table.xxx removed
+    - changed get_options to get_option
+    - changed add_options to set_options
+    - added table, table.default and table.data.frame
+
 commit d9d10b4dc5813fc65b93fa931d536d0e27c75d36
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
@@ -58,10 +520,38 @@ Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     (latex.table.fac) fisher test now ignores missing values
 
+commit 86d2d5161ecbc7f19834a9ec9dd136609f1c3c54
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    experimental new version of latex tables
+    - make table a generic function
+    - table.numeric (was table.cont) and table.factor (was table.fac) now are generich functions
+
 commit 149c5e9a779f135b151fabd61b5222cb90fd542d
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     Update README.md
+
+commit 4970f173f96c062b34cac15ed2d613abb43fa315
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    defined summary.labeled.data.frame
+
+commit 6809d690da05bb4d990abc9ccfaa351bc380ba0c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    renamed "options" attribute for summary tables
+    latex.table.options --> table.options
+
+commit f43c02c7b94b6dd04a80a1cf8aefee2922487dce
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    renamed print.table.xxx to prettify.table.xxx
+
+commit 65772890708ceea0a08676294f6d4daba2bd678e
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    start experimental version for better summary tables
 
 commit 4499a4aefdc1c9daf97fb79824b75e68d25d85b2
 Author: unknown <Benjamin@imbe81.uni-erlangen.de>

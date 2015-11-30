@@ -24,7 +24,7 @@
     ../relative/path/to/R-devel/bin/R
 
   Run
-    install.packages(c("car", "nlme", "lme4", "survival", "gmodels"))
+    install.packages(c("car", "xtable", "nlme", "lme4", "survival", "gmodels", "knitr", "testthat", "foreign"))
 
   Quit R and run
    ../relative/path/to/R-devel/bin/R CMD check --as-cran --run-donttest papeR_XXX.tar.gz

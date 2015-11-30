@@ -1,7 +1,7 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
-\section{Changes in papeR version 1.0-0 (2015-10-22)}{
+\section{Changes in papeR version 1.0-0 (2015-12-01)}{
   \subsection{User-visible changes}{
     \itemize{
       \item \code{summarize} produces summary tables that can be further
@@ -19,8 +19,10 @@
   \subsection{Miscellaneous}{
     \itemize{
       \item Completely refactored code base.
-      \item Added vignette (closes
+      \item Added two vignettes (closes
       \href{https://github.com/hofnerb/papeR/issues/7}{#7}).
+      \item The package is now extensively tested using \code{testthat}
+      (closes \href{https://github.com/hofnerb/papeR/issues/12}{#12}).
     }
   }
   \subsection{Bug-fixes}{
