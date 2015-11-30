@@ -1,0 +1,145 @@
+\documentclass{article}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{capt-of}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0em}
+
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Using papeR with LaTeX}
+
+<<include = FALSE>>=
+library("papeR")
+opts_chunk$set(message = FALSE, warning = FALSE, echo = TRUE, results = 'asis')
+data(Orthodont, package = "nlme")
+@
+
+\title{Using papeR with \LaTeX}
+\author{Benjamin Hofner}
+\date{Version \Sexpr{packageDescription("papeR")$Version}} %$
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+  \setlength{\parskip}{0.5em}
+
+  The main goal of the package \textbf{papeR} is to ease statistical reporting
+  and thus to ease reproducible research. By relying on powerful tools such as
+  the \texttt{Sweave} command kit, or the packages \textbf{knitr} and
+  \textbf{xtable}, the package can be easily integrated in existing workflows.
+
+  The package provides an infrastructure to handle variable labels which are
+  used in all other functions (\texttt{labels()}), allows to create (complex)
+  summary tables of the data sets (\texttt{summarize()}) and to easily plot the
+  data (\texttt{plot()} for labeled \texttt{data.frame}s), and enhances summary
+  tables of statistical models by (possibly) adding confidence intervals,
+  significance stars, odds ratios, etc. and by separating variable names and
+  factor levels (\texttt{prettify()}).
+\end{abstract}
+
+\section{Introduction}
+
+This is a short description of some of the \LaTeX related features of
+\texttt{papeR}. For a comprehensive overview of the features of \texttt{papeR}
+see also the vignette on using \texttt{papeR} to produce Markdown output (e.g.
+via \texttt{vignette("using\_papeR", package = "papeR")}). See also there
+for installation instructions.
+
+In short, we load the package, load an example data set, and set variable labels:
+<<>>=
+library("papeR")
+data(Orthodont, package = "nlme")
+labels(Orthodont) <- c("fissure distance (mm)",
+                       "age (years)", "Subject", "Sex")
+@
+
+\section{Pretty tables}
+
+To produce \LaTeX tables, we heavily rely on the R package \textbf{xtable}. Note
+that all arguments to \texttt{xtable()} or \texttt{print.xtable()} can be used
+as usual, yet, some defaults were changed in package \textbf{papeR}. For
+example, we use per default the \LaTeX package \texttt{booktabs} to print
+tables and tables are not set as floating objects. For further changes see the
+manual of \texttt{xtable.summary}.
+
+\subsection{Summary tables for numerical variables}
+
+Now we can produce summary tables for numeric variables:
+<<>>=
+xtable(summarize(Orthodont, type = "numeric"))
+@
+
+Grouped statistics with tests can be obtained via:
+<<>>=
+xtable(summarize(Orthodont, type = "numeric", group = "Sex"))
+@
+
+Per default, t-tests are computed. To change the test, one can use:
+<<>>=
+xtable(summarize(Orthodont, type = "numeric", group = "Sex",
+                 test = c("wilcox.test", "t.test")))
+@
+To use Wicoxon tests for all variables, one could simply set \texttt{test =
+  "wilcox.test"}, or one could switch off tests by setting \texttt{test =
+  FALSE}.
+
+To drop some of the statistics one can set several options to \texttt{FALSE}.
+E.g., if we do not want to show the five-number summaries (minimum, 25\%
+quantile, median, 75\% quantile, maximum), one can use
+<<>>=
+xtable(summarize(Orthodont, type = "numeric", group = "Sex",
+                 quantiles = FALSE))
+@
+Alternatively or additionally, one could also drop $N$ (\texttt{count = FALSE})
+or mean and standard deviation (\texttt{mean\_sd = FALSE}). For details see also
+the manual of \texttt{summary\_numeric()}.
+
+\subsection{Summary tables for factor variables}
+
+In the same way, summary tables for factors can be computed. Here, we only want
+to print the variable \texttt{Sex}:
+<<>>=
+xtable(summarize(Orthodont, type = "factor", variables = "Sex"))
+@
+
+If tables are longer than one page or cross a page, one can also use
+\texttt{"tabular.environment = "longtable""}:
+<<>>=
+print(xtable(summarize(Orthodont, type = "factor")),
+      tabular.environment = "longtable")
+@
+which automatically specifies the table header such that it is repeated at the
+top of each new page.
+
+To additionally obtain the cumulative frequencies, we can use:
+<<>>=
+xtable(summarize(Orthodont, type = "factor", variables = "Sex",
+                 cumulative = TRUE))
+@
+
+As for numerical summaries, grouped statistics are tested. Per default, Fisher's
+exact test is used. To speed up computations (of this non-sense test), we only
+use a small subset of the original data:
+<<>>=
+Ortho_small <- subset(Orthodont,
+                      Subject %in% c("M01", "M02", "F01", "F02"))
+xtable(summarize(Ortho_small, type = "factor",
+                 variables = "Subject", group = "Sex"))
+@
+
+\subsection{Captions}
+
+As usual, all floating tables can have captions. Per default, these are printed
+above the table. Note that by using the \LaTeX package \texttt{capt-of}, one can
+specify table captions and labels also for non floating tables as shown in
+Table~\ref{tab:Fisher}.
+<<>>=
+xtable(summarize(Ortho_small, type = "factor",
+                 variables = "Subject", group = "Sex"),
+       caption = "Example table for Fisher's exact test",
+       label = "tab:Fisher")
+@
+
+\end{document}
