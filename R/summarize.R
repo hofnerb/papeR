@@ -635,7 +635,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
     if (!is.null(caption(x)) && !floating &&
          tabular.environment != "longtable")
         cat("\\end{minipage}\n")
-    if (!floating)
+    if (!floating  && tabular.environment != "longtable")
         cat("\\newline\n")
 }
 
