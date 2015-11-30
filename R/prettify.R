@@ -21,6 +21,7 @@ prettify.summary.lm <- function(object, labels = NULL, sep = ": ", extra.column 
                                ENV = attr(object$terms, ".Environment"),
                                summary = object, .call = .call)
         if (is.logical(mod)) {
+            ## model could not be refitted, i.e., mod == FALSE
             confint <- mod
         } else {
             CI <- confint(mod, level = level)
@@ -72,6 +73,7 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
                                ENV = attr(object$terms, ".Environment"),
                                summary = object, .call = .call)
         if (is.logical(mod)) {
+            ## model could not be refitted, i.e., mod == FALSE
             confint <- mod
         } else {
             CI <- confint(mod, level = level)
@@ -140,6 +142,7 @@ prettify.summary.coxph <- function(object, labels = NULL, sep = ": ", extra.colu
     ## compute confidence interval or extract it from confint
     if (is.logical(confint)) {
         if (is.logical(mod)) {
+            ## model could not be refitted, i.e., mod == FALSE
             confint <- mod
         } else {
             CI <- confint(mod, level = level)
@@ -203,6 +206,7 @@ prettify.summary.lme <- function(object, labels = NULL, sep = ": ", extra.column
                                ENV = attr(object$terms, ".Environment"),
                                summary = object, .call = .call)
         if (is.logical(mod)) {
+            ## model could not be refitted, i.e., mod == FALSE
             confint <- mod
         } else {
             CI <- confint(mod, level = level)
@@ -257,6 +261,7 @@ prettify.summary.merMod <- function(object,
     ## compute confidence interval or extract it from confint
     if (is.logical(confint)) {
         if (is.logical(mod)) {
+            ## model could not be refitted, i.e., mod == FALSE
             confint <- mod
         } else {
             CI <- confint(mod, level = level, method = method, nsim = B,
@@ -311,6 +316,7 @@ prettify.summary.mer <- function(object,
                                ENV = attr(attr(object@frame, "terms"), ".Environment"),
                                summary = object, .call = .call)
         if (is.logical(mod)) {
+            ## model could not be refitted, i.e., mod == FALSE
             confint <- mod
         } else {
             CI <- confint(mod, level = level, simulate = simulate, B = B, ...)
@@ -361,8 +367,11 @@ prettify.anova <- function(object, labels = NULL,
 
     if (!is.null(labels)) {
         idx <- res[, 1] %in% names(labels)
-        res[idx, 1] <- labels[idx]
+        if (any(idx == TRUE))
+            res[, 1] <- as.character(res[, 1])
+        res[idx, 1] <- labels[res[idx, 1]]
     }
+
     res <- res[!apply(res, 1, function(x) any(is.na(x))), ]
     res
 }

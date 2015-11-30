@@ -265,22 +265,30 @@ if (require("nlme") && require("survival") && require("lme4") && packageDescript
                 ps_anova <- prettify(anova(mod))
                 nc <- ncol(ps_anova)
                 expect_match(ps_anova[, nc - 1], "<0.001")
-                expect_match(as.character(ps_anova[, nc]), "\\*\\*\\*")
+                expect_match(as.character(ps_anova[, nc]),
+                             "\\*\\*\\*")
             }
             if (require("car")) {
                 ps_anova <- prettify(Anova(mod))
+                ps_anova_lbl <- prettify(Anova(mod),
+                                         labels = c(x = "Predictor x",
+                                                    z = "nonsense"))
                 nc <- ncol(ps_anova)
-                if (model_class %in% c("lm", "glm", "lmer")) {
+                if (model_class %in% c("lm", "glm", "lmer", "coxph")) {
                     expect_match(ps_anova[, nc - 1],
                                  "<0.001", info = model_class)
                     expect_match(as.character(ps_anova[, nc]),
                                  "\\*\\*\\*", info = model_class)
+                    expect_match(ps_anova_lbl[, 1],
+                                 "Predictor x", info = model_class)
                 }
                 if (model_class == "lme") {
                     expect_match(ps_anova[2, nc - 1],
                                  "<0.001", info = model_class)
                     expect_match(as.character(ps_anova[2, nc]),
                                  "\\*\\*\\*", info = model_class)
+                    expect_match(ps_anova_lbl[2, 1],
+                                 "Predictor x", info = model_class)
                 }
             }
         }
