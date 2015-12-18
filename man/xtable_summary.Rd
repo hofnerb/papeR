@@ -140,7 +140,7 @@
   For details see \code{\link[xtable]{xtable}} and
   \code{\link[xtable]{print.xtable}}.
 
-  \code{link{summarize}}, \code{\link{get_option}}
+  \code{\link{summarize}}, \code{\link{get_option}}
 }
 \examples{
 if (require("nlme")) {
