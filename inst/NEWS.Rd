@@ -1,6 +1,14 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-1 (2015-12-01)}{
+  \subsection{User-visible changes}{
+    \itemize{
+      \item \code{print.xtable.summary} now also centers tables per
+      default if \code{floating = FALSE}.
+    }
+  }
+}
 \section{Changes in papeR version 1.0-0 (2015-12-01)}{
   \subsection{User-visible changes}{
     \itemize{

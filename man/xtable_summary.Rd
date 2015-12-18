@@ -23,6 +23,7 @@
       sanitize.text.function = get_option(x, "sanitize"),
       tabular.environment = getOption("xtable.tabular.environment", "tabular"),
       floating = getOption("xtable.floating", FALSE),
+      latex.environments = getOption("xtable.latex.environments", c("center")),
       ...)
 
 }
@@ -114,6 +115,12 @@
     environment. Note that the standard default of
     \code{\link[xtable]{print.xtable}} is \code{TRUE}. See there for
     details.
+  }
+  \item{latex.environments}{
+    character string. Per default \code{"center"} is used. In contrast
+    to the default behavior of \code{\link[xtable]{print.xtable}},
+    tables are also centered if no floating environment is used. For
+    details and more options see \code{\link[xtable]{print.xtable}}.
   }
   \item{...}{
     additional arguments passed to \code{\link[xtable]{xtable}} or

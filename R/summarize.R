@@ -569,6 +569,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                                  sanitize.text.function = get_option(x, "sanitize"),
                                  tabular.environment = getOption("xtable.tabular.environment", "tabular"),
                                  floating = getOption("xtable.floating", FALSE),
+                                 latex.environments = getOption("xtable.latex.environments", c("center")),
                                  ...) {
 
     ## extract rules and headers from object
@@ -586,6 +587,11 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
         cat("%% Output requires \\usepackage{booktabs}.\n")
     if (tabular.environment == "longtable")
         cat("%% Output requires \\usepackage{longtable}.\n")
+
+    ## use centering even if not a float
+    if (!floating && latex.environments == "center") {
+        cat("\\begin{center}\n")
+    }
 
     ## If caption is given and we don't use a floating environment,
     ## we need to make use of the LaTeX package capt-of
@@ -635,7 +641,11 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
     if (!is.null(caption(x)) && !floating &&
          tabular.environment != "longtable")
         cat("\\end{minipage}\n")
-    if (!floating  && tabular.environment != "longtable")
+    ## use centering even if not a float
+    if (!floating && latex.environments == "center")
+        cat("\\end{center}\n")
+    if (!floating && tabular.environment != "longtable"
+        && latex.environments != "center")
         cat("\\newline\n")
 }
 
