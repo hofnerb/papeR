@@ -1,6 +1,6 @@
 Package: papeR
 Title: A Toolbox for Writing Pretty Papers and Reports
-Version: 1.0-0
+Version: 1.0-1
 Date: 2015-12-01
 Author: Benjamin Hofner, with contributions by many others (see inst/CONTRIBUTIONS)
 Maintainer: Benjamin Hofner <benjamin.hofner@fau.de>
