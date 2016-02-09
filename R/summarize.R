@@ -39,7 +39,7 @@ latex.table.cont <- function(...,
           floating = floating, latex.environments = ifelse(center, "center", c()),
           tabular.environment = table)
     message("  This function exists for backward compatibility.\n  Consider using ",
-            sQuote('summarize(..., type = "continuous")'), " instead.")
+            sQuote('xtable(summarize(..., type = "numeric"))'), " instead.")
 }
 
 latex.table.fac <- function(...,
@@ -53,7 +53,7 @@ latex.table.fac <- function(...,
           floating = floating, latex.environments = ifelse(center, "center", c()),
           tabular.environment = table)
     message("  This function exists for backward compatibility.\n  Consider using ",
-            sQuote('summarize(..., type = "continuous")'), " instead.")
+            sQuote('xtable(summarize(..., type = "factor"))'), " instead.")
 
 }
 ################################################################################
@@ -99,11 +99,16 @@ summarize_numeric <- function(data, variables = names(data),
         group_var <- data[, group]
     }
     ## get numerical variables
-    num <- mySapply(data[, variables], is.numeric)
+    num <- mySapply(data[, variables], function(x)
+        is.numeric(x) || inherits(x, "Date"))
+    date <- mySapply(data[, variables], function(x)
+        inherits(x, "Date"))
+
     ## drop missings
     if (drop) {
         compl.missing <- mySapply(data[, variables], function(x) all(is.na(x)))
         num <- num & !compl.missing
+        date <- date & !compl.missing
     }
 
     ## if not any is TRUE (i.e. all are FALSE):
@@ -136,29 +141,14 @@ summarize_numeric <- function(data, variables = names(data),
         sums$blank <- NULL
     }
 
-    myData <- data
+    idx <- c(4:5, 7:8, 10:14)
     ## compute statistics
     for (i in 1:nrow(sums)) {
-        if (!is.null(group)) {
-            myData <- data[group_var == sums$group[i], ]
-        }
-        sums$N[i] <- sum(!is.na(myData[, sums$var[i]]))
-        sums$Missing[i] <- sum(is.na(myData[, sums$var[i]]))
-        sums$Mean[i] <- round(mean(myData[, sums$var[i]], na.rm=TRUE),
-                              digits = digits)
-        sums$SD[i] <- round(sd(myData[, sums$var[i]],
-                               na.rm=TRUE), digits = digits)
-        if (incl_outliers) {
-            Q <- round(fivenum(myData[, sums$var[i]]), digits = digits)
-        } else {
-            Q <- round(c(boxplot(myData[, sums$var[i]], plot = FALSE)$stats),
-                       digits = digits)
-        }
-        sums$Min[i] <- Q[1]
-        sums$Q1[i]  <- Q[2]
-        sums$Median[i] <- Q[3]
-        sums$Q3[i] <- Q[4]
-        sums$Max[i] <- Q[5]
+        sums[idx, i] <- compute_summary(data[, sums$var[i]],
+                                        group_var = group_var,
+                                        group = group,
+                                        incl_outliers = incl_outliers,
+                                        digits = digits)
     }
 
     if (!is.null(group)) {
@@ -201,6 +191,44 @@ summarize_numeric <- function(data, variables = names(data),
                         count = count, mean_sd = mean_sd, quantiles = quantiles,
                         colnames = colnames, class = "summarize.numeric")
     prettify(sums)
+}
+
+compute_summary <- function(data, ...)
+    UseMethod("compute_summary")
+
+compute_summary.default <- function(data, group_var, group, incl_outliers,
+                                    digits) {
+    if (!is.null(group)) {
+        data <- data[group_var == group, ]
+    }
+
+    res <- data.frame(N=NA, Missing = NA, Mean=NA, SD=NA,
+                      Min=NA, Q1=NA, Median=NA, Q3=NA, Max=NA)
+
+    res["N"] <- sum(!is.na(data))
+    res["Missing"] <- sum(is.na(data))
+    res["Mean"] <- round(mean(data, na.rm=TRUE), digits = digits)
+    res["SD"] <- round(sd(data, na.rm=TRUE), digits = digits)
+    if (incl_outliers) {
+        Q <- round(fivenum(data), digits = digits)
+    } else {
+        Q <- round(c(boxplot(data, plot = FALSE)$stats), digits = digits)
+    }
+    res["Min"] <- Q[1]
+    res["Q1"]  <- Q[2]
+    res["Median"] <- Q[3]
+    res["Q3"] <- Q[4]
+    res["Max"] <- Q[5]
+    return(res)
+}
+
+compute_summary.Date <- function(data, group_var, group, incl_outliers,
+                                 digits) {
+    res <- compute_summary.default(unclass(data), group_var, group, incl_outliers,
+                                   digits)
+    for (i in c("Mean", "Min", "Q1", "Median", "Q3", "Max"))
+        class(res[, i]) <- oldClass(data)
+    return(res)
 }
 
 ################################################################################
