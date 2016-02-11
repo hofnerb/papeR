@@ -141,14 +141,21 @@ summarize_numeric <- function(data, variables = names(data),
         sums$blank <- NULL
     }
 
-    idx <- c(4:5, 7:8, 10:14)
     ## compute statistics
     for (i in 1:nrow(sums)) {
-        sums[idx, i] <- compute_summary(data[, sums$var[i]],
-                                        group_var = group_var,
-                                        group = group,
-                                        incl_outliers = incl_outliers,
-                                        digits = digits)
+        if (!is.null(group)) {
+            idx <- c(4:5, 7:8, 10:14)
+            sums[i, idx] <- compute_summary(data[, sums$var[i]],
+                                            group_var = group_var,
+                                            group = sums$group[i],
+                                            incl_outliers = incl_outliers,
+                                            digits = digits)
+        } else {
+            idx <- c(2:3, 5:6, 8:12)
+            sums[i, idx] <- compute_summary(data[, sums$var[i]],
+                                            incl_outliers = incl_outliers,
+                                            digits = digits)
+        }
     }
 
     if (!is.null(group)) {
@@ -196,10 +203,10 @@ summarize_numeric <- function(data, variables = names(data),
 compute_summary <- function(data, ...)
     UseMethod("compute_summary")
 
-compute_summary.default <- function(data, group_var, group, incl_outliers,
-                                    digits) {
+compute_summary.default <- function(data, group_var = NULL, group = NULL,
+                                    incl_outliers, digits) {
     if (!is.null(group)) {
-        data <- data[group_var == group, ]
+        data <- data[group_var == group]
     }
 
     res <- data.frame(N=NA, Missing = NA, Mean=NA, SD=NA,
