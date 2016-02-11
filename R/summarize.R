@@ -229,8 +229,8 @@ compute_summary.default <- function(data, group_var = NULL, group = NULL,
     return(res)
 }
 
-compute_summary.Date <- function(data, group_var, group, incl_outliers,
-                                 digits) {
+compute_summary.Date <- function(data, group_var = NULL, group = NULL,
+                                 incl_outliers, digits) {
     res <- compute_summary.default(unclass(data), group_var, group, incl_outliers,
                                    digits)
     for (i in c("Mean", "Min", "Q1", "Median", "Q3", "Max"))
