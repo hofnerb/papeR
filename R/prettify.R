@@ -121,7 +121,7 @@ prettify.summary.glm <- function(object, labels = NULL, sep = ": ", extra.column
              scientific = scientific, signif.stars = signif.stars, ...)
 }
 
-prettify.summary.coxph <- prettify.summary.coxph.penal <-
+prettify.summary.coxph.penal <- prettify.summary.coxph <-
     function(object, labels = NULL, sep = ": ", extra.column = FALSE,
              confint = TRUE, level = 0.95, HR = TRUE,
              smallest.pval = 0.001, digits = NULL, scientific = FALSE,
@@ -130,9 +130,12 @@ prettify.summary.coxph <- prettify.summary.coxph.penal <-
 
     .call <- match.call()
     res <- as.data.frame(coef(object))
-    if (!HR)
+    if (!HR) {
         res$"exp(coef)" <- NULL
-
+    } else {
+        if (is.null(res$"exp(coef)"))
+            res$"exp(coef)" <- exp(res$coef)
+    }
     if (is.null(labels) || (is.logical(confint) && confint)) {
         mod <- refit_model(cl = object$call, ENV = env,
                            summary = object, .call = .call)
@@ -165,10 +168,9 @@ prettify.summary.coxph <- prettify.summary.coxph.penal <-
             res$CI_lower[1:nrow(CI)] <- exp(CI[,1])
             res$CI_upper[1:nrow(CI)] <- exp(CI[,2])
             ## move confint to the front
-            newVars <- (ncol(res) - 1):ncol(res)
-            res <- cbind(res[, 1:2, drop = FALSE],
-                         res[, newVars],
-                         res[, - c(1:2, newVars)])
+            res <- cbind(res[, c("coef", "exp(coef)"), drop = FALSE],
+                         res[, c("CI_lower", "CI_upper")],
+                         res[, !colnames(res) %in% c("coef", "exp(coef)", "CI_lower", "CI_upper", "se2")])
             names(res)[2] <- "Hazard Ratio"
             names(res)[3] <- "CI (lower)"
             names(res)[4] <- "CI (upper)"
@@ -176,10 +178,9 @@ prettify.summary.coxph <- prettify.summary.coxph.penal <-
             res$CI_lower[1:nrow(CI)] <- CI[,1]
             res$CI_upper[1:nrow(CI)] <- CI[,2]
             ## move confint to the front
-            newVars <- (ncol(res) -1):ncol(res)
-            res <- cbind(res[, 1, drop = FALSE],
-                         res[, newVars],
-                         res[, - c(1, newVars)])
+            res <- cbind(res[, c("coef"), drop = FALSE],
+                         res[, c("CI_lower", "CI_upper")],
+                         res[, !colnames(res) %in% c("coef", "CI_lower", "CI_upper", "se2")])
             names(res)[2] <- "CI (lower)"
             names(res)[3] <- "CI (upper)"
         }
@@ -473,7 +474,7 @@ prettifyPValue <- function(object,
                            smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                            signif.stars = getOption("show.signif.stars"), ...) {
 
-    wchPval <- grep("Pr(.*)|p-value", names(object))
+    wchPval <- grep("Pr(.*)|p-value|^p$", names(object))
     if (length(wchPval) != 0) {
         if (signif.stars) {
             object$signif <- symnum(object[, wchPval], corr = FALSE, na = FALSE,
