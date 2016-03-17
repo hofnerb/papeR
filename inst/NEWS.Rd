@@ -8,6 +8,11 @@
       default if \code{floating = FALSE}.
     }
   }
+  \subsection{Bug-fixes}{
+     \itemize{
+      \item Make tests compatible with new testthat version (> 0.11.0).
+    }
+  }
 }
 \section{Changes in papeR version 1.0-0 (2015-12-01)}{
   \subsection{User-visible changes}{
