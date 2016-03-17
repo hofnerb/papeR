@@ -120,23 +120,23 @@ test_that("NAs are correctly replaced for factors",{
               expect_equal(check_which(c("x", "y"), df, "extract"), c("x", "y"))
 
               expect_error(check_which(-1, df, "extract"),
-                           paste("Error : One cannot extract labels for",
-                                 "none-existing variables\n"))
+                           paste("One cannot extract labels for",
+                                 "none-existing variables"))
               expect_error(check_which(3, df, "extract"),
-                           paste("Error : One cannot extract labels for",
-                                 "none-existing variables\n"))
+                           paste("One cannot extract labels for",
+                                 "none-existing variables"))
               expect_error(check_which(1.2, df, "extract"),
-                           paste("Error : One cannot extract labels for",
-                                 "none-existing variables\n"))
+                           paste("One cannot extract labels for",
+                                 "none-existing variables"))
 
               expect_error(check_which("z", df, "extract"),
-                           paste("Error : One cannot extract labels for",
+                           paste("One cannot extract labels for",
                                  "none-existing variables\n  Variables",
-                                 "not found in data set:\n\tz\n"))
+                                 "not found in data set:\n\tz"))
               expect_error(check_which(c("a", "z"), df, "extract"),
-                           paste("Error : One cannot extract labels for",
+                           paste("One cannot extract labels for",
                                  "none-existing variables\n  Variables",
-                                 "not found in data set:\n\ta\n\tz\n"))
+                                 "not found in data set:\n\ta\n\tz"))
           })
 
 ############################################################

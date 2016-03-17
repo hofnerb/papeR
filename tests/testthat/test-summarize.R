@@ -19,7 +19,7 @@ test_that("latex.table.cont works", {
                          ".*",
                          "age & 108 &  & 11.00 & 2.25 &  & 8.00 & 9.00 & 11.00 & 13.00 & 14.00"))
     ## check that longtable isn't printed here
-    expect_that(latex.table.cont(Orthodont), not(prints_text("longtable")))
+    expect_output(latex.table.cont(Orthodont), "(longtable){0}")
     ## but here
     expect_output(latex.table.cont(Orthodont, table = "longtable"), "longtable")
 })
@@ -35,7 +35,7 @@ test_that("latex.table.fac works", {
                          ".*",
                          "& Female &  &  44 & 40.7"))
     ## check that longtable isn't printed here
-    expect_that(latex.table.fac(Orthodont), not(prints_text("longtable")))
+    expect_output(latex.table.fac(Orthodont), "(longtable){0}")
     ## but here
     expect_output(latex.table.fac(Orthodont, table = "longtable"), "longtable")
 })
@@ -166,6 +166,7 @@ test_that("endhead is included if necessary", {
     options(xtable.tabular.environment = "longtable")
     expect_output(print(xtable(summarize(Orthodont, type = "numeric"))),
                   ".*cmidrule\\{7-11\\}\n.*endhead\ndistance.*")
+    options(xtable.tabular.environment = NULL)
 })
 
 test_that("xtable works for summarize_factor with groups", {
