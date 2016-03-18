@@ -599,9 +599,10 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                                  caption.placement = getOption("xtable.caption.placement", "top"),
                                  hline.after = getOption("xtable.hline.after", NULL),
                                  add.to.row = getOption("xtable.add.to.row", NULL),
-                                 include.rownames = getOption("xtable.include.rownames", FALSE),
                                  booktabs = getOption("xtable.booktabs", TRUE),
                                  sanitize.text.function = get_option(x, "sanitize"),
+                                 math.style.negative = getOption("xtable.math.style.negative", TRUE),
+                                 math.sytle.exponents = getOption("xtable.math.style.exponents", TRUE),
                                  tabular.environment = getOption("xtable.tabular.environment", "tabular"),
                                  floating = getOption("xtable.floating", FALSE),
                                  latex.environments = getOption("xtable.latex.environments", c("center")),
@@ -662,13 +663,19 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
                                        midrules, "\\bottomrule\n"))
     }
 
+    if (include.rownames)
+        warning(sQuote("include.rownames"),
+                " is ignored.")
+
     print.xtable(x,
                  caption.placement = caption.placement,
                  hline.after = hline.after,
-                 include.rownames = include.rownames,
+                 include.rownames = FALSE,
                  booktabs = booktabs,
                  add.to.row = add.to.row,
                  sanitize.text.function = sanitize.text.function,
+                 math.style.negative = math.style.negative,
+                 math.sytle.exponents = math.style.exponents,
                  tabular.environment = tabular.environment,
                  floating = floating,
                  ...)
