@@ -598,6 +598,7 @@ xtable.summary <- function(x, caption = NULL, label = NULL, align = NULL,
 print.xtable.summary <- function(x, rules = NULL, header = NULL,
                                  caption.placement = getOption("xtable.caption.placement", "top"),
                                  hline.after = getOption("xtable.hline.after", NULL),
+                                 include.rownames = FALSE,
                                  add.to.row = getOption("xtable.add.to.row", NULL),
                                  booktabs = getOption("xtable.booktabs", TRUE),
                                  sanitize.text.function = get_option(x, "sanitize"),
@@ -664,7 +665,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
     }
 
     if (include.rownames)
-        warning(sQuote("include.rownames"),
+        warning(sQuote("include.rownames = TRUE"),
                 " is ignored.")
 
     print.xtable(x,

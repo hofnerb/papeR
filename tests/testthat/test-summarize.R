@@ -180,4 +180,17 @@ test_that("xtable works for summarize_factor with groups", {
                         "& \\\\multicolumn\\{2\\}\\{c\\}\\{Sex: Female\\}.*"))
 })
 
+test_that("include.rownames is ignored", {
+    tab <- summarize(Orthodont, type = "numeric")
+    expect_output(print(xtable(tab), include.rownames = FALSE),
+                  ".*\n distance .*\n  age .*")
+    expect_warning(print(xtable(tab), include.rownames = TRUE))
+    expect_output(print(xtable(tab), include.rownames = TRUE),
+                  ".*\n distance .*\n  age .*")
+    expect_output(print(xtable(tab)),
+                  ".*\n distance .*\n  age .*")
+})
+
 }
+
+

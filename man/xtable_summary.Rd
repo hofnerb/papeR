@@ -17,6 +17,7 @@
 \method{print}{xtable.summary}(x, rules = NULL, header = NULL,
       caption.placement = getOption("xtable.caption.placement", "top"),
       hline.after = getOption("xtable.hline.after", NULL),
+      include.rownames = FALSE,
       add.to.row = getOption("xtable.add.to.row", NULL),
       booktabs = getOption("xtable.booktabs", TRUE),
       sanitize.text.function = get_option(x, "sanitize"),
@@ -87,9 +88,7 @@
     each variable.
   }
   \item{include.rownames}{
-    logical. If \code{TRUE} the rows names are printed.
-    Default value is \code{FALSE}. Note that the standard default of
-    \code{\link[xtable]{print.xtable}} is \code{TRUE}.
+    logical. Always set to \code{FALSE}.
   }
   \item{booktabs}{
     logical. If \code{TRUE} (default), the \code{toprule},
@@ -104,6 +103,17 @@
     the output format. Per default the function \code{\link{toLatex}} is
     used to sanitize the text. For more options see
     \code{\link[xtable]{print.xtable}}.
+  }
+  \item{math.style.negative}{
+    logical. If \code{TRUE} (default) the negative sign is wrapped in
+    dollar signs for LaTeX tables. Note that the standard default of
+    \code{\link[xtable]{print.xtable}} is \code{FALSE}.
+  }
+  \item{math.sytle.exponents}{
+    logical. If \code{TRUE} (default) scientific numers are set as
+    exponents. See \code{\link[xtable]{print.xtable}} for details.
+    Note that the standard default of \code{\link[xtable]{print.xtable}}
+    is \code{FALSE}.
   }
   \item{tabular.environment}{
     character string. Per default \code{"tabular"} is used. For long
