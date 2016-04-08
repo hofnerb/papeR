@@ -244,7 +244,7 @@ xtable(summarize(Orthodont, type = "numeric", group = "Sex"))
 ```
 to get the following PDF output
 
-![LaTeX Output](graphics/tables.png)
+![LaTeX Output](tables.png)
 
 Note that per default, `booktabs` is set to `TRUE` in `print.xtable.summary`, and
 thus `\usepackage{booktabs}` is needed in the header of the LaTeX report. For details

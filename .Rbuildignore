@@ -12,4 +12,4 @@ copy_Rout_to_Routsave.R
 tests/.*\.Rout\.save$
 tests/testthat/bib.bib
 vignettes/auto
-vignettes/graphics/papeR.*
+vignettes/graphics
