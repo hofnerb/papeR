@@ -1,4 +1,90 @@
-commit 77f5b562e1f9fa12c49d1d7b02374fd3ea8e85a6
+commit bd10235228b1284ea5e331bd601311321b6b1966
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    New release version 1.0-1
+
+commit ae8be3cf011a3ac97dbf8d28ec35e85997215b00
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Minor changes to SOP
+
+commit dc7101d6471edd6748af1f3a0dc650ed0c8376c8
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Moved tables.png to make it permanent in source package
+
+commit d3ed83d6214161e4aa578d3d3a6f3dd96105e9f8
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed typo in math.style.exponents
+
+commit 269e9ee0db6c720d80949445db000a03efe9067b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Update appveyor.yml
+
+commit 42e0afaf51f536b9efd73134e191696a9489156c
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fix problems with include.rownames
+
+commit 0b5613c57062872406e286113bfa79cd3227a273
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed problem with include.rownames by ignoring the option (fixes #30)
+    Use $-$ per default for negative numeric values (fixes #32)
+
+commit 6734fa379a3a398f6fbe2cb016f23f25ab5faec6
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Updated NEWS
+
+commit a49591a786aab58cafac0917972ba7782ba084da
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Make new version of testthat happy
+
+commit 5d150c19ccc75118ef98d3372f71f1221c025f1b
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Improve prettify for Cox fraity models
+
+commit 2050be09f44fb9d02ee9dfbc08debdcf44e86537
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fix interface for dates (still not working completely, see #25)
+
+commit d13755d41bbfac74359c700c1742e14eb5f62212
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    prettify: Added support for Cox fraity models
+
+commit 1d7be45403edcca736dbcee9c765f3bccfed0765
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    fixed refactored code to compute numeric summary
+
+commit 29365497bbaafa027b2035bcfb510a5a5a705549
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed messages of old summary functions
+
+commit f31d5a4aef9679d846ab4e1d14f61260ccf608f1
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    print.xtable.summary now also centers tables per default if floating = FALSE
+
+commit 997c8c9b7098b5b42b607a3f8019f4d27fb0a37e
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Increase patch level
+
+commit cd695dc557c9b037c6387ad14baeb32039e5b0d7
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Typo
+
+commit 03b1ea422d5c1d888878a4c113d70c8d4ec1ad28
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     Prepare release version 1.0-0

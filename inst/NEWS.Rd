@@ -1,16 +1,22 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
-\section{Changes in papeR version 1.0-1 (2015-12-01)}{
+\section{Changes in papeR version 1.0-1 (2016-04-08)}{
   \subsection{User-visible changes}{
     \itemize{
       \item \code{print.xtable.summary} now also centers tables per
       default if \code{floating = FALSE}.
+      \item Added support for Cox frailty models in \code{prettify}
+      \item Fixed problem with \code{include.rownames} by ignoring the option 
+        (fixes \href{https://github.com/hofnerb/papeR/issues/30}{#30}).
+      \item Use \code{$-$} per default for negative numeric values 
+        (fixes \href{https://github.com/hofnerb/papeR/issues/32}{#32}).
     }
   }
   \subsection{Bug-fixes}{
      \itemize{
       \item Make tests compatible with new testthat version (> 0.11.0).
+      \item Fixed messages of old summary functions.
     }
   }
 }
