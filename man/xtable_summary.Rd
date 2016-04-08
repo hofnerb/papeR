@@ -22,7 +22,7 @@
       booktabs = getOption("xtable.booktabs", TRUE),
       sanitize.text.function = get_option(x, "sanitize"),
       math.style.negative = getOption("xtable.math.style.negative", TRUE),
-      math.sytle.exponents = getOption("xtable.math.style.exponents", TRUE),
+      math.style.exponents = getOption("xtable.math.style.exponents", TRUE),
       tabular.environment = getOption("xtable.tabular.environment", "tabular"),
       floating = getOption("xtable.floating", FALSE),
       latex.environments = getOption("xtable.latex.environments", c("center")),
@@ -109,7 +109,7 @@
     dollar signs for LaTeX tables. Note that the standard default of
     \code{\link[xtable]{print.xtable}} is \code{FALSE}.
   }
-  \item{math.sytle.exponents}{
+  \item{math.style.exponents}{
     logical. If \code{TRUE} (default) scientific numers are set as
     exponents. See \code{\link[xtable]{print.xtable}} for details.
     Note that the standard default of \code{\link[xtable]{print.xtable}}

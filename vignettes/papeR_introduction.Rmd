@@ -8,7 +8,7 @@ output:
 ---
 
 <!--
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Using papeR with Markdown}
 -->
 
