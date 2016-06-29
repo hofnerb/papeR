@@ -23,7 +23,7 @@ summarize <- summarise <- function(data, type = c("numeric", "factor"),
         cll$sep <- NULL
     }
     ## and evaluate the modified call
-    eval(cll)
+    eval.parent(cll)
 }
 
 ################################################################################

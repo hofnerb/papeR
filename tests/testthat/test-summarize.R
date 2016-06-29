@@ -1,7 +1,7 @@
 library("papeR")
 context("summarize functions")
 
-if (require("nlme")) {
+if (require("nlme", quietly = TRUE)) {
     ## Use dataset Orthodont
     data(Orthodont, package = "nlme")
     Ortho_small <<- Orthodont[Orthodont$Subject %in% c("M01", "M02", "F01", "F02"), ]
@@ -125,12 +125,12 @@ test_that("caption works", {
                         floating = TRUE),
                   ".*\\caption\\{Test\\}.*\\label\\{tab:Test\\}")
 
-    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test"),
-                        tabular.environment = "longtable", floating = TRUE),
+    expect_output(expect_warning(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test"),
+                        tabular.environment = "longtable", floating = TRUE)),
                   ".*\\caption\\{Test\\}.*")
-    expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test",
+    expect_output(expect_warning(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test",
                                label= "tab:Test"),
-                        tabular.environment = "longtable", floating = TRUE),
+                        tabular.environment = "longtable", floating = TRUE)),
                   ".*\\caption\\{Test\\}.*\\label\\{tab:Test\\}")
 
     expect_output(print(xtable(summarize(Orthodont, type = "numeric"), caption= "Test"),
@@ -184,13 +184,23 @@ test_that("include.rownames is ignored", {
     tab <- summarize(Orthodont, type = "numeric")
     expect_output(print(xtable(tab), include.rownames = FALSE),
                   ".*\n distance .*\n  age .*")
-    expect_warning(print(xtable(tab), include.rownames = TRUE))
-    expect_output(print(xtable(tab), include.rownames = TRUE),
+    ## expect output AND warning
+    expect_output(expect_warning(print(xtable(tab), include.rownames = TRUE)),
                   ".*\n distance .*\n  age .*")
     expect_output(print(xtable(tab)),
                   ".*\n distance .*\n  age .*")
 })
 
+test_that("scoping works correctly", {
+    test <- function(type) {
+        a1 <- Orthodont
+        ## get summary for continuous variables
+        (tab1 <- summarize(a1, type = type))
+    }
+    expect_output(print(test("factor")), 
+                  ".*\n1  Subject .*")
+    expect_output(print(test("numeric")),
+                  ".*\n1 distance .*\n2      age .*")
+})
+
 }
-
-

@@ -152,7 +152,7 @@ test_that("glm interface works", {
 })
 
 ### check lme interface
-if (require("nlme")) {
+if (require("nlme", quietly = TRUE)) {
     test_that("nlme interface works", {
         expect_warning(res <- fit_model("lme"))
         expect_equivalent(res[[1]], res[[3]])
@@ -166,7 +166,7 @@ if (require("nlme")) {
 }
 
 ## check coxph interfaces
-if (require("survival")) {
+if (require("survival", quietly = TRUE)) {
     test_that("survival interface works", {
         expect_warning(res <- fit_model("coxph"))
         expect_equivalent(res[[1]], res[[3]])
@@ -179,7 +179,7 @@ if (require("survival")) {
 }
 
 ## check lmer interface
-if (require("lme4")) {
+if (require("lme4", quietly = TRUE, warn.conflicts = FALSE)) {
     test_that("lme4 interface works", {
         expect_warning(res <- fit_model("lmer"))
         if (packageDescription("lme4")$Version >= 1) {
@@ -236,7 +236,7 @@ fit_model <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
     return(list(data = data, model = mod))
 }
 
-if (require("nlme") && require("lme4") && packageDescription("lme4")$Version >= 1) {
+if (require("nlme", quietly = TRUE) && require("lme4", quietly = TRUE) && packageDescription("lme4")$Version >= 1) {
     test_that("CIs can be hand specified", {
         for (model_class in c("lm", "glm", "lme", "lmer")) {
             ## fit model
@@ -254,7 +254,7 @@ if (require("nlme") && require("lme4") && packageDescription("lme4")$Version >= 
 ## Test anova
 ################################################################################
 
-if (require("nlme") && require("survival") && require("lme4") && packageDescription("lme4")$Version >= 1) {
+if (require("nlme", quietly = TRUE) && require("survival", quietly = TRUE) && require("lme4", quietly = TRUE) && packageDescription("lme4")$Version >= 1) {
     test_that("prettify.anova works", {
         for (model_class in c("lm", "glm", "lme", "lmer", "coxph")) {
             ## fit model
@@ -268,7 +268,7 @@ if (require("nlme") && require("survival") && require("lme4") && packageDescript
                 expect_match(as.character(ps_anova[, nc]),
                              "\\*\\*\\*")
             }
-            if (require("car")) {
+            if (require("car", quietly = TRUE)) {
                 ps_anova <- prettify(Anova(mod))
                 ps_anova_lbl <- prettify(Anova(mod),
                                          labels = c(x = "Predictor x",
@@ -299,7 +299,7 @@ if (require("nlme") && require("survival") && require("lme4") && packageDescript
 ## Test HR
 ################################################################################
 
-if (require("survival")) {
+if (require("survival", quietly = TRUE)) {
     test_that("survival works", {
         RES <- fit_model("coxph")
         mod <- RES$mod
@@ -352,7 +352,7 @@ fit_anova <- function(model_class =  c("lm", "glm", "coxph", "lme", "lmer")) {
 }
 
 
-if (require("nlme") && require("survival") && require("lme4") && packageDescription("lme4")$Version >= 1) {
+if (require("nlme", quietly = TRUE) && require("survival", quietly = TRUE) && require("lme4", quietly = TRUE) && packageDescription("lme4")$Version >= 1) {
     test_that("prettify.anova works", {
         for (model_class in c("lm", "glm", "lme", "lmer", "coxph")) {
             ## fit model
