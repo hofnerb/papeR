@@ -67,9 +67,9 @@ labels.lv <- function(object, abbreviate = FALSE, ...) {
             names(value) <- which
     }
 
-    for (i in which) {
-        attr(data[[i]], "variable.label") <- value[[i]]
-        class(data[[i]]) <- c("lv", class(data[[i]]))
+    for (i in seq_along(which)) {
+        attr(data[[which[i]]], "variable.label") <- value[[i]]
+        class(data[[which[i]]]) <- c("lv", class(data[[which[i]]]))
     }
 
     ## remove attribute of data set if it exists
