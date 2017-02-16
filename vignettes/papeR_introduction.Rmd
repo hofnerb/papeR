@@ -44,7 +44,7 @@ by separating variable names and factor levels (`prettify()`).
 ## Getting started
 
 Before we start, we need to install the package. The package can be easily obtained
-from [CRAN](http://CRAN.R-project.org/package=papeR), e.g. via the command
+from [CRAN](https://CRAN.R-project.org/package=papeR), e.g. via the command
 ```{r install_CRAN, eval = FALSE}
 install.packages("papeR")
 ```

@@ -1,4 +1,30 @@
-commit bd10235228b1284ea5e331bd601311321b6b1966
+commit 45e6510b9fd7605e7f231d4606d8be8dac5a7447
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Release version 1.0-2
+    (update README, update links to https, update release related material)
+
+commit 7caff5ad03f108f62ed39a1805684d75851bdf39
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    removed confint.lme to make CRAN happy (fixes #34)
+
+commit d21752e66d27f00b54291ef519b147175a4aa28b
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    changed maintainer's email address
+
+commit 05c32776f2de939e73baddcb42a89debb32f5e10
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    fixed bug in label assignment
+
+commit 5869382694b10000efa843db10a47bb3e2568117
+Author: Benjamin Hofner <benjamin.hofner@fau.de>
+
+    Fixed #33
+
+commit ce9d2a3f18956f237c87fbc5c5e38b64a4692e6c
 Author: Benjamin Hofner <benjamin.hofner@fau.de>
 
     New release version 1.0-1

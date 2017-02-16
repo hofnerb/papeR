@@ -9,11 +9,11 @@ citEntry(
   author = personList(as.person("Benjamin Hofner")),
   year = year,
   note = paste("{R} package version", vers),
-  url = "http://CRAN.R-project.org/package=papeR",
+  url = "https://CRAN.R-project.org/package=papeR",
   textVersion =
   paste("B. Hofner (", year,
 	"). papeR: A Toolbox for Writing Pretty Papers and Reports, ",
 	paste("R package version", vers),
-        ", http://CRAN.R-project.org/package=papeR", ".",
+        ", https://CRAN.R-project.org/package=papeR", ".",
 	sep="")
 )

@@ -1,6 +1,22 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-2 (2017-02-16)}{
+  \subsection{Miscellaneous}{
+    \itemize{
+      \item Updated maintainer's email address.
+    }
+  }
+  \subsection{Bug-fixes}{
+     \itemize{
+      \item Fix scoping in \code{summarize} function
+        (fixes \href{https://github.com/hofnerb/papeR/issues/33}{#33}).
+      \item Removed \code{confint.lme} to make CRAN happy
+        (fixes \href{https://github.com/hofnerb/papeR/issues/34}{#34}).
+      \item Fixed bug in \code{label} assignment with numerical \code{which}.
+    }
+  }
+}
 \section{Changes in papeR version 1.0-1 (2016-04-08)}{
   \subsection{User-visible changes}{
     \itemize{
