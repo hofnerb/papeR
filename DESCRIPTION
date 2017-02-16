@@ -10,7 +10,6 @@ Depends:
     car,
     xtable
 Enhances:
-    nlme,
     lme4,
     survival
 Imports:
@@ -19,6 +18,7 @@ Imports:
     graphics,
     stats
 Suggests:
+    nlme,
     knitr,
     testthat (>= 0.10.0),
     foreign

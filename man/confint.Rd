@@ -1,16 +1,14 @@
-\name{confint.lme}
-\alias{confint.lme}
+\name{confint.mer}
 \alias{confint.mer}
 \title{Confidence intervals for mixed models}
 \usage{
-\method{confint}{lme}(object, parm, level = 0.95, ...)
 \method{confint}{mer}(object, parm, level = 0.95,
             simulate = c("ifneeded", TRUE, FALSE),
             B = 1000,...)
 }
 \arguments{
   \item{object}{
-    Model of class \code{lme} or \code{mer}.
+    Model of class \code{mer}.
   }
 
   \item{parm}{
@@ -26,7 +24,7 @@
     If \dQuote{"ifneeded"} is specified (default), simulated confidence
     intervals are returned if (and only if) no z-value exists in the
     corresponding \code{summary} and asymptotic confidence intervals
-    will be returned elsewhise. If \code{TRUE} (or \dQuote{"TRUE"})
+    will be returned otherwise. If \code{TRUE} (or \dQuote{"TRUE"})
     confidence intervals will be estimated using \code{\link{ci}} from
     package \pkg{gmodels} which uses \code{\link[lme4]{mcmcsamp}} internally.
     If \code{FALSE} (or \dQuote{"FALSE"}), asymptotic confidence
@@ -43,11 +41,12 @@
   }
 }
 \value{
-  Matrix with confidence intervalls.
+  Matrix with confidence intervals.
 }
 \description{
   Compute confidence intervals for mixed models from
-  packages \pkg{nlme} and \pkg{lme4}
+  package \pkg{lme4} (prior to version 1.0). 
+  This function is only needed for backward compatibility.
 }
 \author{
   Benjamin Hofner, partially based on code from package stats.

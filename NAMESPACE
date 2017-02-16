@@ -23,7 +23,6 @@ export(as.ldf,
        "labels<-")
 
 S3method(Anova, lme)
-S3method(confint, lme)
 S3method(confint, mer)
 S3method(as.ldf, data.frame)
 S3method(labels, lv)

@@ -216,7 +216,7 @@ prettify.summary.lme <- function(object, labels = NULL, sep = ": ", extra.column
                 ## model could not be refitted, i.e., mod == FALSE
                 confint <- mod
             } else {
-                CI <- confint(mod, level = level)
+                CI <- nlme::intervals(mod, level = level, which = "fixed")$fixed[, c("lower", "upper")]
             }
         }
     } else {

@@ -157,9 +157,9 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
   To compute confidence intervalls, the model is refitted internally
   extrating the call and environment from the model summary. All
   functions then use \code{\link{confint}} on the refitted model. For
-  \code{lme} and \code{mer} models special
-  \code{\link[=confint.mer]{confint}} functions are defined in this
-  package. For details see there. Note that is it highly important
+  \code{mer} models special \code{\link[=confint.mer]{confint}} functions 
+  are defined in this package (for backward compatibility). For details see there. 
+  Note that is it highly important
   \bold{not} to modify or delete the data in the fitting environment if
   one wants to obtain correct confidence intervals. See examples for what
   might happen. We try ourt best to find changes of the data and to warn
@@ -200,7 +200,7 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
 
   \code{\link{confint}} and \code{\link{ci}} for confidence intervals.
   Special functions are implemented for mixed models:
-  \code{\link{confint.lme}} and \code{\link{confint.mer}}.
+  \code{\link{confint.mer}}.
 }
 \examples{
 ## Example requires package nlme to be installed and loaded
