@@ -621,9 +621,9 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
         endhead <- "\\endhead\n"
 
     if (booktabs)
-        cat("%% Output requires \\usepackage{booktabs}.\n")
+        message("NOTE: Output requires \\usepackage{booktabs} in your preamble.")
     if (tabular.environment == "longtable")
-        cat("%% Output requires \\usepackage{longtable}.\n")
+        message("NOTE: Output requires \\usepackage{longtable} in your preamble.")
 
     ## use centering even if not a float
     if (!floating && latex.environments == "center") {
@@ -634,7 +634,7 @@ print.xtable.summary <- function(x, rules = NULL, header = NULL,
     ## we need to make use of the LaTeX package capt-of
     if (!is.null(caption(x)) && !floating &&
          tabular.environment != "longtable") {
-        cat("%% Output requires \\usepackage{capt-of}.\n")
+        message("NOTE: Output requires \\usepackage{capt-of} in your preamble.")
         cat("\\begin{minipage}{\\linewidth}\n",
             "  \\captionof{table}{", caption(x), "}\n",
             ifelse(!is.null(label(x)),
