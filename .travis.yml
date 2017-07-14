@@ -12,7 +12,7 @@ repos:
   CRAN: https://cloud.r-project.org
   
 before_install:
-  - tlmgr install texlive-latex-extra
+  - tlmgr install capt-of
 
 r_github_packages:
   - jimhester/covr
