@@ -1,4 +1,39 @@
-commit 45e6510b9fd7605e7f231d4606d8be8dac5a7447
+commit e8959169619786eb1b043eaad37693d363afe035
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Release papeR 1.0-3
+
+commit 6ea6cda410b8c68cf54ac1445d1c0cbdbfafa579
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    stop checking for specific error message (closes #39)
+
+commit bc51e9e5ee44092893a6d91b282c848191a0d185
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    and now?
+
+commit 1d6b6c01c42c1095fe8bd8e3933f6d336a95fbc2
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    next try
+
+commit ddc38e2f0d073138d846a2f0a3f20f75f85c0bf2
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    try to fix latex on travis-ci
+
+commit 18482aad1486c0c0bf246128081018c50fa38349
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Updated travis-ci
+
+commit 80bffd468543bd168245f8d002989e1d93c80ddc
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    make rmarkdown happy. closes #35
+
+commit 8da188f56533ae269bfd29794a134dbe1dbf905e
 Author: Benjamin Hofner <benjamin.hofner@pei.de>
 
     Release version 1.0-2

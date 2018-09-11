@@ -1,6 +1,16 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-3 (2018-09-11)}{
+  \subsection{Bug-fixes}{
+     \itemize{
+      \item Stop checking for specific error message
+        (fixes \href{https://github.com/hofnerb/papeR/issues/39}{#39}).
+      \item Make Rmarkdown happy
+        (fixes \href{https://github.com/hofnerb/papeR/issues/35}{#35}).
+    }
+  }
+}
 \section{Changes in papeR version 1.0-2 (2017-02-16)}{
   \subsection{Miscellaneous}{
     \itemize{
