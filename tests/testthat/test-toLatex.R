@@ -102,8 +102,7 @@ test_that("toLatex.LatexBibtex and toBibtex.LatexBibtex works", {
 test_that("write.bib", {
     expect_message(write.bib(c()),
                    "Empty package list: nothing to be done.")
-    expect_error(write.bib("nonexisting_pkg"),
-                 "package .* not found")
+    expect_error(write.bib("nonexisting_pkg"))
     rref <- bibentry(
         bibtype = "Manual",
         title = "R: A Language and Environment for Statistical Computing",
