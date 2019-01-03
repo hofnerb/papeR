@@ -1,4 +1,24 @@
-commit e8959169619786eb1b043eaad37693d363afe035
+commit fb51405fd71fede88946197e7de9c41673b2cb8e
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Release papeR 1.0-4
+
+commit d472cf04388f1b817aeee1b65d96590bcc3a28f4
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    fixed handling of trailing zeros in prettify (closes #40)
+
+commit 193c385ecbc5fdb3d8154bdafddf443b3bc61c49
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    fix error in vignette
+
+commit cbbfbedff3eda3f48f2ea55d8ba675ed2502eaaa
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    add rmarkdown to Suggests
+
+commit 664c1c822fd5b000585baed5cb04cbaf7d180978
 Author: Benjamin Hofner <benjamin.hofner@pei.de>
 
     Release papeR 1.0-3

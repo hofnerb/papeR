@@ -1,6 +1,16 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-4 (2019-01-03)}{
+  \subsection{Bug-fixes}{
+     \itemize{
+      \item Fixed vignette (load \pkg{knitr} correctly).
+      \item Added \pkg{rmarkdown} to \code{Suggests:}.
+      \item Fixed handling of trailing zeros in \code{prettify}
+        (fixes \href{https://github.com/hofnerb/papeR/issues/40}{#40}).
+    }
+  }
+}
 \section{Changes in papeR version 1.0-3 (2018-09-11)}{
   \subsection{Bug-fixes}{
      \itemize{
