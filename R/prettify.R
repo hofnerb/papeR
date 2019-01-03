@@ -469,7 +469,7 @@ prettify.data.frame <- function(object, labels = NULL, sep = ": ", extra.column 
 }
 
 
-### helper for pretty p-values
+### helper for pretty p-values and other numerical values
 prettifyPValue <- function(object,
                            smallest.pval = 0.001, digits = NULL, scientific = FALSE,
                            signif.stars = getOption("show.signif.stars"), ...) {
@@ -492,11 +492,8 @@ prettifyPValue <- function(object,
     }
 
     if (!is.null(digits)) {
-        for (i in names(object)[-wchPval]) {
-            if (is.numeric(object[, i]))
-                object[, i] <- format(zapsmall(object[, i]), digits = digits,
-                                      scientific = scientific, ...)
-        }
+        object[-wchPval] <- sapply(object[-wchPval], function(col) 
+            formatC(col, digits = digits, flag = "#", ...))
     }
 
     object

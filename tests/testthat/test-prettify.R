@@ -375,3 +375,16 @@ if (require("nlme", quietly = TRUE) && require("survival", quietly = TRUE) && re
         }
     })
 }
+
+################################################################################
+## Test that trailing zeros are not dropped
+################################################################################
+
+if (require("survival", quietly = TRUE)) {
+    test_that("trailing zeros are not dropped", {
+        data(ovarian, package = "survival")
+        mod <- coxph(Surv(futime, fustat) ~ age, data = ovarian)
+        x <- prettify(summary(mod), digit = 3, env = .GlobalEnv)
+        expect_match(x[1,5], "1.30")
+    })
+}
