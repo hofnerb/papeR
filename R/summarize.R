@@ -9,6 +9,10 @@ summarize <- summarise <- function(data, type = c("numeric", "factor"),
     show.NAs = any(is.na(data[, variables])), ...) {
 
     type <- match.arg(type)
+    
+    ## check if data is a dplyr::tbl
+    if (inherits(data, "tbl")) 
+        warning("This is a call to papeR::summarize. If you want to use the dplyr function explizitly call dplyr::summarize() on your data.")
 
     ## get call
     cll <- match.call()
@@ -84,7 +88,7 @@ summarize_numeric <- function(data, variables = names(data),
     }
 
     if (!is.null(group)) {
-        if(!is.factor(data[, group]))
+        if(!is.factor(data[, group, drop = TRUE]))
             stop(sQuote("group"), " must be a factor variable")
         if (group %in% variables) {
             idx <- variables != group
@@ -92,11 +96,11 @@ summarize_numeric <- function(data, variables = names(data),
             variable.labels <- variable.labels[idx]
         }
         ## remove observations with missing group:
-        if (any(is.na(data[, group]))) {
+        if (any(is.na(data[, group, drop = TRUE]))) {
             warning("Removed observations with missing group")
-            data <- data[!is.na(data[, group]), ]
+            data <- data[!is.na(data[, group, drop = TRUE]), ]
         }
-        group_var <- data[, group]
+        group_var <- data[, group, drop = TRUE]
     }
     ## get numerical variables
     num <- mySapply(data[, variables], function(x)
@@ -145,14 +149,14 @@ summarize_numeric <- function(data, variables = names(data),
     for (i in 1:nrow(sums)) {
         if (!is.null(group)) {
             idx <- c(4:5, 7:8, 10:14)
-            sums[i, idx] <- compute_summary(data[, sums$var[i]],
+            sums[i, idx] <- compute_summary(data[, sums$var[i], drop = TRUE],
                                             group_var = group_var,
                                             group = sums$group[i],
                                             incl_outliers = incl_outliers,
                                             digits = digits)
         } else {
             idx <- c(2:3, 5:6, 8:12)
-            sums[i, idx] <- compute_summary(data[, sums$var[i]],
+            sums[i, idx] <- compute_summary(data[, sums$var[i], drop = TRUE],
                                             incl_outliers = incl_outliers,
                                             digits = digits)
         }
@@ -385,7 +389,7 @@ summarize_factor <- function(data, variables = names(data),
     }
 
     if (!is.null(group)) {
-        if(!is.factor(data[, group]))
+        if(!is.factor(data[, group, drop = TRUE]))
             stop(sQuote("group"), " must be a factor variable")
         if (group %in% variables) {
             idx <- variables != group
@@ -393,11 +397,11 @@ summarize_factor <- function(data, variables = names(data),
             variable.labels <- variable.labels[idx]
         }
         ## remove observations with missing group:
-        if (any(is.na(data[, group]))) {
+        if (any(is.na(data[, group, drop = TRUE]))) {
             warning("Removed observations with missing group")
-            data <- data[!is.na(data[, group]), ]
+            data <- data[!is.na(data[, group, drop = TRUE]), ]
         }
-        group_var <- data[, group]
+        group_var <- data[, group, drop = TRUE]
 
         cl <- match.call()
         cl[["group"]] <- NULL
@@ -469,7 +473,7 @@ summarize_factor <- function(data, variables = names(data),
                                 function(i) rep(variable.labels[i], each = n.levels[i])))
 
     ## get all levels
-    lvls <- unlist(lapply(variables, function(x) levels(data[, x])))
+    lvls <- unlist(lapply(variables, function(x) levels(data[, x, drop = TRUE])))
     colnames(lvls) <- NULL
 
     ## setup results object
@@ -483,8 +487,8 @@ summarize_factor <- function(data, variables = names(data),
 
     ## compute statistics
     for (i in 1:length(var2)) {
-        notna <- sum(!is.na(data[, var2[i]]))
-        stats$N[i] <- sum(data[, var2[i]] == lvls[i], na.rm = TRUE)
+        notna <- sum(!is.na(data[, var2[i], drop = TRUE]))
+        stats$N[i] <- sum(data[, var2[i], drop = TRUE] == lvls[i], na.rm = TRUE)
         stats$Fraction[i] <- round(stats$N[i]/notna, digits = digits)
         if (cumulative)
             stats$CumSum[i] <- sum(stats$Fraction[1:i][var2[1:i] == var2[i]])
