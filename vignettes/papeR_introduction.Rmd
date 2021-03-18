@@ -50,7 +50,7 @@ install.packages("papeR")
 ```
 
 To install the latest development version, one can use **devtools** to install
-packages from [GitHub](http://github.com/hofnerb/papeR). Therefore we need to
+packages from [GitHub](https://github.com/hofnerb/papeR). Therefore we need to
 install and load **devtools** before we can install **papeR**:
 
 ```{r install_github, eval=FALSE}
@@ -324,4 +324,4 @@ various statistical models.
 
 **papeR** is under active development. Feature requests, bug reports, or
 patches, which either add new features or fix bugs, are always welcome. Please use
-the [GitHub](http://github.com/hofnerb/papeR) page.
+the [GitHub](https://github.com/hofnerb/papeR) page.

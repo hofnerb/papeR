@@ -1,4 +1,19 @@
-commit fb51405fd71fede88946197e7de9c41673b2cb8e
+commit e4992c135fba3f1867c2427c92f9280358e3f667
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Release papeR 1.0-5
+
+commit d4fa56006972bff34b40838c2a3163f7f4a03374
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Fixed bug introduced by changes in survival
+
+commit ec5fd870211ea29c88ad80ebc87437ae5856edeb
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Fix issues with tibbles (from dplyr); Solves #43
+
+commit 9e79d5b1c73e8a2db69449b19104bc65926b776d
 Author: Benjamin Hofner <benjamin.hofner@pei.de>
 
     Release papeR 1.0-4

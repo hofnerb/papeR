@@ -1,6 +1,14 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-5 (2021-03-19)}{
+  \subsection{Bug-fixes}{
+     \itemize{
+      \item Fixed error introduced by changes in \pkg{survival}: 
+      \code{data(ovarian, package = "survival")} was replaced with \code{data(cancer, package = "survival")}.
+    }
+  }
+}
 \section{Changes in papeR version 1.0-4 (2019-01-03)}{
   \subsection{Bug-fixes}{
      \itemize{
@@ -127,7 +135,7 @@
       \item Added \file{inst/CONTRIBUTIONS} file.
       \item Updated \file{DESCRIPTION} to reflect CRAN policies.
       \item Changed URL in \file{DESCRIPTION} to
-      \url{http://github.com/hofnerb/papeR}.
+      \url{https://github.com/hofnerb/papeR}.
     }
   }
   \subsection{Bug-fixes}{

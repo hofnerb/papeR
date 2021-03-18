@@ -31,8 +31,8 @@ if (length(args) == 0) {
 if (is.null(vignettes))
     vignettes <- FALSE
 
-path <- "pkg"
-check_path <- "papeR.Rcheck/"
+path <- "."
+check_path <- "../papeR.Rcheck/"
 
 ################################################################################
 ## Copy output of test files
