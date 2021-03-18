@@ -267,8 +267,8 @@ if (require("nlme")) {
 
     ## survival models
     if (require("survival")) {
-        ## Load data set ovarian
-        data(ovarian, package = "survival")
+        ## Load data set ovarian (now part of cancer)
+        data(cancer, package = "survival")
 
         ## fit a Cox model
         mod5 <- coxph(Surv(futime, fustat) ~ age, data=ovarian)
