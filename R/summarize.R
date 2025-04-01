@@ -208,7 +208,7 @@ compute_summary <- function(data, ...)
     UseMethod("compute_summary")
 
 compute_summary.default <- function(data, group_var = NULL, group = NULL,
-                                    incl_outliers, digits) {
+                                    incl_outliers, digits, ...) {
     if (!is.null(group)) {
         data <- data[group_var == group]
     }
@@ -234,7 +234,7 @@ compute_summary.default <- function(data, group_var = NULL, group = NULL,
 }
 
 compute_summary.Date <- function(data, group_var = NULL, group = NULL,
-                                 incl_outliers, digits) {
+                                 incl_outliers, digits, ...) {
     res <- compute_summary.default(unclass(data), group_var, group, incl_outliers,
                                    digits)
     for (i in c("Mean", "Min", "Q1", "Median", "Q3", "Max"))
@@ -244,16 +244,16 @@ compute_summary.Date <- function(data, group_var = NULL, group = NULL,
 
 ################################################################################
 ## Helper for summarize_continuous
-prettify.summarize.numeric <- function(x,
-                                       colnames = get_option(x, "colnames"),
-                                       sep = get_option(x, "sep"),
-                                       sanitize = get_option(x, "sanitize"),
-                                       count = get_option(x, "count"),
-                                       mean_sd = get_option(x, "mean_sd"),
-                                       quantiles = get_option(x, "quantiles"),
+prettify.summarize.numeric <- function(object,
+                                       colnames = get_option(object, "colnames"),
+                                       sep = get_option(object, "sep"),
+                                       sanitize = get_option(object, "sanitize"),
+                                       count = get_option(object, "count"),
+                                       mean_sd = get_option(object, "mean_sd"),
+                                       quantiles = get_option(object, "quantiles"),
                                        ...) {
 
-    tab <- x
+    tab <- object
     ## drop duplicted variable names
     tmp <- tab$variable
     tmp[duplicated(tmp)] <- ""
@@ -516,13 +516,13 @@ summarize_factor <- function(data, variables = names(data),
 
 ################################################################################
 ## Helper for summarize_factor
-prettify.summarize.factor <- function(x,
-                                      colnames = get_option(x, "colnames"),
-                                      sep = get_option(x, "sep"),
-                                      sanitize = get_option(x, "sanitize"),
+prettify.summarize.factor <- function(object,
+                                      colnames = get_option(object, "colnames"),
+                                      sep = get_option(object, "sep"),
+                                      sanitize = get_option(object, "sanitize"),
                                       ...) {
 
-    tab <- x
+    tab <- object
     ## drop duplicted variable names
     tmp <- tab$variable
     tmp[duplicated(tmp)] <- ""
@@ -549,7 +549,7 @@ prettify.summarize.factor <- function(x,
         colNames[nms] <- colnames
     } else {
         colNames <- names(tab)
-        if (get_option(x, "percent")) {
+        if (get_option(object, "percent")) {
             colNames[grepl("Fraction", colNames)] <- "%"
             colNames[grepl("CumSum", colNames)] <- "$\\sum$ %"
         } else {
@@ -559,8 +559,8 @@ prettify.summarize.factor <- function(x,
 
         header <- ""
         ## if more than one blank add group label
-        if (!is.null(get_option(x, "group_labels"))) {
-            lab <- get_option(x, "group_labels")
+        if (!is.null(get_option(object, "group_labels"))) {
+            lab <- get_option(object, "group_labels")
             ## if p.values exist last multicolumn
             ## should not include this column
             if (colNames[length(colNames)] == "p.value")
@@ -582,7 +582,7 @@ prettify.summarize.factor <- function(x,
     set_options(tab, colnames = colNames,
                 rules = rules, align = align,
                 sep = sep, sanitize = sanitize,
-                header = header, group_labels = get_option(x, "group_labels"),
+                header = header, group_labels = get_option(object, "group_labels"),
                 class = "summary")
 }
 

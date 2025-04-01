@@ -119,8 +119,8 @@ refit_model <- function(cl, ENV = globalenv(), summary, .call = "prettify") {
 ## Inside archive path: /src/library/stats/R/confint.R
 ## Licence of R package utils: >= GPL-2
 ## Author of the original function: Martin Maechler
-format.perc <- function(probs, digits) {
-    txt <- format(100 * probs, trim = TRUE, scientific = FALSE, digits = digits)
+format.perc <- function(x, digits, ...) {
+    txt <- format(100 * x, trim = TRUE, scientific = FALSE, digits = digits)
     paste(txt, "%")
 }
 
