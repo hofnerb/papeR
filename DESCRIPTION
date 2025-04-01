@@ -1,8 +1,15 @@
 Package: papeR
 Title: A Toolbox for Writing Pretty Papers and Reports
-Version: 1.0-5
-Date: 2021-03-19
-Author: Benjamin Hofner, with contributions by many others (see inst/CONTRIBUTIONS)
+Version: 1.0-6
+Date: 2025-04-01
+Authors@R: c(person(given = "Benjamin", family = "Hofner", role = c("aut", "cre"),
+                    email = "benjamin.hofner@pei.de", 
+                    comment = c(ORCID = "0000-0003-2810-3186")),
+              person("Romain", "Francois", role = "ctb"),
+              person("Kurt", "Hornik", role = "ctb"),
+              person("Martin", "Maechler", role = "ctb"),
+              person("David", "Dahl", role = "ctb", comment = "see inst/CONTRIBUTIONS for details")
+              )
 Maintainer: Benjamin Hofner <benjamin.hofner@pei.de>
 Description: A toolbox for writing 'knitr', 'Sweave' or other 'LaTeX'- or 'markdown'-based
 	     reports and to prettify the output of various estimated models.
