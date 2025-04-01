@@ -1,4 +1,34 @@
-commit e4992c135fba3f1867c2427c92f9280358e3f667
+commit 73c7c0d24654abf09e3080f4ab2cb2e5684e52a0
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Release papeR 1.0-6
+
+commit ca2d2c715e6a0cd3c3a2d28663ff19208ac82034
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Fixed S3 methods
+
+commit de91d35c18d2e0f4d72d4b14b2efecadc7702c78
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Fixed CITATION
+
+commit 29a6c099e9a3e9dea3b1b404ad857ddee2a2ef99
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Included authors of functions which were reused as contributors
+
+commit 07c059fa71a751dba9043920319cc3e4d99002a9
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Removed Travis-CI from Readme.
+
+commit 7f1436efc0421fb086dc9547f6838100cb4ecac9
+Author: Benjamin Hofner <benjamin.hofner@pei.de>
+
+    Fix links in manuals
+
+commit 28347a1c01d7339a94d56be7a275077fdb1d2974
 Author: Benjamin Hofner <benjamin.hofner@pei.de>
 
     Release papeR 1.0-5

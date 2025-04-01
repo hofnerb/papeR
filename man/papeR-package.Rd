@@ -13,8 +13,8 @@
   \tabular{ll}{
     Package: \tab papeR\cr
     Type: \tab Package\cr
-    Version: \tab 1.0-5\cr
-    Date: \tab 2021-03-19\cr
+    Version: \tab 1.0-6\cr
+    Date: \tab 2025-04-01\cr
     License: \tab GPL-2\cr
   }
 

@@ -1,6 +1,25 @@
 \name{NEWS}
 \title{News for Package 'papeR'}
 
+\section{Changes in papeR version 1.0-6 (2025-04-01)}{
+  \subsection{Miscellaneous}{
+    \itemize{
+      \item Included original authors of functions that are used in a modified 
+        form in this package as contributors in \code{Authors@R} field 
+        in \file{DESCRIPTION}.
+    }
+  }
+  \subsection{Bug-fixes}{
+     \itemize{
+      \item Fixed links in manuals.
+      \item Removed Travis-CI integration from \file{README.md}.
+      \item Updated \file{inst/CITATION} to new \code{bibentry} format.
+      \item Added missing S3 methods for \code{prettify}.
+      \item Fixed calls to S3 methods by correcting object names and 
+        adding \code{...} where missing.
+    }
+  }
+}
 \section{Changes in papeR version 1.0-5 (2021-03-19)}{
   \subsection{Bug-fixes}{
      \itemize{
