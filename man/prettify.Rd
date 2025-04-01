@@ -71,7 +71,7 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
   \item{object}{
     object of class \code{data.frame} resulting (most likely) from a
     call to \code{\link{summary}} or directly the output from
-    \code{\link{summary}}, \code{\link{anova}} or \code{\link{Anova}}
+    \code{\link{summary}}, \code{\link{anova}} or \code{\link[car]{Anova}}
     (the latter from package \pkg{car}).
   }
   \item{labels}{
@@ -192,13 +192,13 @@ prettifyPValue(object, smallest.pval = 0.001, digits = NULL,
 
 \seealso{
   \code{\link{summary}}, \code{\link{summary.lm}},
-  \code{\link{summary.glm}}, \code{\link{summary.lme}},
-  \code{summary.merMod} (or \code{summary.mer-class} in lme4 < 1.0)
-  and \code{\link{summary.coxph}} for summary functions.
+  \code{\link{summary.glm}}, \code{\link[nlme]{summary.lme}},
+  \code{\link[lme4]{summary.merMod}} (or \code{summary.mer-class} in \pkg{lme4} < 1.0)
+  and \code{\link[survival]{summary.coxph}} for summary functions.
 
-  \code{\link{anova}} and \code{\link{Anova}} for ANOVA functions.
+  \code{\link{anova}} and \code{\link[car]{Anova}} for ANOVA functions.
 
-  \code{\link{confint}} and \code{\link{ci}} for confidence intervals.
+  \code{\link{confint}} and \code{\link[gmodels]{ci}} for confidence intervals.
   Special functions are implemented for mixed models:
   \code{\link{confint.mer}}.
 }

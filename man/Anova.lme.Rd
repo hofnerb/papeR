@@ -3,7 +3,7 @@
 
 \title{ Anova Function for lme Models }
 \description{
-  This is a wrapper to \code{\link{anova.lme}} from package \pkg{nlme}
+  This is a wrapper to \code{\link[nlme]{anova.lme}} from package \pkg{nlme}
   and is coded similar to \code{\link[car]{Anova}} from \pkg{car} as it
   produces marginal tests by default.
 }
@@ -19,7 +19,7 @@
     type of anova, either marginal (default) or sequential.
   }
   \item{\dots}{
-    further arguments to be passed to \code{\link{anova.lme}}
+    further arguments to be passed to \code{\link[nlme]{anova.lme}}
   }
 }
 

@@ -25,8 +25,8 @@
     intervals are returned if (and only if) no z-value exists in the
     corresponding \code{summary} and asymptotic confidence intervals
     will be returned otherwise. If \code{TRUE} (or \dQuote{"TRUE"})
-    confidence intervals will be estimated using \code{\link{ci}} from
-    package \pkg{gmodels} which uses \code{\link[lme4]{mcmcsamp}} internally.
+    confidence intervals will be estimated using \code{\link[gmodels]{ci}} from
+    package \pkg{gmodels}, which uses \code{\link[lme4]{mcmcsamp}} internally.
     If \code{FALSE} (or \dQuote{"FALSE"}), asymptotic confidence
     intervals will be returned and an error is given if not possible.
   }
