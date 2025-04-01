@@ -3,10 +3,10 @@ citHeader("To cite package 'papeR' in publications use:")
 year <- sub(".*(2[[:digit:]]{3})-.*", "\\1", meta$Date)
 vers <- meta$Version
 
-citEntry(
-  entry="Manual",
+bibentry(
+  bibtype="Manual",
   title = "{papeR}: A Toolbox for Writing Pretty Papers and Reports",
-  author = personList(as.person("Benjamin Hofner")),
+  author = c(person("Benjamin", "Hofner")),
   year = year,
   note = paste("{R} package version", vers),
   url = "https://CRAN.R-project.org/package=papeR",
